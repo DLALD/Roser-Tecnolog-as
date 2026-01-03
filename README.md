@@ -18,4 +18,4 @@ Sitio web corporativo y marketplace de Roser Tecnologías con productos tecnoló
 - Organizadores de Cables CCTV (4 y 8 canales)
 - Soporte QR para Negocios
 - Aplicación 3DCost
-- Servicios de Prototipado
+- Servicios de Prototipado# Roser-Tecnolog-as
