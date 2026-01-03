@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="Imagenes/Rosero.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .terms-container {
+            max-width: 900px;
+            margin: 100px auto 0;
+            padding: 20px;
+        }
+
+        .terms-header {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .terms-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .terms-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        .terms-logo h1 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .terms-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .intro {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196F3;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c5aa0;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196F3;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-number {
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .section p {
+            color: #555;
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .terms-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            color: #666;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-link:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="menu-button">
+                <span class="menu-lines">☰</span>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link">
+                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                    <h2>Roser Tecnologías</h2>
+                </a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="sidebar-dropdown">
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="conocenos.html">
+                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="mision-vision.html">
+                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="terminos-condiciones.html" class="active">
+                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="politica-privacidad.html">
+                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/PTS.png" alt="Productos" class="section-icon">
+                    <span class="section-title">Productos</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <div class="prototypes-header">
+                        <img src="Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                        Prototipos
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="prototype-subsection">
+                        <a href="#depie">
+                            <img src="Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                            DePie
+                        </a>
+                    </div>
+                    <div class="apps-header" data-toggle="apps">
+                        <img src="Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                        Apps
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="sub-subsection">
+                        <a href="3dcost.html">
+                            <img src="Imagenes/3D.png" alt="3D" class="subsection-icon">
+                            3DCost
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="terms-container">
+        <div class="terms-header">
+            <div class="terms-logo">
+                <img src="Imagenes/Rosero.png" alt="Roser Tecnologías">
+                <h1>Roser Tecnologías</h1>
+            </div>
+            <h2>Términos y Condiciones de Uso</h2>
+            <p>Última actualización: Diciembre 2025</p>
+        </div>
+
+        <div class="terms-content">
+            <div class="intro">
+                <p><strong>Este documento establece los términos y condiciones generales aplicables al acceso y uso de los servicios prestados por Roser Tecnologías, empresa legalmente constituida bajo las leyes de la República de Colombia, con domicilio en El Rosario, Nariño.</strong></p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">1</span>Aceptación de los Términos</h2>
+                <p>El acceso y uso de cualquier servicio ofrecido por Roser Tecnologías, incluyendo su sitio web, aplicación móvil o sistemas asociados, implica la aceptación plena de estos términos. Si no está de acuerdo con alguna parte del contenido aquí expuesto, deberá abstenerse de utilizar nuestros servicios.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">2</span>Servicios Prestados</h2>
+                <p>Roser Tecnologías ofrece soluciones de diseño, mantenimiento, fabricación y asesoría en los sectores eléctricos, electrónicos, mecánicos y de impresión 3D. Nos reservamos el derecho de modificar, suspender o discontinuar cualquier servicio sin previo aviso, así como de establecer límites sobre ciertas funciones o servicios.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">3</span>Obligaciones del Usuario</h2>
+                <p>El usuario se compromete a utilizar nuestros servicios conforme a la legislación colombiana vigente, la moral, el orden público y los principios de buena fe. Se prohíbe expresamente el uso con fines ilícitos, fraudulentos o que puedan atentar contra los derechos de terceros o de Roser Tecnologías.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">4</span>Registro y Confidencialidad</h2>
+                <p>Para acceder a ciertos servicios, puede requerirse el registro mediante la creación de una cuenta. El usuario se compromete a proporcionar información veraz y actualizada, así como a mantener la confidencialidad de sus credenciales de acceso. El uso no autorizado de cuentas podrá dar lugar a sanciones o a la cancelación del servicio.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">5</span>Propiedad Intelectual</h2>
+                <p>Todos los contenidos, marcas, logotipos, códigos fuente, diseños industriales y documentos presentes en nuestras plataformas son propiedad exclusiva de Roser Tecnologías o han sido debidamente licenciados. Está prohibida su reproducción, distribución o modificación sin autorización expresa y por escrito.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">6</span>Exclusión de Garantías y Responsabilidad</h2>
+                <p>Roser Tecnologías no garantiza la disponibilidad permanente ni la infalibilidad de sus plataformas. No nos hacemos responsables por daños directos o indirectos causados por interrupciones del servicio, pérdidas de datos, ataques cibernéticos o eventos de fuerza mayor. El uso de nuestros servicios se realiza bajo responsabilidad del usuario.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">7</span>Modificaciones</h2>
+                <p>Roser Tecnologías se reserva el derecho de modificar estos Términos y Condiciones en cualquier momento. Las versiones actualizadas se publicarán en nuestros canales oficiales y entrarán en vigencia desde su publicación. Es responsabilidad del usuario revisarlos periódicamente.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">8</span>Ley Aplicable y Jurisdicción</h2>
+                <p>Estos términos se rigen por las leyes de la República de Colombia. Para cualquier controversia derivada de la interpretación o ejecución del presente documento, las partes se someten a la jurisdicción de los jueces y tribunales del departamento de Nariño, renunciando expresamente a cualquier otra jurisdicción que pudiera corresponder.</p>
+            </div>
+        </div>
+
+        <div class="terms-footer">
+            <p>© Roser Tecnologías - Todos los derechos reservados</p>
+            <p>El Rosario, Nariño - Colombia</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

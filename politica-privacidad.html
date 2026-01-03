@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="Imagenes/Rosero.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .privacy-container {
+            max-width: 900px;
+            margin: 100px auto 0;
+            padding: 20px;
+        }
+
+        .privacy-header {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .privacy-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .privacy-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        .privacy-logo h1 {
+            color: #2c5aa0;
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .privacy-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .intro {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196F3;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2c5aa0;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196F3;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-number {
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+
+        .section p, .section ul {
+            color: #555;
+            text-align: justify;
+            line-height: 1.7;
+        }
+
+        .section ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .section li {
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .privacy-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            color: #666;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-link:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="menu-button">
+                <span class="menu-lines">☰</span>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link">
+                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                    <h2>Roser Tecnologías</h2>
+                </a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="sidebar-dropdown">
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="conocenos.html">
+                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="mision-vision.html">
+                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="terminos-condiciones.html">
+                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="politica-privacidad.html" class="active" target="_self">
+                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/PTS.png" alt="Productos" class="section-icon">
+                    <span class="section-title">Productos</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <div class="prototypes-header">
+                        <img src="Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                        Prototipos
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="prototype-subsection">
+                        <a href="#depie">
+                            <img src="Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                            DePie
+                        </a>
+                    </div>
+                    <div class="apps-header" data-toggle="apps">
+                        <img src="Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                        Apps
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="sub-subsection">
+                        <a href="3dcost.html">
+                            <img src="Imagenes/3D.png" alt="3D" class="subsection-icon">
+                            3DCost
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="privacy-container">
+        <div class="privacy-header">
+            <div class="privacy-logo">
+                <img src="Imagenes/Rosero.png" alt="Roser Tecnologías">
+                <h1>Roser Tecnologías</h1>
+            </div>
+            <h2>Política de Privacidad</h2>
+            <p>Última actualización: Diciembre 2025</p>
+        </div>
+
+        <div class="privacy-content">
+            <div class="intro">
+                <p><strong>En Roser Tecnologías, valoramos la privacidad de nuestros usuarios y nos comprometemos a proteger y manejar de forma segura toda la información personal que usted nos confíe. Esta política detalla cómo recopilamos, utilizamos, almacenamos y protegemos sus datos personales de acuerdo con la legislación colombiana vigente, incluyendo la Ley 1581 de 2012 y sus decretos reglamentarios.</strong></p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">1</span>Información que recopilamos</h2>
+                <p>Recopilamos información personal que usted nos proporciona directamente al utilizar nuestros servicios o al contactarnos, incluyendo:</p>
+                <ul>
+                    <li>Nombre completo</li>
+                    <li>Dirección de correo electrónico</li>
+                    <li>Número telefónico</li>
+                    <li>Dirección de ubicación</li>
+                    <li>Información relacionada con sus solicitudes o proyectos</li>
+                </ul>
+                <p>También podemos recopilar información técnica de forma automática, como la dirección IP, tipo de dispositivo, navegador utilizado y datos de uso del sitio web o app.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">2</span>Finalidad del tratamiento de datos</h2>
+                <p>La información recopilada es utilizada con los siguientes fines:</p>
+                <ul>
+                    <li>Prestar los servicios contratados</li>
+                    <li>Responder a consultas y solicitudes</li>
+                    <li>Mejorar nuestros productos y servicios</li>
+                    <li>Enviar información sobre actualizaciones o novedades</li>
+                    <li>Cumplir con obligaciones legales y contractuales</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">3</span>Compartición de información</h2>
+                <p>No compartimos su información personal con terceros, excepto cuando sea necesario para cumplir con un servicio solicitado, exigido por ley o autorizado por usted expresamente.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">4</span>Seguridad de la información</h2>
+                <p>Implementamos medidas técnicas, administrativas y físicas adecuadas para proteger su información contra acceso no autorizado, pérdida, alteración o divulgación.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">5</span>Derechos del titular de los datos</h2>
+                <p>Usted tiene derecho a conocer, actualizar, rectificar y suprimir sus datos personales, así como a revocar la autorización otorgada para su tratamiento, de acuerdo con lo establecido en la legislación colombiana.</p>
+            </div>
+
+            <div class="section">
+                <h2><span class="section-number">6</span>Contacto</h2>
+                <p>Para ejercer sus derechos o resolver inquietudes sobre nuestra política de privacidad, puede contactarnos a:</p>
+                <div class="contact-info">
+                    <p><strong>• Correo electrónico:</strong> contact@rosertecnologias.com</p>
+                    <p><strong>• Teléfono:</strong> +57 3137331538</p>
+                    <p><strong>• Dirección:</strong> El Rosario, Nariño, Colombia. Código Postal 527030</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="privacy-footer">
+            <p>© Roser Tecnologías - Todos los derechos reservados</p>
+            <p>El Rosario, Nariño - Colombia</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

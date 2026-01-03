@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="Imagenes/Rosero.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="marketplace.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="menu-button">
+                <span class="menu-lines">☰</span>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                    <h2>Roser Tecnologías</h2>
+                </a>
+            </div>
+            <ul class="nav-menu">
+            </ul>
+            <div class="search-container">
+                <button class="search-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+                <div class="search-input-container">
+                    <input type="text" class="search-bar" placeholder="Buscar productos...">
+                    <button class="clear-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="sidebar-dropdown">
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="conocenos.html">
+                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="mision-vision.html">
+                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="terminos-condiciones.html">
+                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="politica-privacidad.html" target="_self">
+                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/PTS.png" alt="Productos" class="section-icon">
+                    <span class="section-title">Productos</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <div class="prototypes-header">
+                        <img src="Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                        Prototipos
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="prototype-subsection">
+                        <a href="#depie">
+                            <img src="Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                            DePie
+                        </a>
+                    </div>
+                    <div class="apps-header" data-toggle="apps">
+                        <img src="Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                        Apps
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="sub-subsection">
+                        <a href="3dcost.html">
+                            <img src="Imagenes/3D.png" alt="3D" class="subsection-icon">
+                            3DCost
+                        </a>
+                    </div>
+                    <a href="marketplace.html" class="active">
+                        <img src="Imagenes/Rosero.png" alt="Marketplace" class="subsection-icon">
+                        Marketplace
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="marketplace-hero">
+        <div class="container">
+            <div class="marketplace-header">
+                <img src="Imagenes/Rosero.png" alt="Marketplace" class="marketplace-icon">
+                <h1>Marketplace</h1>
+                <p>Descubre productos y servicios de tecnología</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketplace Content -->
+    <section class="marketplace-content">
+        <div class="container">
+            <h2>Productos Disponibles</h2>
+            <div class="products-grid">
+                <!-- Producto: Chasis Gamer -->
+                <div class="product-item" onclick="openProductModal('chasis-gamer')">
+                    <div class="product-image">
+                        <img src="Marketplace/Chasis gamer/1.jpg" alt="Chasis Gamer" class="main-product-img">
+                        <div class="product-badge">Usado</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Chasis Gamer Cougar Panzer Evo Rgb (Usado)</h3>
+                        <p class="product-description">Chasis gamer Cougar Panzer Evo con iluminación RGB, en excelente estado</p>
+                        <div class="product-price">$599.000 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 1 día</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Organizador Magnético -->
+                <div class="product-item" onclick="openProductModal('organizador-magnetico')">
+                    <div class="product-image">
+                        <img src="Marketplace/Organizador Magnético De Cables Hasta 80cm Hexastack H1-80/Negro/1.jpg" alt="Organizador Magnético" class="main-product-img">
+                        <div class="product-badge">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Organizador Magnético De Cables Hasta 80cm Hexastack H1-80</h3>
+                        <p class="product-description">Organizador magnético de cables hasta 80cm, disponible en 5 colores</p>
+                        <div class="product-price">$61.069 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Caja Táctica -->
+                <div class="product-item" onclick="openProductModal('caja-tactica')">
+                    <div class="product-image">
+                        <img src="Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" alt="Caja Táctica" class="main-product-img">
+                        <div class="product-badge">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1</h3>
+                        <p class="product-description">Caja táctica profesional para almacenamiento seguro de munición 9mm</p>
+                        <div class="product-price">$81.400 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 2 días</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Baluns Y Borneras Pequeño -->
+                <div class="product-item" onclick="openProductModal('baluns-borneras-pequeno')">
+                    <div class="product-image">
+                        <img src="Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Baluns Y Borneras Pequeño" class="main-product-img">
+                        <div class="product-badge">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Caja Para Cables CCTV Cámaras De Seguridad</h3>
+                        <p class="product-description">Caja compacta organizadora para cables de cámaras CCTV con baluns y borneras</p>
+                        <div class="product-price">$36.900 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Baluns Y Borneras -->
+                <div class="product-item" onclick="openProductModal('baluns-borneras')">
+                    <div class="product-image">
+                        <img src="Marketplace/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/1.png" alt="Baluns Y Borneras" class="main-product-img">
+                        <div class="product-badge">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales</h3>
+                        <p class="product-description">Caja organizadora para cables de cámaras CCTV con baluns y borneras de 8 canales</p>
+                        <div class="product-price">$49.800 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Soporte QR -->
+                <div class="product-item" onclick="openProductModal('soporte-qr')">
+                    <div class="product-image">
+                        <img src="Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR" class="main-product-img">
+                        <div class="product-badge">Nuevo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Soporte QR para Negocios</h3>
+                        <p class="product-description">Soporte universal para códigos QR de cualquier plataforma de pago digital</p>
+                        <div class="product-price">$98.000 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 5 días</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: 3DCost App -->
+                <div class="product-item" onclick="openProductModal('3dcost')">
+                    <div class="product-image">
+                        <img src="Imagenes/3D.png" alt="3DCost App" class="main-product-img">
+                        <div class="product-badge app">App</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>3DCost - Calculadora de Impresión 3D</h3>
+                        <p class="product-description">Aplicación para calcular costos precisos de impresión 3D</p>
+                        <div class="product-price">Gratis</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📱 Descarga inmediata</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Producto: Servicios de Prototipado -->
+                <div class="product-item" onclick="openProductModal('prototipos')">
+                    <div class="product-image">
+                        <img src="Imagenes/Proto.png" alt="Prototipos" class="main-product-img">
+                        <div class="product-badge service">Servicio</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Servicios de Prototipado</h3>
+                        <p class="product-description">Desarrollo y fabricación de prototipos personalizados</p>
+                        <div class="product-price">Desde $50.000 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">🕰️ Cotización personalizada</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <div id="modalBody">
+                <!-- El contenido se carga dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>Roser Tecnologías</h3>
+            <p>Innovación, diseño y tecnología para el futuro.</p>
+            <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
