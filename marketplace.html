@@ -7,8 +7,95 @@
     <link rel="icon" type="image/x-icon" href="Imagenes/Rosero.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="marketplace.css">
+    
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
 </head>
 <body>
+    <!--Div donde estará el botón de WhatsApp-->
+    <div id="BotonWA"></div>
+    
+    <!-- Botón flotante de envío -->
+    <div id="shipping-button" class="shipping-float-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+        </svg>
+    </div>
+    
+    <!-- Modal de envío -->
+    <div id="shipping-modal" class="shipping-modal">
+        <div class="shipping-modal-content">
+            <span class="shipping-close">&times;</span>
+            <h3>Calcular envío</h3>
+            <form id="shipping-form">
+                <div class="form-group">
+                    <label>Código postal</label>
+                    <input type="text" id="postal-code" placeholder="Ej: 110111" maxlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Departamento</label>
+                    <select id="department">
+                        <option value="">Seleccionar departamento</option>
+                        <option value="Amazonas">Amazonas</option>
+                        <option value="Antioquia">Antioquia</option>
+                        <option value="Arauca">Arauca</option>
+                        <option value="Atlántico">Atlántico</option>
+                        <option value="Bolívar">Bolívar</option>
+                        <option value="Boyacá">Boyacá</option>
+                        <option value="Caldas">Caldas</option>
+                        <option value="Caquetá">Caquetá</option>
+                        <option value="Casanare">Casanare</option>
+                        <option value="Cauca">Cauca</option>
+                        <option value="Cesar">Cesar</option>
+                        <option value="Chocó">Chocó</option>
+                        <option value="Córdoba">Córdoba</option>
+                        <option value="Cundinamarca">Cundinamarca</option>
+                        <option value="Guainía">Guainía</option>
+                        <option value="Guaviare">Guaviare</option>
+                        <option value="Huila">Huila</option>
+                        <option value="La Guajira">La Guajira</option>
+                        <option value="Magdalena">Magdalena</option>
+                        <option value="Meta">Meta</option>
+                        <option value="Nariño">Nariño</option>
+                        <option value="Norte de Santander">Norte de Santander</option>
+                        <option value="Putumayo">Putumayo</option>
+                        <option value="Quindío">Quindío</option>
+                        <option value="Risaralda">Risaralda</option>
+                        <option value="San Andrés y Providencia">San Andrés y Providencia</option>
+                        <option value="Santander">Santander</option>
+                        <option value="Sucre">Sucre</option>
+                        <option value="Tolima">Tolima</option>
+                        <option value="Valle del Cauca">Valle del Cauca</option>
+                        <option value="Vaupés">Vaupés</option>
+                        <option value="Vichada">Vichada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ciudad</label>
+                    <select id="city" disabled>
+                        <option value="">Primero selecciona un departamento</option>
+                    </select>
+                </div>
+                <button type="submit" class="calc-btn">Calcular</button>
+            </form>
+            <div id="shipping-result" class="shipping-result" style="display: none;">
+                <h4>Opciones de envío:</h4>
+                <div class="shipping-option">
+                    <span>📦 Envío estándar (3-5 días)</span>
+                    <span class="price">$8.000 COP</span>
+                </div>
+                <div class="shipping-option">
+                    <span>🚚 Envío express (1-2 días)</span>
+                    <span class="price">$15.000 COP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -121,13 +208,50 @@
         </div>
     </section>
 
-    <!-- Marketplace Content -->
-    <section class="marketplace-content">
-        <div class="container">
-            <h2>Productos Disponibles</h2>
-            <div class="products-grid">
+    <!-- Categories Navbar -->
+    <div class="sidebar-toggle-container">
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <img src="Marketplace/Iconos/categorias.png" alt="Categorías" class="categories-icon">
+        </button>
+    </div>
+    
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="marketplace-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Productos Destacados</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="bestsellers">Más Vendidos</a></li>
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="new">Nuevos Lanzamientos</a></li>
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="trending">Productos del Momento</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Buscar por Categoría</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#" class="sidebar-link category-link active" data-category="all">Todos los Productos</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="impresion-3d">Productos de Impresión 3D</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="gaming">Gaming</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="organizacion">Organización</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="seguridad">Seguridad</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="apps">Aplicaciones</a></li>
+                    <li><a href="#" class="sidebar-link category-link" data-category="servicios">Servicios</a></li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="marketplace-content">
+                <div class="container">
+                    <h2>Productos Disponibles</h2>
+                    <div class="products-grid">
                 <!-- Producto: Chasis Gamer -->
-                <div class="product-item" onclick="openProductModal('chasis-gamer')">
+                <div class="product-item" data-category="gaming" onclick="openProductModal('chasis-gamer')">
                     <div class="product-image">
                         <img src="Marketplace/Chasis gamer/1.jpg" alt="Chasis Gamer" class="main-product-img">
                         <div class="product-badge">Usado</div>
@@ -143,7 +267,7 @@
                 </div>
                 
                 <!-- Producto: Organizador Magnético -->
-                <div class="product-item" onclick="openProductModal('organizador-magnetico')">
+                <div class="product-item" data-category="impresion-3d organizacion" onclick="openProductModal('organizador-magnetico')">
                     <div class="product-image">
                         <img src="Marketplace/Organizador Magnético De Cables Hasta 80cm Hexastack H1-80/Negro/1.jpg" alt="Organizador Magnético" class="main-product-img">
                         <div class="product-badge">Nuevo</div>
@@ -159,7 +283,7 @@
                 </div>
                 
                 <!-- Producto: Caja Táctica -->
-                <div class="product-item" onclick="openProductModal('caja-tactica')">
+                <div class="product-item" data-category="impresion-3d seguridad" onclick="openProductModal('caja-tactica')">
                     <div class="product-image">
                         <img src="Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" alt="Caja Táctica" class="main-product-img">
                         <div class="product-badge">Nuevo</div>
@@ -175,7 +299,7 @@
                 </div>
                 
                 <!-- Producto: Baluns Y Borneras Pequeño -->
-                <div class="product-item" onclick="openProductModal('baluns-borneras-pequeno')">
+                <div class="product-item" data-category="impresion-3d organizacion seguridad" onclick="openProductModal('baluns-borneras-pequeno')">
                     <div class="product-image">
                         <img src="Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Baluns Y Borneras Pequeño" class="main-product-img">
                         <div class="product-badge">Nuevo</div>
@@ -191,7 +315,7 @@
                 </div>
                 
                 <!-- Producto: Baluns Y Borneras -->
-                <div class="product-item" onclick="openProductModal('baluns-borneras')">
+                <div class="product-item" data-category="impresion-3d organizacion seguridad" onclick="openProductModal('baluns-borneras')">
                     <div class="product-image">
                         <img src="Marketplace/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/1.png" alt="Baluns Y Borneras" class="main-product-img">
                         <div class="product-badge">Nuevo</div>
@@ -207,7 +331,7 @@
                 </div>
                 
                 <!-- Producto: Soporte QR -->
-                <div class="product-item" onclick="openProductModal('soporte-qr')">
+                <div class="product-item" data-category="impresion-3d servicios" onclick="openProductModal('soporte-qr')">
                     <div class="product-image">
                         <img src="Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR" class="main-product-img">
                         <div class="product-badge">Nuevo</div>
@@ -221,41 +345,11 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Producto: 3DCost App -->
-                <div class="product-item" onclick="openProductModal('3dcost')">
-                    <div class="product-image">
-                        <img src="Imagenes/3D.png" alt="3DCost App" class="main-product-img">
-                        <div class="product-badge app">App</div>
-                    </div>
-                    <div class="product-info">
-                        <h3>3DCost - Calculadora de Impresión 3D</h3>
-                        <p class="product-description">Aplicación para calcular costos precisos de impresión 3D</p>
-                        <div class="product-price">Gratis</div>
-                        <div class="product-delivery">
-                            <span class="delivery-time">📱 Descarga inmediata</span>
-                        </div>
                     </div>
                 </div>
-                
-                <!-- Producto: Servicios de Prototipado -->
-                <div class="product-item" onclick="openProductModal('prototipos')">
-                    <div class="product-image">
-                        <img src="Imagenes/Proto.png" alt="Prototipos" class="main-product-img">
-                        <div class="product-badge service">Servicio</div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Servicios de Prototipado</h3>
-                        <p class="product-description">Desarrollo y fabricación de prototipos personalizados</p>
-                        <div class="product-price">Desde $50.000 COP</div>
-                        <div class="product-delivery">
-                            <span class="delivery-time">🕰️ Cotización personalizada</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
+        </main>
+    </div>
 
     <!-- Modal del Producto -->
     <div id="productModal" class="modal">
@@ -275,6 +369,202 @@
             <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#BotonWA').floatingWhatsApp({
+                phone: '573113579437',
+                headerTitle: 'Roser Tecnologías',
+                popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+                showPopup: true,
+                position: "right",
+                size: "60px",
+                backgroundColor: '#25D366',
+                zIndex: 9999
+            });
+            
+            // Override click to force WhatsApp app on desktop - DISABLED
+            /*
+            $(document).on('click', '.floating-wpp', function(e) {
+                e.preventDefault();
+                const phone = '573113579437';
+                const message = '¡Hola! Estoy interesado en sus productos.';
+                const url = `whatsapp://send?phone=${phone}&text=${encodeURIComponent(message)}`;
+                window.location.href = url;
+            });
+            */
+            
+            // Shipping button functionality
+            $('#shipping-button').click(function() {
+                $('#shipping-modal').show();
+            });
+            
+            $('.shipping-close, .shipping-modal').click(function(e) {
+                if (e.target === this) {
+                    $('#shipping-modal').hide();
+                }
+            });
+            
+            // Cities by department
+            const cities = {
+                'Cundinamarca': ['Bogotá', 'Soacha', 'Girardot', 'Zipaquirá', 'Facatativá', 'Chía', 'Mosquera', 'Fusagasugá', 'Madrid', 'Funza'],
+                'Antioquia': ['Medellín', 'Bello', 'Itagüí', 'Envigado', 'Apartadó', 'Turbo', 'Rionegro', 'Sabaneta', 'Caldas', 'La Estrella'],
+                'Valle del Cauca': ['Cali', 'Palmira', 'Buenaventura', 'Tulua', 'Cartago', 'Buga', 'Jamundi', 'Yumbo', 'Candelaria', 'Florida'],
+                'Atlántico': ['Barranquilla', 'Soledad', 'Malambo', 'Sabanagrande', 'Baranoa', 'Puerto Colombia', 'Galapa', 'Sabanalarga', 'Ponedera', 'Palmar de Varela'],
+                'Santander': ['Bucaramanga', 'Floridablanca', 'Girón', 'Piedecuesta', 'Barrancabermeja', 'San Gil', 'Socorro', 'Barbosa', 'Zapatoca', 'Vélez'],
+                'Bolívar': ['Cartagena', 'Magangue', 'Turbaco', 'Arjona', 'El Carmen de Bolívar', 'Mahates', 'San Pablo', 'Santa Rosa', 'Clemencia', 'María la Baja'],
+                'Norte de Santander': ['Cúcuta', 'Ocaña', 'Pamplona', 'Villa del Rosario', 'Los Patios', 'Sardinata', 'Tibú', 'El Zulia', 'San Cayetano', 'Puerto Santander'],
+                'Nariño': ['Pasto', 'Tumaco', 'Ipiales', 'Samaniego', 'La Unión', 'Sandona', 'Consaca', 'Yacuanquer', 'Tangua', 'Chachagüi'],
+                'Cauca': ['Popayán', 'Santander de Quilichao', 'Puerto Tejada', 'Patia', 'Corinto', 'Miranda', 'Padilla', 'Caloto', 'Villa Rica', 'Guapi'],
+                'Tolima': ['Ibagué', 'Espinal', 'Melgar', 'Honda', 'Chaparral', 'Líbano', 'Mariquita', 'Purificación', 'Flandes', 'Girardot'],
+                'Huila': ['Neiva', 'Pitalito', 'Garzón', 'La Plata', 'Campoalegre', 'Aipe', 'Gigante', 'Guadalupe', 'Yaguará', 'Tesalia'],
+                'Córdoba': ['Montería', 'Lorica', 'Sahagún', 'Cereté', 'Ciénaga de Oro', 'Planeta Rica', 'Ayapel', 'Chinú', 'Pueblo Nuevo', 'Mocarí'],
+                'Cesar': ['Valledupar', 'Aguachica', 'Bosconia', 'Codazzi', 'El Copey', 'Curumaní', 'San Diego', 'Chimichagua', 'Astrea', 'Becerril'],
+                'Magdalena': ['Santa Marta', 'Ciénaga', 'Fundación', 'Aracataca', 'El Retén', 'Zona Bananera', 'Algarrobo', 'Pivijay', 'Sabanas de San Angel', 'Santa Ana'],
+                'La Guajira': ['Riohacha', 'Maicao', 'Uribia', 'Manaure', 'San Juan del Cesar', 'Villanueva', 'Fonseca', 'Barrancas', 'Distracción', 'El Molino'],
+                'Sucre': ['Sincelejo', 'Corozal', 'Sampués', 'San Marcos', 'Tolú', 'Coveñas', 'Majagual', 'Morroa', 'Ovejas', 'Los Palmitos'],
+                'Meta': ['Villavicencio', 'Acacías', 'Granada', 'San Martín', 'Puerto López', 'Cumaral', 'Restrepo', 'Fuente de Oro', 'Puerto Gaitán', 'Barranca de Upía'],
+                'Casanare': ['Yopal', 'Aguazul', 'Villanueva', 'Tauramena', 'Monterrey', 'Sabanalarga', 'Maní', 'Trinidad', 'Recetor', 'Chameza'],
+                'Boyacá': ['Tunja', 'Duitama', 'Sogamoso', 'Chiquinquirá', 'Paipa', 'Villa de Leyva', 'Puerto Boyacá', 'Moniquirá', 'Barbosa', 'Nobsa'],
+                'Risaralda': ['Pereira', 'Dosquebradas', 'Santa Rosa de Cabal', 'La Virginia', 'Marsella', 'Belén de Umbría', 'Apía', 'Santuario', 'Quinchía', 'Guática'],
+                'Quindío': ['Armenia', 'Calarcá', 'La Tebaida', 'Montenegro', 'Quimbaya', 'Circasia', 'Filandia', 'Salento', 'Pijao', 'Córdoba'],
+                'Caldas': ['Manizales', 'Chinchiná', 'Villamaría', 'La Dorada', 'Riosucio', 'Anserma', 'Palestina', 'Supía', 'Aguadas', 'Pacora']
+            };
+            
+            $('#department').change(function() {
+                const dept = $(this).val();
+                const citySelect = $('#city');
+                
+                if (dept && cities[dept]) {
+                    citySelect.prop('disabled', false).html('<option value="">Selecciona una ciudad</option>');
+                    cities[dept].forEach(city => {
+                        citySelect.append(`<option value="${city}">${city}</option>`);
+                    });
+                } else {
+                    citySelect.prop('disabled', true).html('<option value="">Primero selecciona un departamento</option>');
+                }
+            });
+            
+            $('#shipping-form').submit(function(e) {
+                e.preventDefault();
+                $('#shipping-result').show();
+            });
+            
+            // Categories filter functionality
+            $('.category-link').click(function(e) {
+                e.preventDefault();
+                const category = $(this).data('category');
+                
+                // Update active button
+                $('.category-link').removeClass('active');
+                $(this).addClass('active');
+                
+                // Filter products
+                if (category === 'all') {
+                    $('.product-item').show();
+                } else {
+                    $('.product-item').hide();
+                    $(`.product-item[data-category*="${category}"]`).show();
+                }
+            });
+            
+            // Featured products functionality
+            $('.featured-link').click(function(e) {
+                e.preventDefault();
+                const featured = $(this).data('featured');
+                
+                // Remove active from categories
+                $('.category-link').removeClass('active');
+                $('.featured-link').removeClass('active');
+                $(this).addClass('active');
+                
+                // Show products based on featured type
+                $('.product-item').show();
+                
+                if (featured === 'bestsellers') {
+                    // Show products with "Nuevo" badge or high prices
+                    $('.product-item').hide();
+                    $('.product-item').filter(function() {
+                        return $(this).find('.product-badge').text() === 'Nuevo' || 
+                               parseInt($(this).find('.product-price').text().replace(/[^0-9]/g, '')) > 80000;
+                    }).show();
+                } else if (featured === 'new') {
+                    // Show only new products
+                    $('.product-item').hide();
+                    $('.product-item').filter(function() {
+                        return $(this).find('.product-badge').text() === 'Nuevo';
+                    }).show();
+                } else if (featured === 'trending') {
+                    // Show gaming and 3D printing products
+                    $('.product-item').hide();
+                    $(`.product-item[data-category*="gaming"], .product-item[data-category*="impresion-3d"]`).show();
+                }
+            });
+            
+            // Search functionality
+            $('.search-button').click(function(e) {
+                e.stopPropagation();
+                const container = $('.search-input-container');
+                container.addClass('expanded');
+                $('.search-bar').focus();
+            });
+            
+            $('.clear-button').click(function(e) {
+                e.stopPropagation();
+                $('.search-bar').val('');
+                $('.search-input-container').removeClass('expanded');
+                $('.product-item').show();
+            });
+            
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.search-container').length) {
+                    $('.search-input-container').removeClass('expanded');
+                }
+            });
+            
+            $('.search-bar').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                
+                $('.product-item').each(function() {
+                    const productName = $(this).find('h3').text().toLowerCase();
+                    const productDesc = $(this).find('.product-description').text().toLowerCase();
+                    
+                    if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+            
+            // Sidebar toggle functionality
+            $('#sidebar-toggle').click(function() {
+                const sidebar = $('#sidebar');
+                const overlay = $('#sidebar-overlay');
+                const toggle = $(this);
+                
+                sidebar.toggleClass('open');
+                overlay.toggleClass('active');
+                toggle.toggleClass('active');
+            });
+            
+            // Close sidebar when clicking overlay
+            $('#sidebar-overlay').click(function() {
+                $('#sidebar').removeClass('open');
+                $(this).removeClass('active');
+                $('#sidebar-toggle').removeClass('active');
+            });
+            
+            // Close sidebar when clicking a link (mobile)
+            $('.sidebar-link').click(function() {
+                if (window.innerWidth <= 768) {
+                    $('#sidebar').removeClass('open');
+                    $('#sidebar-overlay').removeClass('active');
+                    $('#sidebar-toggle').removeClass('active');
+                }
+            });
+        });
+    </script>
 
     <script src="script.js"></script>
 </body>

@@ -259,6 +259,13 @@ function openProductModal(productId) {
     const modal = document.getElementById('productModal');
     const modalBody = document.getElementById('modalBody');
     
+    // Add click outside to close functionality
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeProductModal();
+        }
+    });
+    
     if (productId === 'chasis-gamer') {
         modalBody.innerHTML = `
             <div style="padding: 30px;">
@@ -981,6 +988,19 @@ function contactWhatsApp(productName, color = null, productId = null) {
     
     if (color) {
         message += ` de color ${color.toLowerCase()}`;
+    }
+    
+    // Add shipping info if available
+    const department = $('#department').val();
+    const city = $('#city').val();
+    const postalCode = $('#postal-code').val();
+    
+    if (department && city) {
+        message += `\n\nDatos de envío:\n📍 ${city}, ${department}`;
+        if (postalCode) {
+            message += `\n📮 Código postal: ${postalCode}`;
+        }
+        message += `\n📦 Envío estándar: $8.000 COP (3-5 días)\n🚚 Envío express: $15.000 COP (1-2 días)`;
     }
     
     const phone = '573113579437';
