@@ -1110,3 +1110,88 @@ function changeColorBaluns(color) {
         thumbnailContainer.appendChild(img);
     }
 }
+
+// Image Slider Functionality
+let currentSlideIndex = 0;
+let slideInterval;
+let isPaused = false;
+const slides = document.querySelectorAll('.slide');
+const progressBars = document.querySelectorAll('.progress-bar');
+const pauseBtn = document.getElementById('pauseBtn');
+
+function goToSlide(index) {
+    slides[currentSlideIndex].classList.remove('active');
+    progressBars[currentSlideIndex].classList.remove('active');
+    progressBars[currentSlideIndex].querySelector('.progress-fill').style.width = '0%';
+    
+    currentSlideIndex = index;
+    slides[currentSlideIndex].classList.add('active');
+    progressBars[currentSlideIndex].classList.add('active');
+    
+    if (!isPaused) resetInterval();
+}
+
+function showNextSlide() {
+    const nextIndex = (currentSlideIndex + 1) % slides.length;
+    goToSlide(nextIndex);
+}
+
+function resetInterval() {
+    clearInterval(slideInterval);
+    if (!isPaused) {
+        slideInterval = setInterval(showNextSlide, 4000);
+    }
+}
+
+function togglePause() {
+    isPaused = !isPaused;
+    const pauseIcon = pauseBtn.querySelector('.pause-icon');
+    const playIcon = pauseBtn.querySelector('.play-icon');
+    
+    if (isPaused) {
+        clearInterval(slideInterval);
+        pauseIcon.style.display = 'none';
+        playIcon.style.display = 'block';
+        progressBars[currentSlideIndex].querySelector('.progress-fill').style.animationPlayState = 'paused';
+    } else {
+        resetInterval();
+        pauseIcon.style.display = 'block';
+        playIcon.style.display = 'none';
+        progressBars[currentSlideIndex].querySelector('.progress-fill').style.animationPlayState = 'running';
+    }
+}
+
+// Initialize slider
+if (slides.length > 0) {
+    progressBars.forEach((bar, index) => {
+        bar.addEventListener('click', () => goToSlide(index));
+    });
+    
+    pauseBtn.addEventListener('click', togglePause);
+    resetInterval();
+}
+
+// Categories Navigation
+function goToCategory(category) {
+    window.location.href = `marketplace.html?category=${category}`;
+}
+
+let currentCategorySlide = 0;
+const maxCategorySlides = 2;
+
+function slideCategories(direction) {
+    const container = document.querySelector('.categories-container');
+    const dots = document.querySelectorAll('.dot');
+    
+    currentCategorySlide += direction;
+    
+    if (currentCategorySlide < 0) currentCategorySlide = maxCategorySlides;
+    if (currentCategorySlide > maxCategorySlides) currentCategorySlide = 0;
+    
+    const translateX = -currentCategorySlide * 33.33;
+    container.style.transform = `translateX(${translateX}%)`;
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentCategorySlide);
+    });
+}

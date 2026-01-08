@@ -468,7 +468,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
     color: #333;
     min-height: 100vh;
     display: flex;
@@ -476,9 +476,225 @@ body {
     justify-content: center;
     margin-top: 70px;
     padding: 2rem 0;
+    overflow: hidden;
+}
+
+/* Image Slider */
+.image-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+/* Progress Bars */
+.progress-bars {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 4;
+}
+
+.pause-btn {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-right: 8px;
+}
+
+.pause-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.progress-bar {
+    width: 60px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.progress-bar:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #fff;
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+.progress-bar.active .progress-fill {
+    animation: fillProgress 4s linear forwards;
+}
+
+@keyframes fillProgress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* Explore Products Section */
+.explore-products {
+    padding: 80px 0;
+    background: #f8f9fa;
+}
+
+.explore-products h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 50px;
+    letter-spacing: 1px;
+}
+
+.categories-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.categories-container {
+    display: flex;
+    gap: 30px;
+    overflow: hidden;
+    max-width: 1000px;
+}
+
+.category-card {
+    flex: 0 0 180px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+}
+
+.category-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.category-card:hover img {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.category-card h3 {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.slider-arrow {
+    background: rgba(0,0,0,0.1);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 20px;
+}
+
+.slider-arrow:hover {
+    background: rgba(0,0,0,0.2);
+    color: #333;
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.dot.active {
+    background: #2196F3;
+}
+
+@media (max-width: 768px) {
+    .categories-container {
+        gap: 20px;
+    }
+    
+    .category-card {
+        flex: 0 0 140px;
+    }
+    
+    .category-card img {
+        width: 120px;
+        height: 120px;
+    }
 }
 
 .hero-content {
+    position: relative;
+    z-index: 3;
     display: flex;
     align-items: center;
     gap: 4rem;
@@ -513,17 +729,19 @@ body {
 .hero-content h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #6c757d;
-    font-weight: 300;
+    color: white;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
 .hero-content p {
     font-size: 1.1rem;
     margin-bottom: 2rem;
-    color: #6c757d;
+    color: white;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
 }
 
 .apps-grid {
