@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja Táctica Para Munición 9mm - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="../Imagenes/Rosero.png">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="producto.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="menu-button">
+                <span class="menu-lines">☰</span>
+            </div>
+            <div class="nav-logo">
+                <a href="../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                    <h2>Roser Tecnologías</h2>
+                </a>
+            </div>
+            <ul class="nav-menu"></ul>
+            <div class="search-container">
+                <button class="search-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+                <div class="search-input-container">
+                    <input type="text" class="search-bar" placeholder="Buscar productos...">
+                    <button class="clear-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button class="cart-button" id="cart-button">
+                <svg class="cart-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                <span class="cart-count" id="cart-count">0</span>
+            </button>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Secondary Navbar -->
+    <div class="secondary-navbar">
+        <div class="secondary-nav-content">
+            <a href="../marketplace.html" class="back-link">← Volver al Marketplace</a>
+        </div>
+    </div>
+
+    <!-- Product Page Content -->
+    <div class="product-page">
+        <div class="product-container">
+            <!-- Product Images -->
+            <div class="product-gallery">
+                <div class="thumbnail-gallery-vertical" id="thumbnailGallery">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" class="thumbnail active" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/2.jpg" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/3.jpg" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/4.jpg" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/5.jpg" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/6.jpg" class="thumbnail" onclick="changeMainImage(this)">
+                </div>
+                <div class="main-image-container">
+                    <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" alt="Caja Táctica" class="main-product-image" id="mainImage">
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-details">
+                <h1>Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1</h1>
+                
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(48 valoraciones)</span>
+                </div>
+
+                <div class="product-price-section">
+                    <span class="price">$81.400 COP</span>
+                </div>
+
+                <div class="product-delivery-info">
+                    <p>📦 <strong>Preparación:</strong> 2 días hábiles</p>
+                    <p>🚚 <strong>Envío:</strong> Disponible a todo Colombia</p>
+                </div>
+
+                <div class="product-description">
+                    <h3>Acerca de este producto</h3>
+                    <ul>
+                        <li>Caja táctica profesional para almacenamiento seguro de munición 9mm</li>
+                        <li>Material resistente y duradero</li>
+                        <li>Diseño compacto y portátil</li>
+                        <li>Sistema de cierre seguro</li>
+                        <li>Fabricado con impresión 3D de alta calidad</li>
+                        <li>Ideal para uso táctico y deportivo</li>
+                    </ul>
+                </div>
+
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <label>Cantidad:</label>
+                        <select id="quantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    
+                    <button class="add-to-cart-btn" onclick="addToCartProduct()">
+                        Agregar al Carrito
+                    </button>
+                    
+                    <button class="whatsapp-btn" onclick="contactWhatsApp('Caja Táctica Para Munición 9mm')">
+                        Contactar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Specifications -->
+        <div class="product-specs">
+            <h2>Especificaciones Técnicas</h2>
+            <table>
+                <tr>
+                    <td><strong>Material:</strong></td>
+                    <td>PLA de alta resistencia</td>
+                </tr>
+                <tr>
+                    <td><strong>Calibre:</strong></td>
+                    <td>9mm</td>
+                </tr>
+                <tr>
+                    <td><strong>Capacidad:</strong></td>
+                    <td>Almacenamiento seguro</td>
+                </tr>
+                <tr>
+                    <td><strong>Peso:</strong></td>
+                    <td>200g aproximadamente</td>
+                </tr>
+                <tr>
+                    <td><strong>Color:</strong></td>
+                    <td>Negro</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            <div id="cartBody" class="cart-body">
+                <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0 COP</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Galería de Imágenes -->
+    <div id="galleryModal" class="modal">
+        <div class="modal-content gallery-modal-content">
+            <span class="close" onclick="closeGalleryModal()">&times;</span>
+            <div class="gallery-modal-body" id="galleryModalBody">
+                <!-- Imágenes se cargan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>Roser Tecnologías</h3>
+            <p>Innovación, diseño y tecnología para el futuro.</p>
+            <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="producto-simple.js"></script>
+    <script>
+        window.addToCartProduct = function() {
+            const quantity = parseInt($('#quantity').val()) || 1;
+            const mainImage = document.getElementById('mainImage');
+            const currentImage = mainImage.src;
+            
+            const productName = 'Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1';
+            const productId = 'caja-tactica';
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ 
+                    id: productId, 
+                    name: productName, 
+                    price: 81400, 
+                    image: currentImage, 
+                    quantity: quantity 
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            updateCartDisplay();
+            
+            alert('Producto agregado al carrito');
+        };
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>

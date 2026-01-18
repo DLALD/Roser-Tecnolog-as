@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caja Para Cables CCTV - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="../Imagenes/Rosero.png">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="producto.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="menu-button">
+                <span class="menu-lines">☰</span>
+            </div>
+            <div class="nav-logo">
+                <a href="../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                    <h2>Roser Tecnologías</h2>
+                </a>
+            </div>
+            <ul class="nav-menu"></ul>
+            <div class="search-container">
+                <button class="search-button">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+                <div class="search-input-container">
+                    <input type="text" class="search-bar" placeholder="Buscar productos...">
+                    <button class="clear-button">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button class="cart-button" id="cart-button">
+                <svg class="cart-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                <span class="cart-count" id="cart-count">0</span>
+            </button>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Secondary Navbar -->
+    <div class="secondary-navbar">
+        <div class="secondary-nav-content">
+            <a href="../marketplace.html" class="back-link">← Volver al Marketplace</a>
+        </div>
+    </div>
+
+    <!-- Product Page Content -->
+    <div class="product-page">
+        <div class="product-container">
+            <!-- Product Images -->
+            <div class="product-gallery">
+                <div class="thumbnail-gallery-vertical" id="thumbnailGallery">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" class="thumbnail active" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/2.png" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/3.png" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/4.png" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/5.png" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/6.png" class="thumbnail" onclick="changeMainImage(this)">
+                    <div class="thumbnail-more" onclick="openGalleryModal('Negra', colorImages['Negra'])">+2</div>
+                </div>
+                <div class="main-image-container">
+                    <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Caja Para Cables CCTV" class="main-product-image" id="mainImage">
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-details">
+                <h1>Caja Para Cables CCTV Cámaras De Seguridad</h1>
+                
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(45 valoraciones)</span>
+                </div>
+
+                <div class="product-price-section">
+                    <span class="price">$36.900 COP</span>
+                </div>
+
+                <div class="product-delivery-info">
+                    <p>📦 <strong>Preparación:</strong> 3 días hábiles</p>
+                    <p>🚚 <strong>Envío:</strong> Disponible a todo Colombia</p>
+                </div>
+
+                <div class="product-description">
+                    <h3>Acerca de este producto</h3>
+                    <ul>
+                        <li>Caja compacta organizadora para cables de cámaras CCTV</li>
+                        <li>Disponible en 3 colores diferentes</li>
+                        <li>Incluye espacio para baluns y borneras</li>
+                        <li>Diseño compacto para 4 canales</li>
+                        <li>Fabricado con impresión 3D de alta calidad</li>
+                        <li>Ideal para instalaciones de seguridad</li>
+                    </ul>
+                </div>
+
+                <div class="product-actions">
+                    <div class="color-selector">
+                        <label>Color:</label>
+                        <div class="color-options">
+                            <button class="color-circle active" data-color="Negra" onclick="selectColor(this, 'Negra')" style="background: #000000;" title="Negra"></button>
+                            <button class="color-circle" data-color="Gris" onclick="selectColor(this, 'Gris')" style="background: #808080;" title="Gris"></button>
+                            <button class="color-circle" data-color="Indigo" onclick="selectColor(this, 'Indigo')" style="background: #4B0082;" title="Indigo"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="quantity-selector">
+                        <label>Cantidad:</label>
+                        <select id="quantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    
+                    <button class="add-to-cart-btn" onclick="addToCartWithColor()">
+                        Agregar al Carrito
+                    </button>
+                    
+                    <button class="whatsapp-btn" onclick="contactWhatsApp('Caja Para Cables CCTV')">
+                        Contactar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Specifications -->
+        <div class="product-specs">
+            <h2>Especificaciones Técnicas</h2>
+            <table>
+                <tr>
+                    <td><strong>Material:</strong></td>
+                    <td>PLA de alta calidad</td>
+                </tr>
+                <tr>
+                    <td><strong>Canales:</strong></td>
+                    <td>4 canales</td>
+                </tr>
+                <tr>
+                    <td><strong>Colores disponibles:</strong></td>
+                    <td>Negra, Gris, Indigo</td>
+                </tr>
+                <tr>
+                    <td><strong>Peso:</strong></td>
+                    <td>150g aproximadamente</td>
+                </tr>
+                <tr>
+                    <td><strong>Uso:</strong></td>
+                    <td>Cámaras de seguridad CCTV</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            <div id="cartBody" class="cart-body">
+                <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0 COP</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Galería de Imágenes -->
+    <div id="galleryModal" class="modal">
+        <div class="modal-content gallery-modal-content">
+            <span class="close" onclick="closeGalleryModal()">&times;</span>
+            <div class="gallery-modal-body" id="galleryModalBody">
+                <!-- Imágenes se cargan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>Roser Tecnologías</h3>
+            <p>Innovación, diseño y tecnología para el futuro.</p>
+            <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="producto-simple.js"></script>
+    <script>
+        let selectedColor = 'Negra';
+        
+        const colorImages = {
+            'Negra': ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png'],
+            'Gris': ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg'],
+            'Indigo': ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
+        };
+        
+        window.selectColor = function(button, color) {
+            $('.color-circle').removeClass('active');
+            $(button).addClass('active');
+            
+            selectedColor = color;
+            
+            const thumbnailGallery = document.getElementById('thumbnailGallery');
+            thumbnailGallery.innerHTML = '';
+            
+            const images = colorImages[color];
+            const maxThumbnails = 6;
+            const displayImages = images.slice(0, maxThumbnails);
+            
+            displayImages.forEach((img, index) => {
+                const thumbnail = document.createElement('img');
+                thumbnail.src = `../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/${color}/${img}`;
+                thumbnail.className = index === 0 ? 'thumbnail active' : 'thumbnail';
+                thumbnail.onclick = function() { changeMainImage(this); };
+                thumbnailGallery.appendChild(thumbnail);
+            });
+            
+            if (images.length > maxThumbnails) {
+                const moreButton = document.createElement('div');
+                moreButton.className = 'thumbnail-more';
+                moreButton.innerHTML = `+${images.length - maxThumbnails}`;
+                moreButton.onclick = function() { openGalleryModal(color, images); };
+                thumbnailGallery.appendChild(moreButton);
+            }
+            
+            const mainImage = document.getElementById('mainImage');
+            mainImage.src = `../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/${color}/${images[0]}`;
+        };
+        
+        window.openGalleryModal = function(color, images) {
+            const modalBody = document.getElementById('galleryModalBody');
+            modalBody.innerHTML = '';
+            
+            images.forEach(img => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/${color}/${img}`;
+                imgElement.className = 'gallery-modal-img';
+                imgElement.onclick = function() {
+                    document.getElementById('mainImage').src = this.src;
+                    closeGalleryModal();
+                };
+                modalBody.appendChild(imgElement);
+            });
+            
+            $('#galleryModal').show();
+        };
+        
+        window.addToCartWithColor = function() {
+            const quantity = parseInt($('#quantity').val()) || 1;
+            const mainImage = document.getElementById('mainImage');
+            const currentImage = mainImage.src;
+            
+            const productName = `Caja Para Cables CCTV Cámaras De Seguridad - ${selectedColor}`;
+            const productId = `caja-cables-cctv-${selectedColor.toLowerCase()}`;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ 
+                    id: productId, 
+                    name: productName, 
+                    price: 36900, 
+                    image: currentImage, 
+                    quantity: quantity 
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            updateCartDisplay();
+            
+            alert('Producto agregado al carrito');
+        };
+    </script>
+    <script src="../script.js"></script>
+</body>
+</html>
