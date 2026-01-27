@@ -6,8 +6,16 @@
     <title>Roser Tecnologías - Inicio</title>
     <link rel="icon" type="image/x-icon" href="Imagenes/Rosero.png">
     <link rel="stylesheet" href="styles.css">
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
 </head>
 <body>
+    <!--Div donde estará el botón de WhatsApp-->
+    <div id="BotonWA"></div>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -19,9 +27,15 @@
                     <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
                     <h2>Roser Tecnologías</h2>
                 </a>
+                <a href="marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
+                    <img src="Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
+                    <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
+                </a>
             </div>
             <ul class="nav-menu">
             </ul>
+            <div class="nav-right">
+            </div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
@@ -33,26 +47,30 @@
         <div class="sidebar-dropdown">
             <div class="dropdown-section">
                 <div class="section-header">
-                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
-                    <span class="section-title">Empresa</span>
+                    <img src="Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+                    <span class="section-title">Servicios</span>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
-                    <a href="conocenos.html">
-                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
-                        Conocenos
+                    <a href="Servicios/disenos-3.html">
+                        <img src="Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+                        Diseños 3D
                     </a>
-                    <a href="mision-vision.html">
-                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
-                        Misión y Visión
+                    <a href="impresion-3d.html">
+                        <img src="Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+                        Impresión 3D
                     </a>
-                    <a href="terminos-condiciones.html">
-                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
-                        Términos y Condiciones
+                    <a href="diseno-electrico.html">
+                        <img src="Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+                        Diseño Eléctrico
                     </a>
-                    <a href="politica-privacidad.html" target="_self">
-                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
-                        Privacidad
+                    <a href="diseno-mecanico.html">
+                        <img src="Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+                        Diseño Mecánico
+                    </a>
+                    <a href="fabricacion-sistemas-mecanicos.html">
+                        <img src="Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+                        Fabricación de Sistemas Mecánicos
                     </a>
                 </div>
             </div>
@@ -85,9 +103,30 @@
                             3DCost
                         </a>
                     </div>
-                    <a href="marketplace.html">
-                        <img src="Imagenes/Rosero.png" alt="Marketplace" class="subsection-icon">
-                        Marketplace
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="conocenos.html">
+                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="mision-vision.html">
+                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="terminos-condiciones.html">
+                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="politica-privacidad.html" target="_self">
+                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
                     </a>
                 </div>
             </div>
@@ -96,6 +135,20 @@
 
     <!-- Hero Section -->
     <section id="inicio" class="hero">
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="logo-3d">
+                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-hero">
+                </div>
+                <h1>Bienvenido a Roser Tecnologías</h1>
+                <p>Soluciones de ingeniería en diseño, desarrollo y fabricación de tecnología.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Slider Section -->
+    <section class="image-slider-section">
         <!-- Image Slider Background -->
         <div class="image-slider">
             <div class="slide active" style="background-image: url('Welcome/1.jpeg')"></div>
@@ -115,6 +168,14 @@
             <div class="slide" style="background-image: url('Welcome/15.jpg')"></div>
         </div>
         <div class="hero-overlay"></div>
+        
+        <!-- Navigation Arrows -->
+        <button class="slider-arrow prev-arrow" id="prevBtn">
+            <img src="Imagenes/D.png" alt="Anterior" class="arrow-icon prev-icon">
+        </button>
+        <button class="slider-arrow next-arrow" id="nextBtn">
+            <img src="Imagenes/D.png" alt="Siguiente" class="arrow-icon next-icon">
+        </button>
         <!-- Progress Bars -->
         <div class="progress-bars">
             <button class="pause-btn" id="pauseBtn">
@@ -165,15 +226,6 @@
             </div>
             <div class="progress-bar" data-slide="14">
                 <div class="progress-fill"></div>
-            </div>
-        </div>
-        <div class="hero-content">
-            <div class="hero-left">
-                <div class="logo-3d">
-                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-hero">
-                </div>
-                <h1>Bienvenido a Roser Tecnologías</h1>
-                <p>Soluciones de ingeniería en diseño, desarrollo y fabricación de tecnología.</p>
             </div>
         </div>
     </section>
@@ -227,6 +279,22 @@
         </div>
     </footer>
 
+    <script src="shared-components.js"></script>
     <script src="script.js"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#BotonWA').floatingWhatsApp({
+                phone: '573113579437',
+                headerTitle: 'Roser Tecnologías',
+                popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+                showPopup: true,
+                position: "right",
+                size: "60px",
+                backgroundColor: '#25D366',
+                zIndex: 9999
+            });
+        });
+    </script>
 </body>
 </html>

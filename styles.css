@@ -23,7 +23,7 @@ body {
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 1000;
+    z-index: 1001;
 }
 
 .nav-container {
@@ -92,27 +92,27 @@ body {
 .search-button {
     width: 50px;
     height: 50px;
-    background: #4285f4;
+    background: #2196F3; /* azul permanente */
     border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(33,150,243,0.25);
 }
 
 .search-button:hover {
-    background: #3367d6;
+    background: #1976D2; /* azul más oscuro al hover */
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+    box-shadow: 0 4px 12px rgba(33,150,243,0.35);
 }
 
-.search-button svg {
+.search-button img {
     width: 20px;
     height: 20px;
-    fill: white;
+    filter: brightness(0) invert(1); /* fuerza el icono a color blanco */
 }
 
 .search-input-container {
@@ -207,8 +207,10 @@ body {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s;
-    z-index: 1000;
+    z-index: 9999;
     border: 1px solid #e0e0e0;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .dropdown-section {
@@ -246,6 +248,14 @@ body {
     flex: 1;
     font-weight: 500;
     color: #333;
+}
+
+/* Estilo para el botón del encabezado: azul claro en fondo/borde cuando está activo/seleccionado */
+.section-header.active,
+.section-header:focus {
+    background: #e3f7ff; /* fondo azul muy claro */
+    border: 1px solid #4fc3f7; /* borde azul claro */
+    box-shadow: 0 0 0 2px rgba(79,195,247,0.12);
 }
 
 .section-arrow {
@@ -470,13 +480,106 @@ body {
 .hero {
     position: relative;
     color: #333;
-    min-height: 100vh;
+    padding: 1.5rem 0;
+    margin-top: 70px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.logo-3d {
+    margin-bottom: 0.5rem;
+}
+
+.logo-hero {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.hero h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000000 !important;
+    margin: 0;
+}
+
+.hero p {
+    font-size: 1rem;
+    color: #000000 !important;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Image Slider Section */
+.image-slider-section {
+    position: relative;
+    height: 50vh;
+    overflow: hidden;
+}
+
+/* Navigation Arrows */
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 70px;
-    padding: 2rem 0;
-    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 3;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.slider-arrow:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.arrow-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.prev-icon {
+    transform: rotate(180deg);
+}
+
+.next-icon {
+    transform: rotate(0deg);
+}
+
+.prev-arrow {
+    left: 20px;
+}
+
+.next-arrow {
+    right: 20px;
 }
 
 /* Image Slider */
@@ -570,7 +673,7 @@ body {
 }
 
 .progress-bar.active .progress-fill {
-    animation: fillProgress 4s linear forwards;
+    animation: fillProgress 8s linear forwards;
 }
 
 @keyframes fillProgress {
@@ -1501,4 +1604,148 @@ body {
         flex-direction: column;
         gap: 15px;
     }
+}
+
+/* Marketplace Link Styles */
+.marketplace-link:hover {
+    background: #1976d2 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.marketplace-link:hover span {
+    color: white !important;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+/* Menu button styles for marketplace */
+.sidebar-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.sidebar-toggle .menu-button {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #2196F3;
+    border-radius: 8px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle .menu-button:hover {
+    background: #e3f2fd;
+    border-color: #1976D2;
+    transform: scale(1.05);
+}
+/* Search Box Styles */
+.search-box {
+    position: relative;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.search-box.active {
+    width: 300px;
+}
+
+.search-box input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 50px;
+    background: #fff;
+    outline: none;
+    padding: 0 60px 0 20px;
+    font-size: 16px;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.search-box input.active {
+    opacity: 1;
+}
+
+.search-box input::placeholder {
+    color: #a6a6a6;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 40px;
+    background: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    z-index: 1;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-box .search-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #664AFF;
+}
+
+.search-box .search-icon.active {
+    right: 5px;
+    height: 30px;
+    width: 30px;
+    background: #664AFF;
+    transform: translateY(-50%) rotate(360deg);
+}
+
+.search-box .search-icon.active svg {
+    fill: #fff;
+}
+
+.search-box .cancel-icon {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: all 0.5s 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+}
+
+.search-box .cancel-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: #664AFF;
+}
+
+.search-box .cancel-icon.active {
+    right: 45px;
+    transform: translateY(-50%) rotate(360deg);
+    opacity: 1;
+    visibility: visible;
 }

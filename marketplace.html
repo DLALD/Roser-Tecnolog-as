@@ -8,6 +8,362 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="marketplace.css">
     
+    <style>
+        /* Navbar scroll effect from GitHub repository */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2001;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .navbar.scroll {
+            background: white;
+            box-shadow: 0.1rem 0.2rem 0.3rem #333;
+        }
+        
+        .navbar.scroll .nav-logo h2 {
+            color: #141C29;
+        }
+        
+        .navbar.scroll .menu-lines {
+            color: #141C29;
+        }
+        
+        .navbar.scroll .categories-btn {
+            /* Mantener el estilo del gradiente en scroll */
+        }
+        
+        /* Nuevo estilo para navbar estilo YouTube */
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            max-width: none;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 0 auto;
+        }
+        
+        .nav-center {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+            max-width: 600px;
+            margin: 0 40px;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 0 0 auto;
+        }
+        
+        /* Animación de búsqueda estilo CodingNepal */
+        .search-box {
+            position: relative;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .search-box.active {
+            width: 350px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 50px;
+            background: #fff;
+            outline: none;
+            padding: 0 60px 0 20px;
+            font-size: 16px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .search-box input.active {
+            opacity: 1;
+        }
+        
+        .search-box input::placeholder {
+            color: #a6a6a6;
+        }
+        
+        .search-box .search-icon {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 50px;
+            width: 50px;
+            background: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            z-index: 1;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .search-box .search-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #664AFF;
+        }
+        
+        .search-box .search-icon.active {
+            right: 5px;
+            height: 40px;
+            width: 40px;
+            background: #664AFF;
+            transform: translateY(-50%) rotate(360deg);
+        }
+        
+        .search-box .search-icon.active svg {
+            fill: #fff;
+        }
+        
+        .search-box .cancel-icon {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            transition: all 0.5s 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 10;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .search-box .cancel-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #664AFF;
+        }
+        
+        .search-box .cancel-icon.active {
+            right: 55px;
+            transform: translateY(-50%) rotate(360deg);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .categories-btn {
+            background-color: #e3f2fd !important;
+            border: 2px solid #1976d2 !important;
+            border-radius: 4px !important;
+            box-shadow: none !important;
+            color: #1976d2 !important;
+            cursor: pointer;
+            display: flex !important;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 0 18px !important;
+            line-height: 50px;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 50px !important;
+            position: relative !important;
+            z-index: 2002 !important;
+            margin: 0 !important;
+        }
+        
+        .categories-btn:hover {
+            background-color: #fff !important;
+        }
+        
+        .categories-btn:active {
+            background-color: #bbdefb !important;
+        }
+        
+        .sidebar-dropdown {
+            z-index: 9999 !important;
+        }
+        
+        .categories-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .sidebar-toggle {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            outline: none;
+        }
+        
+        .sidebar-toggle:hover {
+            background: #e9ecef;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            outline: none;
+        }
+        
+        .sidebar-toggle:focus {
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+            
+            .categories-btn span {
+                display: none;
+            }
+            
+            .categories-btn {
+                padding: 0 12px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .categories-btn {
+                min-width: 120px;
+                padding: 0 25px;
+            }
+        }
+    </style>
+    
+    <style>
+        /* Estilos para el zoom de imágenes */
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+        
+        .product-image:hover .main-product-img {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .zoom-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 5% auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .zoom-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+        }
+        
+        .zoom-close:hover {
+            color: #ccc;
+        }
+        
+        .zoom-container {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: hidden;
+            cursor: crosshair;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+        
+        #zoomImage {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.1s ease;
+            display: block;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+        
+        .zoom-lens {
+            position: absolute;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1px);
+        }
+        
+        .zoom-container {
+            cursor: crosshair;
+        }
+        
+        @media (max-width: 768px) {
+            .zoom-container {
+                max-width: 95%;
+                max-height: 70%;
+            }
+            
+            .zoom-lens {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+    
     <!--JQuery-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!--Floating WhatsApp css-->
@@ -22,42 +378,44 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="menu-button">
-                <span class="menu-lines">☰</span>
-            </div>
-            <div class="nav-logo">
-                <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-                    <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
-                    <h2>Roser Tecnologías</h2>
-                </a>
-            </div>
-            <ul class="nav-menu">
-            </ul>
-            <div class="search-container">
-                <button class="search-button">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                    </svg>
+            <div class="nav-left">
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <div class="menu-button">
+                        <span class="menu-lines">☰</span>
+                    </div>
                 </button>
-                <div class="search-input-container">
-                    <input type="text" class="search-bar" placeholder="Buscar productos...">
-                    <button class="clear-button">
+                <div class="nav-logo">
+                    <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                        <img src="Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                        <h2>Roser Tecnologías</h2>
+                    </a>
+                </div>
+                <button class="categories-btn">
+                    <img src="Marketplace/Iconos/categorias.png" alt="Categorías" class="categories-icon">
+                    <span>Categorías</span>
+                </button>
+            </div>
+            
+            <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar productos...">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </div>
+                    <div class="cancel-icon">
                         <svg viewBox="0 0 24 24">
                             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                         </svg>
-                    </button>
+                    </div>
                 </div>
-            </div>
-            <button class="cart-button" id="cart-button">
-                <svg class="cart-icon" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
-                <span class="cart-count" id="cart-count">0</span>
-            </button>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+                <button class="cart-button" id="cart-button">
+                    <svg class="cart-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
             </div>
         </div>
         
@@ -65,26 +423,30 @@
         <div class="sidebar-dropdown">
             <div class="dropdown-section">
                 <div class="section-header">
-                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
-                    <span class="section-title">Empresa</span>
+                    <img src="Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+                    <span class="section-title">Servicios</span>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
-                    <a href="conocenos.html">
-                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
-                        Conocenos
+                    <a href="disenos-3d.html">
+                        <img src="Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+                        Diseños 3D
                     </a>
-                    <a href="mision-vision.html">
-                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
-                        Misión y Visión
+                    <a href="impresion-3d.html">
+                        <img src="Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+                        Impresión 3D
                     </a>
-                    <a href="terminos-condiciones.html">
-                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
-                        Términos y Condiciones
+                    <a href="diseno-electrico.html">
+                        <img src="Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+                        Diseño Eléctrico
                     </a>
-                    <a href="politica-privacidad.html" target="_self">
-                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
-                        Privacidad
+                    <a href="diseno-mecanico.html">
+                        <img src="Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+                        Diseño Mecánico
+                    </a>
+                    <a href="fabricacion-sistemas-mecanicos.html">
+                        <img src="Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+                        Fabricación de Sistemas Mecánicos
                     </a>
                 </div>
             </div>
@@ -118,24 +480,39 @@
                         </a>
                     </div>
                     <a href="marketplace.html" class="active">
-                        <img src="Imagenes/Rosero.png" alt="Marketplace" class="subsection-icon">
+                        <img src="Marketplace/Iconos/Marketplace.png" alt="Marketplace" class="subsection-icon">
                         Marketplace
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="conocenos.html">
+                        <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="mision-vision.html">
+                        <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="terminos-condiciones.html">
+                        <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="politica-privacidad.html" target="_self">
+                        <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
                     </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Secondary Navbar -->
-    <div class="secondary-navbar" style="background: #232f3e; padding: 8px 0; position: sticky; top: 60px; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <div class="secondary-nav-content" style="max-width: 100%; margin: 0; padding: 0 20px 0 50px; display: flex; align-items: center; gap: 20px;">
-            <button class="sidebar-toggle" id="sidebar-toggle">
-                <img src="Marketplace/Iconos/categorias.png" alt="Categorías" class="categories-icon">
-                <span>Todo</span>
-            </button>
-        </div>
-    </div>
-    
     <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     
@@ -300,6 +677,17 @@
         </div>
     </div>
 
+    <!-- Modal de Zoom de Imagen -->
+    <div id="imageZoomModal" class="zoom-modal">
+        <div class="zoom-modal-content">
+            <span class="zoom-close" onclick="closeImageZoom()">&times;</span>
+            <div class="zoom-container">
+                <img id="zoomImage" src="" alt="Imagen ampliada">
+                <div class="zoom-lens"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -323,6 +711,19 @@
             });
             
 
+            
+            // Navbar scroll effect
+            const navbar = document.querySelector('.navbar');
+            const contenedor = document.querySelector('.marketplace-content');
+            
+            window.addEventListener('scroll', function(){
+                if(contenedor.getBoundingClientRect().top < 10){
+                    navbar.classList.add('scroll');
+                }
+                else{
+                    navbar.classList.remove('scroll');
+                }
+            });
             
             // Categories filter functionality
             $('.category-link').click(function(e) {
@@ -375,28 +776,33 @@
                 }
             });
             
-            // Search functionality
-            $('.search-button').click(function(e) {
-                e.stopPropagation();
-                const container = $('.search-input-container');
-                container.addClass('expanded');
-                $('.search-bar').focus();
-            });
+
             
-            $('.clear-button').click(function(e) {
-                e.stopPropagation();
-                $('.search-bar').val('');
-                $('.search-input-container').removeClass('expanded');
+            // Funcionalidad de búsqueda animada
+            const searchBox = document.querySelector(".search-box");
+            const searchBtn = document.querySelector(".search-icon");
+            const cancelBtn = document.querySelector(".cancel-icon");
+            const searchInput = document.querySelector(".search-box input");
+            
+            searchBtn.onclick = () => {
+                searchBox.classList.add("active");
+                searchBtn.classList.add("active");
+                searchInput.classList.add("active");
+                cancelBtn.classList.add("active");
+                searchInput.focus();
+            };
+            
+            cancelBtn.onclick = () => {
+                searchBox.classList.remove("active");
+                searchBtn.classList.remove("active");
+                searchInput.classList.remove("active");
+                cancelBtn.classList.remove("active");
+                searchInput.value = "";
                 $('.product-item').show();
-            });
+            };
             
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.search-container').length) {
-                    $('.search-input-container').removeClass('expanded');
-                }
-            });
-            
-            $('.search-bar').on('input', function() {
+            // Funcionalidad de búsqueda
+            $(searchInput).on('input', function() {
                 const searchTerm = $(this).val().toLowerCase();
                 
                 $('.product-item').each(function() {
@@ -411,13 +817,41 @@
                 });
             });
             
-            // Sidebar toggle functionality
-            $('#sidebar-toggle, #sidebar-close').click(function() {
+            // Sidebar toggle functionality - botón izquierdo abre dropdown navbar
+            $('#sidebar-toggle').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const dropdown = $('.sidebar-dropdown');
+                dropdown.toggleClass('active');
+            });
+            
+            // Categories button functionality - botón derecho abre sidebar
+            $('.categories-btn').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 const sidebar = $('#sidebar');
                 const overlay = $('#sidebar-overlay');
                 
-                sidebar.toggleClass('open');
-                overlay.toggleClass('active');
+                sidebar.addClass('open');
+                overlay.addClass('active');
+            });
+            
+            // Sidebar close button - solo cierra el sidebar
+            $('#sidebar-close').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const sidebar = $('#sidebar');
+                const overlay = $('#sidebar-overlay');
+                
+                sidebar.removeClass('open');
+                overlay.removeClass('active');
+            });
+            
+            // Cerrar dropdown al hacer clic fuera
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#sidebar-toggle, .sidebar-dropdown').length) {
+                    $('.sidebar-dropdown').removeClass('active');
+                }
             });
             
             // Close sidebar when clicking overlay
@@ -432,6 +866,42 @@
                     $('#sidebar').removeClass('open');
                     $('#sidebar-overlay').removeClass('active');
                 }
+            });
+            
+            // Dropdown section toggle functionality
+            $('.section-header').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const subsection = $(this).next('.subsection');
+                const arrow = $(this).find('.section-arrow');
+                
+                subsection.toggleClass('active');
+                arrow.css('transform', subsection.hasClass('active') ? 'rotate(180deg)' : 'rotate(0deg)');
+            });
+            
+            // Prototypes header toggle
+            $('.prototypes-header').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const subsection = $(this).next('.prototype-subsection');
+                const arrow = $(this).find('.section-arrow');
+                
+                subsection.toggleClass('active');
+                arrow.css('transform', subsection.hasClass('active') ? 'rotate(180deg)' : 'rotate(0deg)');
+            });
+            
+            // Apps header toggle
+            $('.apps-header').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const subsection = $(this).next('.sub-subsection');
+                const arrow = $(this).find('.section-arrow');
+                
+                subsection.toggleClass('active');
+                arrow.css('transform', subsection.hasClass('active') ? 'rotate(180deg)' : 'rotate(0deg)');
             });
         });
         
@@ -616,6 +1086,77 @@
         // Initialize cart
         updateCartCount();
         updateCartDisplay();
+        
+        // Funciones para el zoom de imágenes
+        window.openImageZoom = function(imageSrc, altText) {
+            const modal = $('#imageZoomModal');
+            const zoomImage = $('#zoomImage');
+            
+            zoomImage.attr('src', imageSrc);
+            zoomImage.attr('alt', altText);
+            modal.show();
+        };
+        
+        window.closeImageZoom = function() {
+            $('#imageZoomModal').hide();
+        };
+        
+        // Funcionalidad de lupa con movimiento del mouse
+        $(document).on('mousemove', '.zoom-container', function(e) {
+            const container = $(this);
+            const lens = container.find('.zoom-lens');
+            const image = container.find('#zoomImage');
+            
+            // Obtener posición relativa al contenedor
+            const containerOffset = container.offset();
+            const x = e.pageX - containerOffset.left;
+            const y = e.pageY - containerOffset.top;
+            
+            // Posicionar la lupa
+            const lensSize = 300;
+            lens.css({
+                left: (x - lensSize/2) + 'px',
+                top: (y - lensSize/2) + 'px'
+            });
+            
+            // Calcular zoom - ajustar ligeramente hacia la izquierda y arriba
+            const zoomFactor = 2.5;
+            const percentX = ((x - 5) / container.width()) * 100;
+            const percentY = ((y - 5) / container.height()) * 100;
+            
+            // Aplicar transformación
+            image.css({
+                'transform-origin': percentX + '% ' + percentY + '%',
+                'transform': 'scale(' + zoomFactor + ')'
+            });
+            
+            lens.show();
+        });
+        
+        // Resetear zoom cuando el mouse sale del contenedor
+        $(document).on('mouseleave', '.zoom-container', function() {
+            const image = $(this).find('#zoomImage');
+            const lens = $(this).find('.zoom-lens');
+            image.css({
+                'transform': 'scale(1)',
+                'transform-origin': 'center center'
+            });
+            lens.hide();
+        });
+        
+        // Cerrar modal con ESC
+        $(document).keydown(function(e) {
+            if (e.keyCode === 27) { // ESC key
+                closeImageZoom();
+            }
+        });
+        
+        // Cerrar modal al hacer clic fuera de la imagen
+        $('#imageZoomModal').click(function(e) {
+            if (e.target === this) {
+                closeImageZoom();
+            }
+        });
     </script>
 
     <script src="script.js"></script>

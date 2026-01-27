@@ -1139,7 +1139,7 @@ function showNextSlide() {
 function resetInterval() {
     clearInterval(slideInterval);
     if (!isPaused) {
-        slideInterval = setInterval(showNextSlide, 4000);
+        slideInterval = setInterval(showNextSlide, 8000);
     }
 }
 
@@ -1168,6 +1168,24 @@ if (slides.length > 0) {
     });
     
     pauseBtn.addEventListener('click', togglePause);
+    
+    // Add arrow navigation
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            const prevIndex = currentSlideIndex === 0 ? slides.length - 1 : currentSlideIndex - 1;
+            goToSlide(prevIndex);
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            showNextSlide();
+        });
+    }
+    
     resetInterval();
 }
 
