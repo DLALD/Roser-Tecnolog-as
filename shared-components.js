@@ -158,8 +158,9 @@ function addSharedComponents() {
     // Agregar HTML de búsqueda y carrito al navbar si no existe
     const navbar = document.querySelector('.navbar .nav-container .nav-right');
     const isMarketplace = window.location.pathname.includes('marketplace.html');
+    const isIndex = window.location.pathname.includes('index.html') || window.location.pathname === '/';
     
-    if (navbar && !document.getElementById('shared-search-cart') && !isMarketplace) {
+    if (navbar && !document.getElementById('shared-search-cart') && !isMarketplace && !isIndex) {
         const searchCartHTML = `
             <div id="shared-search-cart" style="display: flex; align-items: center; gap: 16px;">
                 <div class="search-box">

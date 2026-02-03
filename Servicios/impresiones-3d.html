@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicio de Impresión 3D - Roser Tecnologías</title>
+  <link rel="icon" href="../Imagenes/Rosero.png" type="image/png">
+  <link rel="stylesheet" href="impresiones-3d.css">
+  <!--JQuery-->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!--Floating WhatsApp css-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+  <!--Floating WhatsApp javascript-->
+  <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
+</head>
+<body>
+  <!--Div donde estará el botón de WhatsApp-->
+  <div id="BotonWA"></div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="menu-button">
+        <span class="menu-lines">☰</span>
+      </div>
+      <div class="nav-logo">
+        <a href="../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+          <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+          <h2>Roser Tecnologías</h2>
+        </a>
+        <a href="../Marketplace/marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
+          <img src="../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
+          <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+      </ul>
+      <div class="nav-center">
+      </div>
+      <div class="nav-right">
+        <div class="search-box">
+          <input type="text" placeholder="Buscar productos...">
+          <div class="search-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </div>
+          <div class="cancel-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="cart-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    
+    <!-- Dropdown Menu -->
+    <div class="sidebar-dropdown">
+      <div class="dropdown-section">
+        <div class="section-header">
+          <img src="../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+          <span class="section-title">Servicios</span>
+          <span class="section-arrow">▼</span>
+        </div>
+        <div class="subsection">
+          <a href="disenos-3.html">
+            <img src="../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+            Diseños 3D
+          </a>
+          <a href="impresiones-3d.html">
+            <img src="../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+            Impresión 3D
+          </a>
+          <a href="../diseno-electrico.html">
+            <img src="../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+            Diseño Eléctrico
+          </a>
+          <a href="../diseno-mecanico.html">
+            <img src="../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+            Diseño Mecánico
+          </a>
+          <a href="../fabricacion-sistemas-mecanicos.html">
+            <img src="../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+            Fabricación de Sistemas Mecánicos
+          </a>
+        </div>
+      </div>
+      <div class="dropdown-section">
+        <div class="section-header">
+          <img src="../Imagenes/PTS.png" alt="Productos" class="section-icon">
+          <span class="section-title">Productos</span>
+          <span class="section-arrow">▼</span>
+        </div>
+        <div class="subsection">
+          <div class="prototypes-header">
+            <img src="../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+            Prototipos
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="prototype-subsection">
+            <a href="../index.html#depie">
+              <img src="../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+              DePie
+            </a>
+          </div>
+          <div class="apps-header" data-toggle="apps">
+            <img src="../Imagenes/apps.png" alt="Apps" class="subsection-icon">
+            Apps
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="sub-subsection">
+            <a href="../Productos-Roser/3dcost/3dcost.html">
+              <img src="../Imagenes/3D.png" alt="3D" class="subsection-icon">
+              3DCost
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-section">
+        <div class="section-header">
+          <img src="../Imagenes/empresa.png" alt="Empresa" class="section-icon">
+          <span class="section-title">Empresa</span>
+          <span class="section-arrow">▼</span>
+        </div>
+        <div class="subsection">
+          <a href="../Empresa/conocenos.html">
+            <img src="../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+            Conocenos
+          </a>
+          <a href="../Empresa/mision-vision.html">
+            <img src="../Imagenes/vision.png" alt="Vision" class="subsection-icon">
+            Misión y Visión
+          </a>
+          <a href="../Empresa/terminos-condiciones.html">
+            <img src="../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+            Términos y Condiciones
+          </a>
+          <a href="../Empresa/politica-privacidad.html" target="_self">
+            <img src="../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+            Privacidad
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Servicio de Impresión 3D Personalizado</h1>
+          <p class="hero-subtitle">por Roser Tecnologías</p>
+          <p class="hero-description">
+            Ofrecemos servicios especializados de <strong>impresión 3D personalizada</strong> con la más alta calidad y precios competitivos. Nuestro equipo de expertos está comprometido en dar vida a tus ideas con tecnología de vanguardia.
+          </p>
+          <a href="#cotizar" class="cta-button">Cotiza tu proyecto en impresión 3D</a>
+        </div>
+        <div class="hero-visual">
+          <img src="Impresiones/1.png" alt="Impresión 3D personalizada" class="hero-img">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Sections -->
+  <section class="content-section">
+    <div class="container">
+      <!-- Section 1 -->
+      <div class="section-grid">
+        <div class="section-text">
+          <h2>Impresión 3D en Colombia</h2>
+          <h3>Excelentes Precios para tus necesidades y aplicaciones.</h3>
+          <p>
+            En Colombia, la <strong>impresión 3D</strong> ha transformado la industria manufacturera y de prototipado. Además, nuestros servicios destacan por ofrecer <strong>precios competitivos</strong>, asegurando que puedas acceder a los beneficios de la impresión 3D sin comprometer la calidad. Aprovecha esta tecnología para llevar tus proyectos al siguiente nivel a un <strong>precio</strong> que se ajusta a tus necesidades.
+          </p>
+        </div>
+        <div class="section-image">
+          <img src="Impresiones/3.jpg" alt="Impresoras 3D en Colombia">
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section-grid reverse">
+        <div class="section-text">
+          <h2>Servicios de Impresión 3D en Roser Tecnologías</h2>
+          <p>
+            <strong>Roser Tecnologías</strong>, empresa especializada ubicada en Colombia, ofrece <strong>servicios profesionales de impresión 3D personalizadas</strong> desde el año 2020. Su amplia gama de <strong>servicios con excelente precio</strong>, abarca desde la impresión de modelos tridimensionales hasta la planeación quirúrgica en 3D. Utilizando tecnologías de impresoras FDM, garantizan resultados sin restricciones.
+          </p>
+        </div>
+        <div class="section-image">
+          <img src="Impresiones/4.jpg" alt="Servicios profesionales de impresión 3D">
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section-grid">
+        <div class="section-text">
+          <h2>Modelado 3D y diseño personalizado.</h2>
+          <p>
+            En <strong>Roser Tecnologías</strong>, se ofrecen <strong>servicios de impresiones 3D personalizadas</strong> y para aquellos sin modelos tridimensionales, cuentan con un <strong>servicio de escaneo 3D</strong>. Además, brindan asistencia en el desarrollo de productos y la réplica de piezas a través de su <strong>servicio de diseño 3D</strong>. Están comprometidos en ayudarte a dar vida a tus ideas.
+          </p>
+        </div>
+        <div class="section-image">
+          <img src="Impresiones/5.jpg" alt="Modelado y diseño 3D personalizado">
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="section-grid reverse">
+        <div class="section-text">
+          <h2>Impresión 3D en Colombia.</h2>
+          <p>
+            Desde 2020 proveemos tecnología 3D en Colombia y en toda Colombia brindando todo nuestro respaldo, con excelentes precios y garantías de Calidad.
+          </p>
+        </div>
+        <div class="section-image">
+          <img src="Impresiones/6.jpg" alt="Impresión 3D en Colombia">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="container">
+      <div class="services-title">
+        <h2>Servicios de Impresión 3D Profesional</h2>
+        <p class="services-subtitle">«Tu Lo Imaginas, Nosotros Lo Creamos»</p>
+        <p>
+          En <strong>Roser Tecnologías</strong> comprendemos que cada proyecto es único. Por eso, ofrecen atención especializada para adaptarse a necesidades específicas. Ya sea en el campo médico, artístico, educativo o metalmecánico, su experiencia y versatilidad les permite brindar soluciones personalizadas, con excelentes precios y de calidad. También realizamos venta de filamento Impresora 3D a nivel nacional.
+        </p>
+      </div>
+
+      <div class="section-grid">
+        <div class="section-text">
+          <h2>Servicio de impresión 3D ágil y a su Medida</h2>
+          <p>
+            El <strong>servicio de impresión 3D</strong> de Roser Tecnologías ofrece propuestas de valor únicas. Los clientes pueden modificar diseños con facilidad, agregar un toque único a sus productos y recibirlos en poco tiempo, sin necesidad de moldes. Esto les permite realizar pruebas funcionales durante la fase de desarrollo y obtener piezas que no se encuentran en el mercado. Además, la experiencia y expertise de <strong>Roser Tecnologías</strong> garantizan resultados precisos y de alta calidad.
+          </p>
+        </div>
+        <div class="materials-list">
+          <h4>Podemos fabricar modelos en las tecnologías FDM con los siguientes materiales:</h4>
+          <ul>
+            <li><strong>PLA</strong> (diversos colores disponibles)</li>
+            <li><strong>ABS</strong> (diversos colores disponibles)</li>
+            <li><strong>Polipropileno</strong> (PP)</li>
+            <li><strong>PETG</strong></li>
+            <li><strong>Flexible</strong> – TPU</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Form Section -->
+  <section class="quote-section" id="cotizar">
+    <div class="container">
+      <div class="quote-title">
+        <h2>Formulario de cotización</h2>
+      </div>
+      
+      <form class="quote-form" id="quoteForm">
+        <div class="form-group">
+          <label for="name">Nombre completo o Empresa *</label>
+          <input type="text" id="name" name="name" required placeholder="Nombre completo">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Correo de contacto *</label>
+          <input type="email" id="email" name="email" required placeholder="Correo de contacto">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Teléfono *</label>
+          <input type="tel" id="phone" name="phone" required placeholder="Teléfono, Celular o WhatsApp">
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Breve descripción del modelo y su uso o aplicación final. Observaciones. Tal como color o material en específico, cantidad, configuraciones de impresión, etc.</label>
+          <textarea id="description" name="description" placeholder="Descripción del uso y observaciones."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" required> Acepto política de privacidad y tratamiento de datos.
+          </label>
+        </div>
+        
+        <button type="submit" class="submit-btn">Cotizar</button>
+        
+        <a href="https://wa.me/573113579437?text=Hola, me interesa cotizar un servicio de impresión 3D" class="whatsapp-btn">
+          Cualquier duda escríbenos al WhatsApp
+        </a>
+      </form>
+    </div>
+  </section>
+
+  <!-- Modal del Carrito -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content cart-modal-content">
+      <span class="close" onclick="closeCartModal()">&times;</span>
+      <div class="cart-header">
+        <h2>Carrito de Compras</h2>
+      </div>
+      <div id="cartBody" class="cart-body">
+        <p class="empty-cart">Tu carrito está vacío</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cart-total">$0 COP</span>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Sidebar dropdown functionality
+    const menuButton = document.querySelector('.menu-button');
+    const sidebarDropdown = document.querySelector('.sidebar-dropdown');
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    
+    // Menu button toggle
+    menuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebarDropdown.classList.toggle('active');
+    });
+    
+    // Section headers toggle
+    sectionHeaders.forEach(sectionHeader => {
+      sectionHeader.setAttribute('tabindex', '0');
+      
+      const toggleSection = (e) => {
+        e.stopPropagation();
+        const subsection = sectionHeader.nextElementSibling;
+        const sectionArrow = sectionHeader.querySelector('.section-arrow');
+        
+        subsection.classList.toggle('active');
+        if (sectionArrow) {
+          sectionArrow.style.transform = subsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+      };
+      
+      sectionHeader.addEventListener('click', toggleSection);
+    });
+    
+    // Apps header toggle
+    document.querySelectorAll('.apps-header').forEach(appsHeader => {
+      appsHeader.setAttribute('tabindex', '0');
+      
+      const toggleAppsSubmenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const subSubsection = appsHeader.nextElementSibling;
+        const sectionArrow = appsHeader.querySelector('.section-arrow');
+        
+        if (subSubsection && subSubsection.classList.contains('sub-subsection')) {
+          subSubsection.classList.toggle('active');
+          if (sectionArrow) {
+            sectionArrow.style.transform = subSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        }
+      };
+      
+      appsHeader.addEventListener('click', toggleAppsSubmenu);
+    });
+    
+    // Prototypes header toggle
+    document.querySelectorAll('.prototypes-header').forEach(prototypesHeader => {
+      prototypesHeader.setAttribute('tabindex', '0');
+      
+      const togglePrototypesSubmenu = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const prototypeSubsection = prototypesHeader.nextElementSibling;
+        const sectionArrow = prototypesHeader.querySelector('.section-arrow');
+        
+        if (prototypeSubsection && prototypeSubsection.classList.contains('prototype-subsection')) {
+          prototypeSubsection.classList.toggle('active');
+          if (sectionArrow) {
+            sectionArrow.style.transform = prototypeSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        }
+      };
+      
+      prototypesHeader.addEventListener('click', togglePrototypesSubmenu);
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menuButton.contains(e.target) && !sidebarDropdown.contains(e.target)) {
+        sidebarDropdown.classList.remove('active');
+      }
+    });
+    
+    // Close sidebar dropdown when clicking on a link
+    document.querySelectorAll('.sidebar-dropdown a:not(.apps-header)').forEach(n => n.addEventListener('click', () => {
+      sidebarDropdown.classList.remove('active');
+    }));
+    
+    // Search functionality - Animación estilo CodingNepal
+    const searchBox = document.querySelector('.search-box');
+    const searchIcon = document.querySelector('.search-icon');
+    const searchInput = document.querySelector('.search-box input');
+    const cancelIcon = document.querySelector('.cancel-icon');
+    
+    if (searchBox && searchIcon && searchInput && cancelIcon) {
+      searchIcon.addEventListener('click', () => {
+        searchBox.classList.add('active');
+        searchIcon.classList.add('active');
+        searchInput.classList.add('active');
+        cancelIcon.classList.add('active');
+        searchInput.focus();
+      });
+      
+      cancelIcon.addEventListener('click', () => {
+        searchBox.classList.remove('active');
+        searchIcon.classList.remove('active');
+        searchInput.classList.remove('active');
+        cancelIcon.classList.remove('active');
+        searchInput.value = '';
+        showSearchResults([], {});
+      });
+      
+      // Cerrar al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!searchBox.contains(e.target)) {
+          searchBox.classList.remove('active');
+          searchIcon.classList.remove('active');
+          searchInput.classList.remove('active');
+          cancelIcon.classList.remove('active');
+          searchInput.value = '';
+          showSearchResults([], {});
+        }
+      });
+      
+      // Funcionalidad de búsqueda con redirección
+      const products = {
+        'organizador magnético de cables hexastack h1-80': '../Marketplace/productos/producto-organizador-magnetico.html',
+        'organizador magnético': '../Marketplace/productos/producto-organizador-magnetico.html',
+        'hexastack': '../Marketplace/productos/producto-organizador-magnetico.html',
+        'caja táctica para munición 9mm': '../Marketplace/productos/producto-caja-tactica.html',
+        'caja táctica': '../Marketplace/productos/producto-caja-tactica.html',
+        'munición': '../Marketplace/productos/producto-caja-tactica.html',
+        'tacbox': '../Marketplace/productos/producto-caja-tactica.html',
+        'caja para cables cctv cámaras de seguridad': '../Marketplace/productos/producto-caja-cables-cctv.html',
+        'cables cctv': '../Marketplace/productos/producto-caja-cables-cctv.html',
+        'cctv 4 canales': '../Marketplace/productos/producto-caja-cables-cctv.html',
+        'baluns y borneras caja para cables cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
+        'baluns cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
+        'borneras': '../Marketplace/productos/producto-baluns-8-canales.html',
+        'soporte qr para negocios': '../Marketplace/productos/producto-soporte-qr.html',
+        'soporte qr': '../Marketplace/productos/producto-soporte-qr.html',
+        'código qr': '../Marketplace/productos/producto-soporte-qr.html',
+        '3dcost': '../Productos-Roser/3dcost/3dcost.html',
+        'marketplace': '../Marketplace/marketplace.html',
+        'impresión 3d': 'impresiones-3d.html',
+        'diseño 3d': 'disenos-3.html'
+      };
+      
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        console.log('Searching for:', query); // Debug
+        if (query.length > 0) {
+          const results = Object.keys(products).filter(product => 
+            product.includes(query)
+          );
+          console.log('Results found:', results); // Debug
+          showSearchResults(results, products);
+        } else {
+          showSearchResults([], products);
+        }
+      });
+      
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const query = e.target.value.toLowerCase();
+          const exactMatch = Object.keys(products).find(product => 
+            product.includes(query)
+          );
+          if (exactMatch) {
+            window.location.href = products[exactMatch];
+          }
+        }
+      });
+    }
+    
+    function showSearchResults(results, products) {
+      console.log('showSearchResults called with:', results.length, 'results');
+      let dropdown = document.querySelector('.search-dropdown');
+      
+      if (!dropdown) {
+        console.log('Creating new dropdown');
+        dropdown = document.createElement('div');
+        dropdown.className = 'search-dropdown';
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = '50px';
+        dropdown.style.left = '0';
+        dropdown.style.width = '100%';
+        dropdown.style.background = 'white';
+        dropdown.style.border = '1px solid #e0e0e0';
+        dropdown.style.borderRadius = '8px';
+        dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        dropdown.style.maxHeight = '300px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.zIndex = '9999';
+        dropdown.style.padding = '8px 0';
+        searchBox.appendChild(dropdown);
+      }
+      
+      if (results.length > 0) {
+        console.log('Showing dropdown with results');
+        dropdown.innerHTML = results.map(result => `
+          <div style="padding: 12px 16px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px;" 
+               onmouseover="this.style.background='#f8f9fa'" 
+               onmouseout="this.style.background='white'"
+               onclick="selectSearchResult('${result}', '${products[result]}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#664AFF">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
+          </div>
+        `).join('');
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.style.display = 'none';
+      }
+    }
+    
+    function selectSearchResult(result, url) {
+      showSearchResults([], {});
+      searchBox.classList.remove('active');
+      searchIcon.classList.remove('active');
+      searchInput.classList.remove('active');
+      cancelIcon.classList.remove('active');
+      searchInput.value = '';
+      window.location.href = url;
+    }
+
+    // Cart system
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    function updateCartCount() {
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountElement = document.getElementById('cart-count');
+      cartCountElement.textContent = count;
+      if (count > 0) {
+        cartCountElement.classList.add('show');
+      } else {
+        cartCountElement.classList.remove('show');
+      }
+    }
+    
+    function updateCartDisplay() {
+      const cartBody = document.getElementById('cartBody');
+      
+      if (cart.length === 0) {
+        cartBody.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
+        document.getElementById('cart-total').textContent = '$0 COP';
+        return;
+      }
+      
+      let html = '<div class="cart-items">';
+      let total = 0;
+      
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        html += `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+            <div class="cart-item-details">
+              <h4>${item.name}</h4>
+              <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>
+            </div>
+            <div class="cart-item-quantity">
+              <button onclick="decreaseQuantity(${index})">-</button>
+              <span>${item.quantity}</span>
+              <button onclick="increaseQuantity(${index})">+</button>
+            </div>
+            <div class="cart-item-total">$${itemTotal.toLocaleString('es-CO')} COP</div>
+            <button class="remove-item" onclick="removeFromCart(${index})">&times;</button>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      cartBody.innerHTML = html;
+      document.getElementById('cart-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
+    }
+    
+    window.addToCart = function(id, name, price, image) {
+      const existingItem = cart.find(item => item.id === id);
+      
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ id, name, price, image, quantity: 1 });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      updateCartDisplay();
+      
+      alert('Producto agregado al carrito');
+    };
+    
+    window.removeFromCart = function(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      updateCartDisplay();
+    };
+    
+    window.increaseQuantity = function(index) {
+      cart[index].quantity++;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      updateCartDisplay();
+    };
+    
+    window.decreaseQuantity = function(index) {
+      if (cart[index].quantity > 1) {
+        cart[index].quantity--;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        updateCartDisplay();
+      }
+    };
+    
+    window.openCartModal = function() {
+      updateCartDisplay();
+      document.getElementById('cartModal').style.display = 'block';
+    };
+    
+    window.closeCartModal = function() {
+      document.getElementById('cartModal').style.display = 'none';
+    };
+    
+    window.checkout = function() {
+      if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+      }
+      
+      const phone = '573113579437';
+      let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+      let total = 0;
+      
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
+      });
+      
+      message += `Total: $${total.toLocaleString('es-CO')} COP`;
+      
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    };
+    
+    // Cart button click
+    document.querySelector('.cart-icon').addEventListener('click', function() {
+      openCartModal();
+    });
+    
+    // Initialize cart
+    updateCartCount();
+    updateCartDisplay();
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('cartModal');
+      if (event.target === modal) {
+        closeCartModal();
+      }
+    });
+
+    // Smooth scrolling for anchor links
+    document.getElementById('quoteForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const phone = formData.get('phone');
+      const description = formData.get('description');
+      
+      let message = `Hola Roser Tecnologías, solicito cotización para impresión 3D:\n\n`;
+      message += `Nombre: ${name}\n`;
+      message += `Email: ${email}\n`;
+      message += `Teléfono: ${phone}\n`;
+      if (description) {
+        message += `Descripción: ${description}\n`;
+      }
+      
+      const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // WhatsApp floating button
+    $(function () {
+      $('#BotonWA').floatingWhatsApp({
+        phone: '573113579437',
+        headerTitle: 'Roser Tecnologías',
+        popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+        showPopup: true,
+        position: "right",
+        size: "60px",
+        backgroundColor: '#25D366',
+        zIndex: 9999
+      });
+    });
+  </script>
+</body>
+</html>
