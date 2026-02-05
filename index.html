@@ -49,16 +49,16 @@
                     </div>
                 </div>
             </div>
-               <div class="cart-icon">
-                    <img src="Imagenes/Carrito.png" alt="Carrito" width="28" height="28">
-                    <span class="cart-count" id="cart-count">0</span>
-                </div>
+            <div class="cart-icon" onclick="event.preventDefault(); event.stopPropagation(); openCartModal();" style="position: relative; cursor: pointer; display: flex; align-items: center; margin-left: 15px; min-width: 40px; min-height: 40px; justify-content: center;">
+                <img src="Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+                <span class="cart-count" id="cart-count" style="position: absolute; top: 2px; right: 2px; background: #ff4444; color: white; border-radius: 50%; width: 16px; height: 16px; display: none; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">0</span>
+            </div>
             <div class="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-        </div>
+            </div>
         
         <!-- Dropdown Menu -->
         <div class="sidebar-dropdown">
@@ -73,11 +73,11 @@
                         <img src="Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
                         Diseños 3D
                     </a>
-                    <a href="impresion-3d.html">
+                    <a href="Servicios/impresiones-3d.html">
                         <img src="Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
                         Impresión 3D
                     </a>
-                    <a href="diseno-electrico.html">
+                    <a href="Servicios/diseno-electrico.html">
                         <img src="Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
                         Diseño Eléctrico
                     </a>
@@ -115,7 +115,7 @@
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="sub-subsection">
-                        <a href="3dcost.html">
+                        <a href="../Productos-Roser/3dcost/3dcost.html">
                             <img src="Imagenes/3D.png" alt="3D" class="subsection-icon">
                             3DCost
                         </a>
@@ -129,19 +129,19 @@
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
-                    <a href="conocenos.html">
+                    <a href="Empresa/conocenos.html">
                         <img src="Imagenes/ceo.png" alt="CEO" class="subsection-icon">
                         Conocenos
                     </a>
-                    <a href="mision-vision.html">
+                    <a href="Empresa/mision-vision.html">
                         <img src="Imagenes/vision.png" alt="Vision" class="subsection-icon">
                         Misión y Visión
                     </a>
-                    <a href="terminos-condiciones.html">
+                    <a href="Empresa/terminos-condiciones.html">
                         <img src="Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
                         Términos y Condiciones
                     </a>
-                    <a href="politica-privacidad.html" target="_self">
+                    <a href="Empresa/politica-privacidad.html" target="_self">
                         <img src="Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
                         Privacidad
                     </a>
@@ -273,16 +273,48 @@
             <div class="contact-content">
                 <div class="contact-info">
                     <h3>Información de Contacto</h3>
-                    <p>📧 info@rosertecnologias.com</p>
-                    <p>📞 +34 123 456 789</p>
-                    <p>📍 Madrid, España</p>
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <a href="mailto:info@rosertecnologias.com" class="contact-link">info@rosertecnologias.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <a href="tel:+573113579437" class="contact-link">+57 311 3579437</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📍</span>
+                        <span class="contact-text">El Rosario, Nariño, Colombia</span>
+                    </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Nombre" required>
-                    <input type="email" placeholder="Email" required>
-                    <textarea placeholder="Mensaje" rows="5" required></textarea>
-                    <button type="submit">Enviar Mensaje</button>
+                <form class="contact-form" id="contactForm">
+                    <input type="text" name="name" placeholder="Nombre" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="Mensaje" rows="5" required></textarea>
+                    <button type="submit" class="contact-submit-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
+                        </svg>
+                        Enviar por WhatsApp
+                    </button>
                 </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ubicación -->
+    <section class="location-section">
+        <div class="container">
+            <h2>Nuestra Ubicación</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.6234567890!2d-77.3348548!3d1.7435793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2ef95775e1f8d9%3A0x6ecc57112a7de802!2sFerreteria%20JOHN'S!5e0!3m2!1ses!2sco!4v1642000000000!5m2!1ses!2sco" 
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
         </div>
     </section>
@@ -339,9 +371,9 @@
                 const count = cart.reduce((sum, item) => sum + item.quantity, 0);
                 $('#cart-count').text(count);
                 if (count > 0) {
-                    $('#cart-count').addClass('show');
+                    $('#cart-count').css('display', 'flex').addClass('show');
                 } else {
-                    $('#cart-count').removeClass('show');
+                    $('#cart-count').css('display', 'none').removeClass('show');
                 }
             }
             
@@ -530,6 +562,24 @@
                 cart = JSON.parse(localStorage.getItem('cart')) || [];
                 updateCartCount();
             }, 1000);
+            
+            // Contact form functionality
+            $('#contactForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const name = formData.get('name');
+                const email = formData.get('email');
+                const message = formData.get('message');
+                
+                let whatsappMessage = `Hola Roser Tecnologías, me contacto desde el sitio web:\n\n`;
+                whatsappMessage += `Nombre: ${name}\n`;
+                whatsappMessage += `Email: ${email}\n`;
+                whatsappMessage += `Mensaje: ${message}`;
+                
+                const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrl, '_blank');
+            });
             window.removeFromCart = function(index) {
                 cart.splice(index, 1);
                 localStorage.setItem('cart', JSON.stringify(cart));

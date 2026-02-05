@@ -500,7 +500,24 @@
       <ul class="nav-menu">
       </ul>
       <div class="nav-right">
+        <div class="search-box">
+          <input type="text" placeholder="Buscar productos..." id="search-input">
+          <div class="search-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </div>
+          <div class="cancel-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </div>
+        </div>
       </div>
+      <div class="cart-icon" onclick="event.preventDefault(); event.stopPropagation(); openCartModal();">
+          <img src="../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
       <div class="hamburger">
         <span></span>
         <span></span>
@@ -521,11 +538,11 @@
             <img src="../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
             Diseños 3D
           </a>
-          <a href="../impresion-3d.html">
+          <a href="impresiones-3d.html">
             <img src="../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
             Impresión 3D
           </a>
-          <a href="../diseno-electrico.html">
+          <a href="diseno-electrico.html">
             <img src="../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
             Diseño Eléctrico
           </a>
@@ -812,9 +829,6 @@
     </div>
   </section>
 
-  <script src="../shared-components.js"></script>
-  <script src="../script.js"></script>
-  
   <!-- Modal para imagen ampliada -->
   <div id="imageModal" class="image-modal">
     <div class="modal-content">
@@ -823,100 +837,47 @@
     </div>
   </div>
   
-  <script>
-    // Variables globales
-    let currentSlide = 0;
-    let totalSlides = 5;
-    
-    // Funciones globales
-    function changeDesignSlide(direction) {
-      currentSlide += direction;
-      
-      if (currentSlide >= totalSlides) {
-        currentSlide = 0;
-      } else if (currentSlide < 0) {
-        currentSlide = totalSlides - 1;
-      }
-      
-      updateCarousel();
-    }
-    
-    function goToDesignSlide(slideIndex) {
-      currentSlide = slideIndex;
-      updateCarousel();
-    }
-    
-    function updateCarousel() {
-      const carousel = document.getElementById('designCarousel');
-      const progressBars = document.querySelectorAll('.progress-bar');
-      const thumbnails = document.querySelectorAll('.thumbnail');
-      
-      if (carousel) {
-        carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-      }
-      
-      // Update progress bars
-      progressBars.forEach((bar, index) => {
-        if (index === currentSlide) {
-          bar.classList.add('active');
-        } else {
-          bar.classList.remove('active');
-        }
-      });
-      
-      // Update thumbnails
-      thumbnails.forEach((thumbnail, index) => {
-        if (index === currentSlide) {
-          thumbnail.classList.add('active');
-        } else {
-          thumbnail.classList.remove('active');
-        }
-      });
-    }
-    
-    // Add click functionality to progress bars
-    document.addEventListener('DOMContentLoaded', function() {
-      const progressBars = document.querySelectorAll('.progress-bar');
-      progressBars.forEach((bar, index) => {
-        bar.addEventListener('click', () => {
-          goToDesignSlide(index);
-        });
-      });
-    });
-    
-    // Auto-play
-    setInterval(function() {
-      changeDesignSlide(1);
-    }, 6000);
-    
-    // Modal functions
-    function openImageModal(imageSrc) {
-      const modal = document.getElementById('imageModal');
-      const modalImage = document.getElementById('modalImage');
-      
-      modalImage.src = imageSrc;
-      modal.style.display = 'block';
-    }
-    
-    function closeImageModal() {
-      const modal = document.getElementById('imageModal');
-      modal.style.display = 'none';
-    }
-    
-    // Close modal when clicking outside the image
-    document.getElementById('imageModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeImageModal();
-      }
-    });
-    
-    // Close modal with ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeImageModal();
-      }
-    });
-  </script>
+  <!-- Modal para modelo 3D -->
+  <div id="model3DModal" class="model-3d-modal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="close3DModal()">&times;</span>
+      <model-viewer 
+        id="modal3DViewer"
+        alt="Modelo 3D"
+        auto-rotate 
+        camera-controls 
+        loading="eager"
+        reveal="auto"
+        environment-image="neutral"
+        shadow-intensity="0"
+        exposure="1.5"
+        tone-mapping="aces"
+        style="background: #f5f5f5;">
+      </model-viewer>
+    </div>
+  </div>
+
+  <!-- Modal del Carrito -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content cart-modal-content">
+      <span class="close" onclick="closeCartModal()">&times;</span>
+      <div class="cart-header">
+        <h2>Carrito de Compras</h2>
+      </div>
+      <div id="cartBody" class="cart-body">
+        <p class="empty-cart">Tu carrito está vacío</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cart-total">$0 COP</span>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="disenos-3d.js"></script>
   
   <script type="text/javascript">
     $(function () {
