@@ -156,6 +156,7 @@ function addSharedComponents() {
     }
 
     // Agregar HTML de búsqueda y carrito al navbar si no existe
+    /*
     const navbar = document.querySelector('.navbar .nav-container .nav-right');
     const isMarketplace = window.location.pathname.includes('marketplace.html');
     const isIndex = window.location.pathname.includes('index.html') || window.location.pathname === '/';
@@ -182,6 +183,7 @@ function addSharedComponents() {
         `;
         navbar.insertAdjacentHTML('beforeend', searchCartHTML);
     }
+    */
 
     // Inicializar funcionalidad de búsqueda
     initializeSharedSearch();
@@ -203,11 +205,11 @@ function initializeSharedSearch() {
     
     // Lista de productos
     const products = [
-        { name: "Organizador Magnético de Cables HexaStack H1-80", url: "productos/producto-organizador-magnetico.html" },
-        { name: "Caja Táctica para Munición 9mm", url: "productos/producto-caja-tactica.html" },
-        { name: "Organizador de Cables CCTV 4 Canales", url: "productos/producto-caja-cables-cctv.html" },
-        { name: "Baluns CCTV 8 Canales", url: "productos/producto-baluns-8-canales.html" },
-        { name: "Soporte QR para Negocios", url: "productos/producto-soporte-qr.html" }
+        { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
+        { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
+        { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
+        { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
+        { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
     ];
     
     if (searchBtn && searchInput && searchBox && searchResults) {
@@ -290,10 +292,29 @@ function initializeSharedCart() {
     // Botón de carrito
     const cartButton = document.getElementById('shared-cart-button');
     if (cartButton) {
-        cartButton.addEventListener('click', () => {
-            window.location.href = 'marketplace.html';
+        cartButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // If a page defines openCartModal, prefer that. Otherwise navigate to marketplace.
+            if (typeof window.openCartModal === 'function') {
+                try { window.openCartModal(); } catch (err) { console.warn(err); }
+            } else {
+                window.location.href = 'marketplace.html';
+            }
         });
     }
+
+    // Attach handlers to any cart icons/buttons present so they open the modal when available
+    document.querySelectorAll('.cart-icon, .cart-button').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.openCartModal === 'function') {
+                try { window.openCartModal(); } catch (err) { console.warn(err); }
+            } else {
+                // If not available, try to navigate to marketplace (relative path)
+                window.location.href = 'marketplace.html';
+            }
+        });
+    });
     
     // Actualizar contador inicial
     updateCartCount();

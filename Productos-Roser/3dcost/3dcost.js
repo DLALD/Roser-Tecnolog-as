@@ -328,6 +328,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollToTop();
     initLazyLoading();
     
+    // Inicializar carrito
+    updateCartUI();
+    
     // Inicializar preloader solo si no es una recarga
     if (!sessionStorage.getItem('visited')) {
         initPreloader();
@@ -436,4 +439,255 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+
+
+// Cart from localStorage
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Search Functionality
+const searchBox = document.querySelector('.search-box');
+const searchIcon = document.querySelector('.search-icon');
+const searchInput = document.getElementById('searchInput');
+const cancelIcon = document.querySelector('.cancel-icon');
+
+const products = {
+    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
+    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
+    'marketplace': '../../Marketplace/marketplace.html',
+    'impresión 3d': '../../Servicios/impresiones-3d.html',
+    'diseño 3d': '../../Servicios/disenos-3.html',
+    'diseño eléctrico': '../../Servicios/diseno-electrico.html',
+    'diseño mecánico': '../../Servicios/diseno-mecanico.html',
+    'fabricación': '../../Servicios/fabricacion-sistemas-mecanicos.html'
+};
+
+if (searchBox && searchIcon && searchInput && cancelIcon) {
+    searchIcon.addEventListener('click', () => {
+        searchBox.classList.add('active');
+        searchIcon.classList.add('active');
+        searchInput.classList.add('active');
+        cancelIcon.classList.add('active');
+        searchInput.focus();
+    });
+    
+    cancelIcon.addEventListener('click', () => {
+        searchBox.classList.remove('active');
+        searchIcon.classList.remove('active');
+        searchInput.classList.remove('active');
+        cancelIcon.classList.remove('active');
+        searchInput.value = '';
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!searchBox.contains(e.target)) {
+            searchBox.classList.remove('active');
+            searchIcon.classList.remove('active');
+            searchInput.classList.remove('active');
+            cancelIcon.classList.remove('active');
+            searchInput.value = '';
+        }
+    });
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        if (query.length > 0) {
+            const results = Object.keys(products).filter(product => product.includes(query));
+            showSearchResults(results, products);
+        } else {
+            showSearchResults([], products);
+        }
+    });
+}
+
+function showSearchResults(results, products) {
+    let dropdown = document.querySelector('.search-dropdown');
+    
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.className = 'search-dropdown';
+        dropdown.style.cssText = `
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 9999;
+            padding: 8px 0;
+        `;
+        searchBox.appendChild(dropdown);
+    }
+    
+    if (results.length > 0) {
+        dropdown.innerHTML = results.map(result => `
+            <div style="padding: 12px 16px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px;" 
+                 onmouseover="this.style.background='#f8f9fa'" 
+                 onmouseout="this.style.background='white'"
+                 onclick="window.location.href='${products[result]}'">
+                <span style="color: #664AFF; font-size: 18px; line-height: 1;">★</span>
+                <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
+            </div>
+        `).join('');
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+// Cart Modal
+const cartModal = document.getElementById('cartModal');
+const closeCart = document.getElementById('closeCart');
+
+window.openCartModal = function() {
+    updateCartUI();
+    cartModal.style.display = 'block';
+};
+
+window.closeCartModal = function() {
+    cartModal.style.display = 'none';
+};
+
+if (closeCart) {
+    closeCart.addEventListener('click', () => {
+        closeCartModal();
+    });
+}
+
+if (cartModal) {
+    cartModal.addEventListener('click', (e) => {
+        if (e.target === cartModal) {
+            closeCartModal();
+        }
+    });
+}
+
+// Cart button click
+document.querySelector('.cart-icon').addEventListener('click', function() {
+    openCartModal();
+});
+
+// Update Cart UI
+function updateCartUI() {
+    const cartCount = document.getElementById('cart-count');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cartCount || !cartItems || !cartTotal) return;
+    
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    cartCount.textContent = totalItems;
+    
+    if (totalItems > 0) {
+        cartCount.classList.add('show');
+    } else {
+        cartCount.classList.remove('show');
+    }
+    
+    if (totalItems === 0) {
+        cartItems.innerHTML = '<p class="cart-empty">El carrito está vacío</p>';
+        cartTotal.textContent = '$0 COP';
+    } else {
+        cartItems.innerHTML = '<div class="cart-items">' + cart.map((item, index) => {
+            // Ajustar ruta de imagen según la ubicación actual
+            let imagePath = item.image || '';
+            
+            // Si la ruta ya es absoluta o comienza con http, dejarla como está
+            if (imagePath.startsWith('http') || imagePath.startsWith('/')) {
+                // No hacer nada
+            } else if (imagePath.includes('Marketplace/')) {
+                // Si ya contiene Marketplace/, extraer la parte después de Marketplace/
+                const marketplaceIndex = imagePath.indexOf('Marketplace/');
+                const relativePath = imagePath.substring(marketplaceIndex + 12); // 12 = length of 'Marketplace/'
+                imagePath = '../../Marketplace/' + relativePath;
+            } else {
+                // Si no tiene prefijo, asumir que es relativa al Marketplace
+                imagePath = '../../Marketplace/' + imagePath;
+            }
+            
+            return `
+            <div class="cart-item">
+                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
+                <div class="cart-item-details">
+                    <h4>${item.name}</h4>
+                    <p class="cart-item-price">${item.price > 0 ? '$' + item.price.toLocaleString('es-CO') + ' COP' : 'Cotización'}</p>
+                </div>
+                <div class="cart-item-actions">
+                    <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                    <span class="quantity-display">${item.quantity}</span>
+                    <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                </div>
+                <div class="cart-item-total">${item.price > 0 ? '$' + (item.price * item.quantity).toLocaleString('es-CO') + ' COP' : 'Cotización'}</div>
+                <button class="remove-item-btn" onclick="removeFromCart(${index})">&times;</button>
+            </div>
+        `}).join('') + '</div>';
+        
+        if (totalPrice > 0) {
+            cartTotal.textContent = '$' + totalPrice.toLocaleString('es-CO') + ' COP';
+        } else {
+            cartTotal.textContent = 'Cotización';
+        }
+    }
+}
+
+// WhatsApp Quote
+const btnQuote = document.getElementById('btnQuote');
+if (btnQuote) {
+    btnQuote.addEventListener('click', () => {
+        if (cart.length === 0) {
+            alert('El carrito está vacío');
+            return;
+        }
+        
+        let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
+        cart.forEach((item, index) => {
+            message += `${index + 1}. ${item.name}`;
+            if (item.quantity > 1) {
+                message += ` (x${item.quantity})`;
+            }
+            message += '\n';
+        });
+        message += '\n¿Podrían proporcionarme más información?';
+        
+        const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+}
+
+// Update quantity
+function updateQuantity(index, change) {
+    if (cart[index]) {
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+}
+
+// Remove from cart
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartUI();
+}
+
+// Debug cart images
+console.log('Cart items:', cart);
+cart.forEach((item, index) => {
+    console.log(`Item ${index}:`, {
+        name: item.name,
+        image: item.image,
+        price: item.price,
+        quantity: item.quantity
+    });
 });

@@ -25,6 +25,23 @@
                 </a>
             </div>
             <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Buscar productos...">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </div>
+                    <div class="cancel-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-icon">
+                <img src="../../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+                <span class="cart-count" id="cart-count">0</span>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -58,7 +75,7 @@
                         <img src="../../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
                         Diseño Mecánico
                     </a>
-                    <a href="../../fabricacion-sistemas-mecanicos.html">
+                    <a href="../../Servicios/fabricacion-sistemas-mecanicos.html">
                         <img src="../../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
                         Fabricación de Sistemas Mecánicos
                     </a>
@@ -188,15 +205,15 @@
                         <!-- Slide 3 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/3.png" alt="Datos de impresión" class="screenshot-img">
+                                <img src="3dcost-app/3.png" alt="Opciones de la app" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">📊</div>
-                                <h3>Datos de Impresión</h3>
-                                <p>Ingresa parámetros precisos como tiempo de impresión, peso del material y configuraciones específicas de tu proyecto de impresión 3D.</p>
+                                <div class="feature-icon animate-bounce">⚙️</div>
+                                <h3>Opciones de la App</h3>
+                                <p>Accede a las diferentes opciones y configuraciones de la aplicación para personalizar tu experiencia de cálculo de costos.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 3</span>
-                                    <span class="step-text">Ingresa tiempo de impresión y peso del material</span>
+                                    <span class="step-text">Explora las opciones disponibles</span>
                                 </div>
                             </div>
                         </div>
@@ -204,31 +221,31 @@
                         <!-- Slide 4 -->
                         <div class="carousel-slide">
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">🧵</div>
-                                <h3>Cálculo de Filamento</h3>
-                                <p>Calcula el costo exacto del material basado en el peso, precio de bobina y margen de error. Obtén estimaciones precisas del consumo de filamento.</p>
+                                <div class="feature-icon animate-bounce">📊</div>
+                                <h3>Datos de Impresión</h3>
+                                <p>Ingresa parámetros precisos como tiempo de impresión, peso del material y configuraciones específicas de tu proyecto de impresión 3D.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 4</span>
-                                    <span class="step-text">Calcula costos de material</span>
+                                    <span class="step-text">Ingresa tiempo de impresión y peso del material</span>
                                 </div>
                             </div>
                             <div class="feature-image">
-                                <img src="3dcost-app/4.png" alt="Costos de filamento" class="screenshot-img">
+                                <img src="3dcost-app/4.png" alt="Datos de impresión" class="screenshot-img">
                             </div>
                         </div>
 
                         <!-- Slide 5 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/5.png" alt="Consumo energético" class="screenshot-img">
+                                <img src="3dcost-app/5.png" alt="Costo de filamento" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">⚡</div>
-                                <h3>Consumo Energético</h3>
-                                <p>Estima el costo de electricidad considerando la potencia de la impresora y tiempo de impresión. Incluye tarifas eléctricas locales.</p>
+                                <div class="feature-icon animate-bounce">🧵</div>
+                                <h3>Costo de Filamento</h3>
+                                <p>Calcula el costo exacto del material basado en el peso, precio de bobina y margen de error. Obtén estimaciones precisas del consumo de filamento.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 5</span>
-                                    <span class="step-text">Calcula consumo de energía</span>
+                                    <span class="step-text">Calcula costos de material</span>
                                 </div>
                             </div>
                         </div>
@@ -236,31 +253,31 @@
                         <!-- Slide 6 -->
                         <div class="carousel-slide">
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">👷</div>
-                                <h3>Mano de Obra</h3>
-                                <p>Incluye costos de diseño, post-procesado y tarifas por hora de trabajo especializado. Considera tiempo de preparación y acabado.</p>
+                                <div class="feature-icon animate-bounce">⚡</div>
+                                <h3>Consumo Energético</h3>
+                                <p>Estima el costo de electricidad considerando la potencia de la impresora y tiempo de impresión. Incluye tarifas eléctricas locales.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 6</span>
-                                    <span class="step-text">Incluye diseño y post-procesado</span>
+                                    <span class="step-text">Calcula consumo de energía</span>
                                 </div>
                             </div>
                             <div class="feature-image">
-                                <img src="3dcost-app/6.png" alt="Mano de obra" class="screenshot-img">
+                                <img src="3dcost-app/6.png" alt="Consumo energético" class="screenshot-img">
                             </div>
                         </div>
 
                         <!-- Slide 7 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/7.png" alt="Costos de máquina" class="screenshot-img">
+                                <img src="3dcost-app/7.png" alt="Mano de obra" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">🔧</div>
-                                <h3>Costos de Máquina</h3>
-                                <p>Considera depreciación, mantenimiento y vida útil estimada de tu equipo de impresión. Incluye costos de desgaste y reparaciones.</p>
+                                <div class="feature-icon animate-bounce">👷</div>
+                                <h3>Mano de Obra</h3>
+                                <p>Incluye costos de diseño, post-procesado y tarifas por hora de trabajo especializado. Considera tiempo de preparación y acabado.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 7</span>
-                                    <span class="step-text">Calcula depreciación y mantenimiento</span>
+                                    <span class="step-text">Incluye diseño y post-procesado</span>
                                 </div>
                             </div>
                         </div>
@@ -268,31 +285,31 @@
                         <!-- Slide 8 -->
                         <div class="carousel-slide">
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">💰</div>
-                                <h3>Otros Gastos</h3>
-                                <p>Agrega gastos adicionales personalizables para un cálculo completo y profesional. Incluye costos administrativos y otros gastos operativos.</p>
+                                <div class="feature-icon animate-bounce">🔧</div>
+                                <h3>Costos de Máquina</h3>
+                                <p>Considera depreciación, mantenimiento y vida útil estimada de tu equipo de impresión. Incluye costos de desgaste y reparaciones.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 8</span>
-                                    <span class="step-text">Agrega gastos adicionales</span>
+                                    <span class="step-text">Calcula depreciación y mantenimiento</span>
                                 </div>
                             </div>
                             <div class="feature-image">
-                                <img src="3dcost-app/8.png" alt="Otros gastos" class="screenshot-img">
+                                <img src="3dcost-app/8.png" alt="Costos de máquina" class="screenshot-img">
                             </div>
                         </div>
 
                         <!-- Slide 9 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/9.png" alt="Resultado final" class="screenshot-img">
+                                <img src="3dcost-app/9.png" alt="Otros gastos" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">📊</div>
-                                <h3>Resultado Final</h3>
-                                <p>Visualiza un desglose completo de todos los costos con subtotales e impuestos. Obtén el cálculo completo y detallado de tu proyecto.</p>
+                                <div class="feature-icon animate-bounce">💰</div>
+                                <h3>Otros Gastos</h3>
+                                <p>Agrega gastos adicionales personalizables para un cálculo completo y profesional. Incluye costos administrativos y otros gastos operativos.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 9</span>
-                                    <span class="step-text">Obtén cotización completa</span>
+                                    <span class="step-text">Agrega gastos adicionales</span>
                                 </div>
                             </div>
                         </div>
@@ -300,31 +317,31 @@
                         <!-- Slide 10 -->
                         <div class="carousel-slide">
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">📄</div>
-                                <h3>Generar Resumen PDF</h3>
-                                <p>Genera cotizaciones profesionales en PDF para presentar a tus clientes. Exporta documentos con formato profesional y detallado.</p>
+                                <div class="feature-icon animate-bounce">💰</div>
+                                <h3>Otros Gastos</h3>
+                                <p>Continúa agregando gastos adicionales y ajustes finales para completar tu cotización de manera precisa.</p>
                                 <div class="process-step">
                                     <span class="step-badge">Paso 10</span>
-                                    <span class="step-text">Exporta cotización en PDF</span>
+                                    <span class="step-text">Finaliza gastos adicionales</span>
                                 </div>
                             </div>
                             <div class="feature-image">
-                                <img src="3dcost-app/10.png" alt="Generar resumen" class="screenshot-img">
+                                <img src="3dcost-app/10.png" alt="Otros gastos continuación" class="screenshot-img">
                             </div>
                         </div>
 
                         <!-- Slide 11 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/11.png" alt="Versión Pro" class="screenshot-img">
+                                <img src="3dcost-app/11.png" alt="Resultado final" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">🚀</div>
-                                <h3>Versión Pro</h3>
-                                <p>Desbloquea funciones avanzadas como eliminación de anuncios, campos editables y características premium para usuarios profesionales.</p>
+                                <div class="feature-icon animate-bounce">📊</div>
+                                <h3>Resultado Final y Exportar PDF</h3>
+                                <p>Visualiza un desglose completo de todos los costos con subtotales e impuestos. Exporta tu cotización en formato PDF profesional.</p>
                                 <div class="process-step">
-                                    <span class="step-badge">Premium</span>
-                                    <span class="step-text">Funciones avanzadas disponibles</span>
+                                    <span class="step-badge">Paso 11</span>
+                                    <span class="step-text">Obtén y exporta cotización</span>
                                 </div>
                             </div>
                         </div>
@@ -332,31 +349,31 @@
                         <!-- Slide 12 -->
                         <div class="carousel-slide">
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">📱</div>
-                                <h3>Menú Principal</h3>
-                                <p>Navegación simple y clara con acceso rápido a todas las funciones. Interfaz intuitiva que facilita el uso de la aplicación.</p>
+                                <div class="feature-icon animate-bounce">📄</div>
+                                <h3>Generar Resumen</h3>
+                                <p>Genera un resumen completo de tu cotización con todos los detalles y cálculos realizados para presentar a tus clientes.</p>
                                 <div class="process-step">
-                                    <span class="step-badge">Navegación</span>
-                                    <span class="step-text">Acceso rápido a funciones</span>
+                                    <span class="step-badge">Paso 12</span>
+                                    <span class="step-text">Genera resumen detallado</span>
                                 </div>
                             </div>
                             <div class="feature-image">
-                                <img src="3dcost-app/12.png" alt="Menú principal" class="screenshot-img">
+                                <img src="3dcost-app/12.png" alt="Generar resumen" class="screenshot-img">
                             </div>
                         </div>
 
                         <!-- Slide 13 -->
                         <div class="carousel-slide">
                             <div class="feature-image">
-                                <img src="3dcost-app/13.png" alt="Configuraciones" class="screenshot-img">
+                                <img src="3dcost-app/13.png" alt="Actualizar a Pro" class="screenshot-img">
                             </div>
                             <div class="feature-content">
-                                <div class="feature-icon animate-bounce">⚙️</div>
-                                <h3>Configuraciones</h3>
-                                <p>Personaliza según tus necesidades con opciones avanzadas de configuración. Ajusta parámetros y preferencias de la aplicación.</p>
+                                <div class="feature-icon animate-bounce">🚀</div>
+                                <h3>Actualizar a Pro</h3>
+                                <p>Desbloquea funciones avanzadas como eliminación de anuncios, campos editables y características premium para usuarios profesionales.</p>
                                 <div class="process-step">
-                                    <span class="step-badge">Personalización</span>
-                                    <span class="step-text">Ajusta según tus necesidades</span>
+                                    <span class="step-badge">Paso 13</span>
+                                    <span class="step-text">Accede a funciones premium</span>
                                 </div>
                             </div>
                         </div>
@@ -390,6 +407,26 @@
     </div>
 </div>
 
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" id="closeCart">&times;</span>
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            <div id="cartItems" class="cart-body">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0 COP</span>
+                </div>
+                <button class="checkout-btn" id="btnQuote">Finalizar Compra por WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p>Roser Tecnologías</p>
@@ -405,6 +442,20 @@
     <button class="scroll-to-top" id="scrollToTop" title="Volver arriba">
         ↑
     </button>
+
+    <!-- Social Media Buttons -->
+    <div class="social-media-buttons">
+        <a href="https://www.youtube.com/@3DCost" target="_blank" class="social-btn youtube" title="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+        </a>
+        <a href="https://www.tiktok.com/@3dcost" target="_blank" class="social-btn tiktok" title="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+            </svg>
+        </a>
+    </div>
 
     <script src="../../shared-components.js"></script>
     <script src="3dcost.js"></script>

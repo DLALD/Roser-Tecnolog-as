@@ -112,3 +112,101 @@ document.querySelectorAll('.mission-card, .vision-card, .value-item').forEach(el
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
 });
+
+// Search functionality
+const searchBox = document.querySelector(".search-box");
+const searchBtn = document.querySelector("#shared-search-btn");
+const searchInput = document.querySelector("#shared-search-input");
+const searchResults = document.querySelector("#search-results");
+
+const products = [
+    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
+    { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
+    { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
+    { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
+    { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
+];
+
+if (searchBtn && searchInput && searchBox && searchResults) {
+    searchBtn.onclick = () => {
+        searchBox.classList.add("active");
+        searchBtn.classList.add("active");
+        searchInput.classList.add("active");
+        searchInput.focus();
+    };
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        
+        if (searchTerm === '') {
+            searchResults.classList.remove("show");
+            return;
+        }
+        
+        const filteredProducts = products.filter(product => 
+            product.name.toLowerCase().includes(searchTerm)
+        );
+        
+        if (filteredProducts.length === 0) {
+            searchResults.classList.remove("show");
+            return;
+        }
+        
+        let html = '';
+        filteredProducts.forEach(product => {
+            html += `
+                <div class="search-result-item" onclick="window.location.href='${product.url}'">
+                    <svg class="search-result-icon" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    ${product.name}
+                </div>
+            `;
+        });
+        
+        searchResults.innerHTML = html;
+        searchResults.classList.add("show");
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!searchBox.contains(e.target)) {
+            searchBox.classList.remove("active");
+            searchBtn.classList.remove("active");
+            searchInput.classList.remove("active");
+            searchResults.classList.remove("show");
+            searchInput.value = "";
+        }
+    });
+}
+
+// Cart functionality
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function updateCartCount() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountEl = document.getElementById('shared-cart-count');
+    if (cartCountEl) {
+        cartCountEl.textContent = count;
+        if (count > 0) {
+            cartCountEl.style.display = 'flex';
+        } else {
+            cartCountEl.style.display = 'none';
+        }
+    }
+}
+
+const cartButton = document.getElementById('shared-cart-button');
+if (cartButton) {
+    cartButton.addEventListener('click', () => {
+        window.location.href = '../Marketplace/marketplace.html';
+    });
+}
+
+updateCartCount();
+
+window.addEventListener('storage', (e) => {
+    if (e.key === 'cart') {
+        cart = JSON.parse(e.newValue) || [];
+        updateCartCount();
+    }
+});
