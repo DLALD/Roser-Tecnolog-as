@@ -1191,7 +1191,9 @@ if (slides.length > 0) {
 
 // Categories Navigation
 function goToCategory(category) {
-    window.location.href = `marketplace.html?category=${category}`;
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    const up = parts.length > 1 ? '../'.repeat(parts.length - 1) : '';
+    window.location.href = `${up}Marketplace/marketplace.html?category=${encodeURIComponent(category)}`;
 }
 
 let currentCategorySlide = 0;

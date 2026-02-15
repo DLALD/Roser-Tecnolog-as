@@ -169,44 +169,49 @@ body {
     fill: #fff;
 }
 
-.cart-button {
+.cart-icon {
     position: relative;
-    background: none;
-    border: none;
     cursor: pointer;
-    padding: 8px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    color: #2c3e50;
+    margin-left: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.cart-button:hover {
-    background: rgba(33, 150, 243, 0.1);
-}
-
-.cart-icon {
-    width: 24px;
-    height: 24px;
+.cart-icon:hover {
+    background: #e3f2fd;
     color: #2196F3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(33,150,243,0.25);
 }
 
 .cart-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff4444;
+    top: -2px;
+    right: -2px;
+    background: #f44336;
     color: white;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
+    width: 18px;
+    height: 18px;
     display: none;
     align-items: center;
     justify-content: center;
+    font-size: 11px;
     font-weight: bold;
+    border: 2px solid white;
+    text-align: center;
+    line-height: 14px;
 }
+
+.cart-count.show { display: flex; }
 
 .search-results {
     position: absolute;
@@ -613,6 +618,27 @@ body {
     border-radius: 8px;
     margin-bottom: 5px;
 }
+
+/* Make cart button match circular white icon with badge */
+.cart-button {
+    position: relative;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cart-button:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+
+.cart-count { position:absolute; top:6px; right:6px; background:#ff4444; color:#fff; border-radius:50%; width:18px; height:18px; font-size:11px; display:none; align-items:center; justify-content:center; font-weight:700; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.15); }
+.cart-count.show { display:flex; }
 
 .apps-header:hover {
     background-color: rgba(0,0,0,0.05);

@@ -6,138 +6,7 @@
     <title>Política de Privacidad - Roser Tecnologías</title>
     <link rel="icon" type="image/x-icon" href="../Imagenes/Rosero.png">
     <link rel="stylesheet" href="../styles.css">
-    <style>
-        .privacy-container {
-            max-width: 900px;
-            margin: 100px auto 0;
-            padding: 20px;
-        }
-
-        .privacy-header {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .privacy-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .privacy-logo img {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-        }
-
-        .privacy-logo h1 {
-            color: #2c5aa0;
-            font-size: 2rem;
-            margin: 0;
-        }
-
-        .privacy-content {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .intro {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 5px solid #2196F3;
-        }
-
-        .section {
-            margin-bottom: 35px;
-            padding: 25px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .section:hover {
-            background: #f8f9fa;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .section h2 {
-            color: #2c5aa0;
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #2196F3;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-number {
-            background: #2196F3;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 15px;
-            font-size: 0.9rem;
-        }
-
-        .section p, .section ul {
-            color: #555;
-            text-align: justify;
-            line-height: 1.7;
-        }
-
-        .section ul {
-            margin-left: 20px;
-            margin-top: 10px;
-        }
-
-        .section li {
-            margin-bottom: 5px;
-        }
-
-        .contact-info {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .privacy-footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            color: #666;
-        }
-
-        .logo-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .logo-link:hover {
-            text-decoration: none;
-        }
-    </style>
+    <link rel="stylesheet" href="politica-privacidad.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -151,12 +20,27 @@
                     <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
                     <h2>Roser Tecnologías</h2>
                 </a>
-                <a href="../marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
-                    <img src="../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
-                    <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
+                <a href="../Marketplace/marketplace.html" class="marketplace-link">
+                    <img src="../Marketplace/Iconos/Marketplace.png" alt="Marketplace" class="marketplace-icon">
+                    <span class="marketplace-text">Marketplace</span>
                 </a>
             </div>
             <div class="nav-right">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar productos..." id="shared-search-input">
+                        <div class="search-icon" id="shared-search-btn">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                            </svg>
+                        </div>
+                        <div class="search-results" id="search-results"></div>
+                    </div>
+                    <div class="cart-icon" id="shared-cart-button" role="button" aria-label="Abrir carrito">
+                        <img src="../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+                        <span class="cart-count" id="shared-cart-count">0</span>
+                    </div>
+                </div>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -209,7 +93,7 @@
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="prototype-subsection">
-                        <a href="#depie">
+                        <a href="../Productos-Roser/DePie/DePie.html">
                             <img src="../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
                             DePie
                         </a>
@@ -327,7 +211,9 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../shared-components.js"></script>
+    <script src="politica-privacidad.js"></script>
     <script src="../script.js"></script>
 </body>
 </html>

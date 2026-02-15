@@ -73,42 +73,49 @@ function addSharedComponents() {
                 fill: #fff;
             }
             
-            .cart-button {
+            .cart-icon {
                 position: relative;
-                background: none;
-                border: none;
                 cursor: pointer;
-                padding: 8px;
+                width: 40px;
+                height: 40px;
+                background: #fff;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: all 0.3s ease;
+                color: #2c3e50;
+                margin-left: 20px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
-            
-            .cart-button:hover {
-                background: rgba(0,0,0,0.1);
+
+            .cart-icon:hover {
+                background: #e3f2fd;
+                color: #2196F3;
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(33,150,243,0.25);
             }
-            
-            .cart-icon {
-                width: 24px;
-                height: 24px;
-            }
-            
+
             .cart-count {
                 position: absolute;
-                top: -5px;
-                right: -5px;
-                background: #ff4444;
+                top: -2px;
+                right: -2px;
+                background: #f44336;
                 color: white;
                 border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                font-size: 12px;
+                width: 18px;
+                height: 18px;
                 display: none;
                 align-items: center;
                 justify-content: center;
+                font-size: 11px;
                 font-weight: bold;
+                border: 2px solid white;
+                text-align: center;
+                line-height: 14px;
             }
+
+            .cart-count.show { display: flex; }
             
             .search-results {
                 position: absolute;
@@ -127,6 +134,32 @@ function addSharedComponents() {
             .search-results.show {
                 display: block;
             }
+
+            .search-shortcuts {
+                display: flex;
+                gap: 8px;
+                padding: 8px 4px;
+                margin-top: 8px;
+                flex-wrap: wrap;
+            }
+
+            .search-shortcut-item {
+                background: #f5f7ff;
+                color: #213547;
+                padding: 6px 10px;
+                border-radius: 999px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 2px 6px rgba(102,74,255,0.08);
+                border: 1px solid rgba(102,74,255,0.06);
+            }
+
+            .search-shortcut-item:hover { background: #664AFF; color: #fff; }
+            .search-shortcut-item { max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             
             .search-result-item {
                 padding: 12px 20px;
@@ -197,27 +230,34 @@ function initializeSharedSearch() {
     if (window.location.pathname.includes('marketplace.html')) {
         return;
     }
-    
     const searchBox = document.querySelector(".search-box");
     const searchBtn = document.querySelector("#shared-search-btn");
     const searchInput = document.querySelector("#shared-search-input");
     const searchResults = document.querySelector("#search-results");
-    
-    // Lista de productos
+    // shortcuts container (may be present in page)
+    const searchShortcuts = document.querySelector('#search-shortcuts');
+
+    // Build robust prefix to Marketplace relative paths
+    const _pathParts = window.location.pathname.split('/').filter(Boolean);
+    const _upPrefix = _pathParts.length > 1 ? '../'.repeat(_pathParts.length - 1) : '';
+
+    // Lista de productos (URLs construidas desde la ubicación actual)
     const products = [
-        { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
-        { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
-        { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
-        { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
-        { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
+        { name: "Organizador Magnético de Cables HexaStack H1-80", url: _upPrefix + "Marketplace/productos/producto-organizador-magnetico.html" },
+        { name: "Caja Táctica para Munición 9mm", url: _upPrefix + "Marketplace/productos/producto-caja-tactica.html" },
+        { name: "Organizador de Cables CCTV 4 Canales", url: _upPrefix + "Marketplace/productos/producto-caja-cables-cctv.html" },
+        { name: "Baluns CCTV 8 Canales", url: _upPrefix + "Marketplace/productos/producto-baluns-8-canales.html" },
+        { name: "Soporte QR para Negocios", url: _upPrefix + "Marketplace/productos/producto-soporte-qr.html" }
     ];
-    
+
     if (searchBtn && searchInput && searchBox && searchResults) {
         searchBtn.onclick = () => {
             searchBox.classList.add("active");
             searchBtn.classList.add("active");
             searchInput.classList.add("active");
             searchInput.focus();
+            // show shortcuts when opening the search and input is empty
+            if (searchShortcuts && searchInput.value.trim() === '') searchShortcuts.style.display = 'flex';
         };
         
         // Función para mostrar resultados
@@ -246,17 +286,40 @@ function initializeSharedSearch() {
         // Búsqueda en tiempo real
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase().trim();
-            
+
             if (searchTerm === '') {
                 searchResults.classList.remove("show");
+                if (searchShortcuts) searchShortcuts.style.display = 'flex';
                 return;
             }
-            
+
+            if (searchShortcuts) searchShortcuts.style.display = 'none';
+
             const filteredProducts = products.filter(product => 
                 product.name.toLowerCase().includes(searchTerm)
             );
-            
+
             showSearchResults(filteredProducts);
+        });
+
+        // Render shortcuts if container exists (hidden by default)
+        if (searchShortcuts) {
+            searchShortcuts.innerHTML = '';
+            products.slice(0,5).forEach(p => {
+                const a = document.createElement('a');
+                a.href = p.url;
+                a.className = 'search-shortcut-item';
+                a.textContent = p.name;
+                searchShortcuts.appendChild(a);
+            });
+            searchShortcuts.style.display = 'none';
+        }
+
+        // Hide shortcuts when clicking outside the search box
+        document.addEventListener('click', function(e){
+            if (searchShortcuts && searchBox && !searchBox.contains(e.target)) {
+                searchShortcuts.style.display = 'none';
+            }
         });
         
         // Cerrar búsqueda al hacer clic fuera
@@ -275,6 +338,10 @@ function initializeSharedSearch() {
 function initializeSharedCart() {
     // Sistema de carrito compartido
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Calcular ruta relativa robusta a marketplace.html desde cualquier subcarpeta
+    const _pathParts = window.location.pathname.split('/').filter(Boolean);
+    const _upPrefix = _pathParts.length > 1 ? '../'.repeat(_pathParts.length - 1) : '';
+    const marketplaceHref = _upPrefix + 'Marketplace/marketplace.html';
     
     function updateCartCount() {
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -294,12 +361,24 @@ function initializeSharedCart() {
     if (cartButton) {
         cartButton.addEventListener('click', (e) => {
             e.preventDefault();
-            // If a page defines openCartModal, prefer that. Otherwise navigate to marketplace.
+            // If a page defines openCartModal, prefer that.
             if (typeof window.openCartModal === 'function') {
                 try { window.openCartModal(); } catch (err) { console.warn(err); }
-            } else {
-                window.location.href = 'marketplace.html';
+                return;
             }
+
+            // If the page has a cart modal element, show it (handles index which uses direct jQuery modal)
+            const pageModal = document.getElementById('cartModal');
+            if (pageModal) {
+                try {
+                    if (window.$) $('#cartModal').show();
+                    else pageModal.style.display = 'block';
+                } catch (err) { console.warn(err); }
+                return;
+            }
+
+            // Fallback: navigate to marketplace
+            window.location.href = marketplaceHref;
         });
     }
 
@@ -309,10 +388,20 @@ function initializeSharedCart() {
             e.preventDefault();
             if (typeof window.openCartModal === 'function') {
                 try { window.openCartModal(); } catch (err) { console.warn(err); }
-            } else {
-                // If not available, try to navigate to marketplace (relative path)
-                window.location.href = 'marketplace.html';
+                return;
             }
+
+            const pageModal = document.getElementById('cartModal');
+            if (pageModal) {
+                try {
+                    if (window.$) $('#cartModal').show();
+                    else pageModal.style.display = 'block';
+                } catch (err) { console.warn(err); }
+                return;
+            }
+
+            // If not available, try to navigate to marketplace (relative path)
+            window.location.href = marketplaceHref;
         });
     });
     
@@ -365,3 +454,55 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Protección global contra invocaciones accidentales de checkout()
+(function(){
+    // Registro de interacción del usuario (click/tecla)
+    // Track page load time and last user interaction
+    window.__pageLoadedAt = Date.now();
+    window.__lastUserInteraction = Date.now();
+    // Listen to early pointer/mouse/touch events so inline onclick handlers see recent interaction
+    ['pointerdown','mousedown','click','keydown','touchstart'].forEach(evt => {
+        document.addEventListener(evt, function(){ window.__lastUserInteraction = Date.now(); }, { passive: true });
+    });
+
+    // Manejador que envuelve la implementación real de checkout
+    function makeSafeCheckout(original) {
+        return function safeCheckout(){
+            const now = Date.now();
+            const timeSinceLoad = now - (window.__pageLoadedAt || 0);
+            const timeSinceUser = now - (window.__lastUserInteraction || 0);
+
+            // Block only if call happens very early after load (first 3s)
+            // AND there was no recent user interaction (2s). This prevents
+            // accidental automatic openings on page load while allowing
+            // normal user clicks.
+            if (timeSinceLoad < 3000 && timeSinceUser > 2000) {
+                console.warn('checkout() bloqueado: llamada temprana sin interacción');
+                return;
+            }
+
+            return original.apply(this, arguments);
+        };
+    }
+
+    // Si ya existe, envolverla; si se define después, intentar envolverla más tarde
+    if (typeof window.checkout === 'function') {
+        window.checkout = makeSafeCheckout(window.checkout);
+    } else {
+        // Vigilar asignaciones a window.checkout (si la página las define después)
+        Object.defineProperty(window, 'checkout', {
+            configurable: true,
+            set(fn) {
+                if (typeof fn === 'function') {
+                    const wrapped = makeSafeCheckout(fn);
+                    // Reassign the wrapped function and stop intercepting
+                    Object.defineProperty(window, 'checkout', { value: wrapped, writable: true, configurable: true });
+                } else {
+                    Object.defineProperty(window, 'checkout', { value: fn, writable: true, configurable: true });
+                }
+            },
+            get() { return undefined; }
+        });
+    }
+})();

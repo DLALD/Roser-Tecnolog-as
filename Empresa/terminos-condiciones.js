@@ -1,4 +1,4 @@
-// Mobile menu toggle
+// Menu and dropdown behavior (similar to other Empresa pages)
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 const menuButton = document.querySelector('.menu-button');
@@ -12,7 +12,6 @@ if (hamburger && navMenu) {
     });
 }
 
-// Menu button toggle
 if (menuButton && sidebarDropdown) {
     menuButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -20,7 +19,6 @@ if (menuButton && sidebarDropdown) {
     });
 }
 
-// Section headers toggle
 sectionHeaders.forEach(sectionHeader => {
     sectionHeader.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -90,95 +88,6 @@ document.querySelectorAll('.sidebar-dropdown a:not(.apps-header)').forEach(n => 
     }
 }));
 
-// Smooth scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe cards and values
-document.querySelectorAll('.mission-card, .vision-card, .value-item').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-});
-
-// Search functionality
-const searchBox = document.querySelector(".search-box");
-const searchBtn = document.querySelector("#shared-search-btn");
-const searchInput = document.querySelector("#shared-search-input");
-const searchResults = document.querySelector("#search-results");
-
-const products = [
-    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
-    { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
-    { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
-    { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
-    { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
-];
-
-if (searchBtn && searchInput && searchBox && searchResults) {
-    searchBtn.onclick = () => {
-        searchBox.classList.add("active");
-        searchBtn.classList.add("active");
-        searchInput.classList.add("active");
-        searchInput.focus();
-    };
-    
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        
-        if (searchTerm === '') {
-            searchResults.classList.remove("show");
-            return;
-        }
-        
-        const filteredProducts = products.filter(product => 
-            product.name.toLowerCase().includes(searchTerm)
-        );
-        
-        if (filteredProducts.length === 0) {
-            searchResults.classList.remove("show");
-            return;
-        }
-        
-        let html = '';
-        filteredProducts.forEach(product => {
-            html += `
-                <div class="search-result-item" onclick="window.location.href='${product.url}'">
-                    <svg class="search-result-icon" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    ${product.name}
-                </div>
-            `;
-        });
-        
-        searchResults.innerHTML = html;
-        searchResults.classList.add("show");
-    });
-    
-    document.addEventListener('click', (e) => {
-        if (!searchBox.contains(e.target)) {
-            searchBox.classList.remove("active");
-            searchBtn.classList.remove("active");
-            searchInput.classList.remove("active");
-            searchResults.classList.remove("show");
-            searchInput.value = "";
-        }
-    });
-}
-
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -208,7 +117,6 @@ if (cartButton) {
 
 updateCartCount();
 
-// Cart display and actions
 function updateCartDisplay() {
     const cartBodyEl = document.getElementById('cartBody');
     if (!cartBodyEl) return;
@@ -293,8 +201,6 @@ window.closeCartModal = function() {
 }
 
 window.checkout = function() {
-    console.log('[DEBUG] checkout() called on mision-vision.js', { time: Date.now(), cartLength: cart.length });
-    console.trace();
     if (cart.length === 0) { alert('Tu carrito está vacío'); return; }
     const phone = '573113579437';
     let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
@@ -309,24 +215,40 @@ window.checkout = function() {
     window.open(url, '_blank');
 }
 
-// Debug: log clicks on sidebar links to find unintended WhatsApp triggers
-document.querySelectorAll('.sidebar-dropdown a').forEach(a => {
-    a.addEventListener('click', function(e) {
-        console.log('[DEBUG] sidebar link clicked:', this.href);
-    });
-});
-
-// Close modal on overlay click or ESC
-(function() {
-    function hideModal() { if (window.$) $('#cartModal').hide(); else { const m = document.getElementById('cartModal'); if (m) m.style.display = 'none'; } }
-    function onOverlayClick(e) { const modal = document.getElementById('cartModal'); if (!modal) return; if (e.target === modal) hideModal(); }
-    function onKeyDown(e) { if (e.key === 'Escape' || e.key === 'Esc') hideModal(); }
-    if (window.$) { $(document).on('click', onOverlayClick); $(document).on('keydown', onKeyDown); } else { document.addEventListener('click', onOverlayClick); document.addEventListener('keydown', onKeyDown); }
-})();
-
 window.addEventListener('storage', (e) => {
     if (e.key === 'cart') {
         cart = JSON.parse(e.newValue) || [];
         updateCartCount();
     }
 });
+
+// Close modal when clicking outside content or pressing ESC
+(function() {
+    const modalSelector = '#cartModal';
+
+    function hideModal() {
+        if (window.$) $(modalSelector).hide();
+        else {
+            const m = document.querySelector(modalSelector);
+            if (m) m.style.display = 'none';
+        }
+    }
+
+    function onOverlayClick(e) {
+        const modal = document.querySelector(modalSelector);
+        if (!modal) return;
+        if (e.target === modal) hideModal();
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') hideModal();
+    }
+
+    if (window.$) {
+        $(document).on('click', function(e) { onOverlayClick(e); });
+        $(document).on('keydown', function(e) { onKeyDown(e); });
+    } else {
+        document.addEventListener('click', onOverlayClick);
+        document.addEventListener('keydown', onKeyDown);
+    }
+})();

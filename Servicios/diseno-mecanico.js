@@ -82,7 +82,7 @@ function cotizarServicio(serviceId) {
     if (!service) return;
     
     const message = `¡Hola! Me gustaría solicitar cotización para:\n\n${service.name}\n${service.description}\n\n¿Podrían proporcionarme más información?`;
-    const whatsappUrl = `https://wa.me/573213698788?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
 
@@ -354,16 +354,25 @@ document.getElementById('btnQuote').addEventListener('click', () => {
     }
     
     let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
-    cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name}`;
-        if (item.quantity > 1) {
-            message += ` (x${item.quantity})`;
+    let total = 0;
+    
+    cart.forEach(item => {
+        const itemTotal = (item.price || 0) * item.quantity;
+        total += itemTotal;
+        message += `• ${item.name}\n  Cantidad: ${item.quantity}`;
+        if (item.price > 0) {
+            message += `\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP`;
         }
-        message += '\n';
+        message += '\n\n';
     });
+    
+    if (total > 0) {
+        message += `Total: $${total.toLocaleString('es-CO')} COP\n\n`;
+    }
+    
     message += '\n¿Podrían proporcionarme más información?';
     
-    const whatsappUrl = `https://wa.me/573213698788?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 });
 
@@ -402,7 +411,7 @@ document.querySelectorAll('.prototypes-header, .apps-header').forEach(header => 
 // WhatsApp Floating Button
 $(document).ready(function() {
     $('#BotonWA').floatingWhatsApp({
-        phone: '573213698788',
+        phone: '573113579437',
         headerTitle: 'Roser Tecnologías',
         popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
         showPopup: true,

@@ -323,13 +323,13 @@ window.checkout = function() {
   }
   
   const phone = '573113579437';
-  let message = '¡Hola! Quiero realizar el siguiente pedido:\\n\\n';
+  let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
   let total = 0;
   
   cart.forEach(item => {
     const itemTotal = item.price * item.quantity;
     total += itemTotal;
-    message += `• ${item.name}\\n  Cantidad: ${item.quantity}\\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\\n\\n`;
+    message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
   });
   
   message += `Total: $${total.toLocaleString('es-CO')} COP`;

@@ -351,3 +351,107 @@ window.addEventListener('click', function(event) {
     closeCartModal();
   }
 });
+
+// Solución para botones no clickeables y funcionalidad de cotización
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Corrección de estilos (Z-Index)
+    const style = document.createElement('style');
+    style.textContent = `
+        .hero-text, .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        .hero-text a, .hero-text button, .whatsapp-button, .btn-primary, .btn {
+            position: relative;
+            z-index: 20 !important;
+            cursor: pointer;
+        }
+        .hero-image, .model-viewer-container {
+            z-index: 1;
+        }
+        
+        /* Corrección del Modal del Carrito (Estilo Index - Optimizado) */
+        #cartModal .modal-content {
+            max-width: 600px !important;
+            width: 90% !important;
+            margin: 5% auto !important;
+            max-height: 85vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 0 !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+        }
+
+        #cartModal .cart-header {
+            padding: 20px 25px !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            flex-shrink: 0;
+            background: #fff;
+            position: relative;
+        }
+
+        #cartModal .cart-header h2 {
+            font-size: 1.5rem !important;
+            margin: 0 !important;
+            color: #333;
+        }
+
+        #cartModal .cart-body {
+            padding: 20px 25px !important;
+            overflow-y: auto !important;
+            flex-grow: 1;
+            overscroll-behavior: contain;
+        }
+
+        #cartModal .cart-footer {
+            padding: 20px 25px !important;
+            border-top: 1px solid #f0f0f0 !important;
+            flex-shrink: 0;
+            background: #f9f9f9;
+        }
+
+        #cartModal .close {
+            top: 20px !important;
+            right: 25px !important;
+            font-size: 28px !important;
+            line-height: 1 !important;
+            z-index: 10;
+            color: #aaa;
+            opacity: 1;
+        }
+        
+        #cartModal .close:hover {
+            color: #333;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. Asignar funcionalidad al botón de Cotizar (Igual que en Diseño 3D)
+    const heroBtns = document.querySelectorAll('.hero-text a, .hero-text button, .whatsapp-button, a[href="#cotizar"]');
+    heroBtns.forEach(btn => {
+        // Verificar si es un botón de cotizar
+        if (btn.textContent.toLowerCase().includes('cotizar') || btn.classList.contains('whatsapp-button') || btn.getAttribute('href') === '#cotizar') {
+            
+            const phone = '573113579437';
+            const message = 'Hola, me interesa solicitar una cotización para Diseño Eléctrico.';
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+            
+            // Si es un enlace <a>, actualizamos el href directamente para que funcione nativamente
+            if (btn.tagName === 'A') {
+                btn.href = url;
+                btn.target = '_blank';
+            }
+            
+            btn.addEventListener('click', function(e) {
+                // Si es un botón (no enlace), abrimos la ventana manualmente
+                if (this.tagName !== 'A') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(url, '_blank');
+                }
+            });
+        }
+    });
+});

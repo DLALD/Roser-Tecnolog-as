@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DePie - Roser Tecnologías</title>
+  <link rel="icon" type="image/x-icon" href="../../Imagenes/Rosero.png">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../Marketplace/marketplace.css">
+  <link rel="stylesheet" href="DePie.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Floating WhatsApp (optional, used across site) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+</head>
+<body>
+  <div id="BotonWA"></div>
+
+  <!-- Navbar (copied from index, adapted paths & IDs) -->
+  <nav class="navbar">
+	  <div class="nav-container">
+		  <div class="menu-button">
+			  <span class="menu-lines">☰</span>
+		  </div>
+		  <div class="nav-logo">
+			  <a href="../../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+				  <img src="../../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+				  <h2>Roser Tecnologías</h2>
+			  </a>
+			  <a href="../../Marketplace/marketplace.html" class="marketplace-link" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease; white-space: nowrap;">
+				  <img src="../../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
+				  <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
+			  </a>
+		  </div>
+		  <ul class="nav-menu"></ul>
+		  <div class="nav-right">
+			  <div class="search-box">
+				  <input type="text" placeholder="Buscar productos..." id="shared-search-input">
+				  <div class="search-icon" id="shared-search-btn">
+					  <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+				  </div>
+				  <div class="cancel-icon"></div>
+				  <div class="search-results" id="search-results"></div>
+				  <div class="search-shortcuts" id="search-shortcuts" aria-hidden="false"></div>
+			  </div>
+		  </div>
+		  <div class="cart-icon" id="shared-cart-button" role="button" aria-label="Abrir carrito" onclick="event.preventDefault(); event.stopPropagation(); openCartModal();" style="position: relative; cursor: pointer; display: flex; align-items: center; margin-left: 15px; min-width: 40px; min-height: 40px; justify-content: center;">
+			  <img src="../../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+			  <span class="cart-count" id="shared-cart-count" style="position: absolute; top: 2px; right: 2px; background: #ff4444; color: white; border-radius: 50%; width: 16px; height: 16px; display: none; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">0</span>
+		  </div>
+		  <div class="hamburger"><span></span><span></span><span></span></div>
+	  </div>
+
+	  <!-- Dropdown Menu (keep same links, adjust relative paths) -->
+	  <div class="sidebar-dropdown">
+		  <div class="dropdown-section">
+			  <div class="section-header">
+				  <img src="../../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+				  <span class="section-title">Servicios</span>
+				  <span class="section-arrow">▼</span>
+			  </div>
+			  <div class="subsection">
+				  <a href="../../Servicios/disenos-3.html"><img src="../../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">Diseños 3D</a>
+				  <a href="../../Servicios/impresiones-3d.html"><img src="../../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">Impresión 3D</a>
+				  <a href="../../Servicios/diseno-electrico.html"><img src="../../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">Diseño Eléctrico</a>
+				  <a href="../../Servicios/diseno-mecanico.html"><img src="../../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">Diseño Mecánico</a>
+				  <a href="../../Servicios/fabricacion-sistemas-mecanicos.html"><img src="../../Imagenes/F_mecanico.png" alt="Fabricación" class="subsection-icon">Fabricación de Sistemas Mecánicos</a>
+			  </div>
+		  </div>
+		  <div class="dropdown-section">
+			  <div class="section-header">
+				  <img src="../../Imagenes/PTS.png" alt="Productos" class="section-icon">
+				  <span class="section-title">Productos</span>
+				  <span class="section-arrow">▼</span>
+			  </div>
+			  <div class="subsection">
+				  <div class="prototypes-header"><img src="../../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">Prototipos<span class="section-arrow">▼</span></div>
+				  <div class="prototype-subsection"><a href="DePie.html"><img src="../../Imagenes/ceo.png" alt="DePie" class="subsection-icon">DePie</a></div>
+				  <div class="apps-header" data-toggle="apps"><img src="../../Imagenes/apps.png" alt="Apps" class="subsection-icon">Apps<span class="section-arrow">▼</span></div>
+				  <div class="sub-subsection"><a href="../../Productos-Roser/3dcost/3dcost.html"><img src="../../Imagenes/3D.png" alt="3D" class="subsection-icon">3DCost</a></div>
+			  </div>
+		  </div>
+		  <div class="dropdown-section">
+			  <div class="section-header"><img src="../../Imagenes/empresa.png" alt="Empresa" class="section-icon"><span class="section-title">Empresa</span><span class="section-arrow">▼</span></div>
+			  <div class="subsection">
+				  <a href="../../Empresa/conocenos.html"><img src="../../Imagenes/ceo.png" alt="CEO" class="subsection-icon">Conocenos</a>
+				  <a href="../../Empresa/mision-vision.html"><img src="../../Imagenes/vision.png" alt="Vision" class="subsection-icon">Misión y Visión</a>
+				  <a href="../../Empresa/terminos-condiciones.html"><img src="../../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">Términos y Condiciones</a>
+				  <a href="../../Empresa/politica-privacidad.html" target="_self"><img src="../../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">Privacidad</a>
+			  </div>
+		  </div>
+	  </div>
+  </nav>
+
+  
+  <!-- Cart modal (copied from Marketplace) -->
+  <div id="cartModal" class="modal">
+	  <div class="modal-content cart-modal-content">
+		  <span class="close" onclick="closeCartModal()">&times;</span>
+		  <div class="cart-header"><h2>Carrito de Compras</h2></div>
+		  <div id="cartBody" class="cart-body"><p class="empty-cart">Tu carrito está vacío</p></div>
+		  <div class="cart-footer"><div class="cart-total"><span>Total:</span><span id="cart-total">$0 COP</span></div><button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button></div>
+	  </div>
+  </div>
+
+	<!-- Promotional content for DePie prototype -->
+	<main class="promo-main">
+		<section class="promo-hero">
+			<div class="promo-container">
+				<div class="hero-copy">
+					<h1><img src="../../Imagenes/Rosero.png" alt="Roser Logo" class="logo-roser-anim" style="height: 1.5em; vertical-align: middle; margin-right: 15px;">DePie — Soporte modular para prototipos</h1>
+					<p class="lead">Un prototipo en desarrollo que facilita pruebas, sujeción y organización de componentes. Ligero, modular y optimizado para fabricación aditiva.</p>
+					<div class="hero-cta">
+						<button class="btn primary" id="openVideoBtn">Ver video</button>
+						<a class="btn outline" href="#gallery">Ver galería</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="promo-about" id="about">
+			<div class="container">
+				<h2>Sobre DePie</h2>
+				<p>DePie nace como una solución para ingenieros, makers y equipos de I+D. Su diseño modular permite adaptarlo a diferentes pruebas, sujeciones magnéticas y montaje rápido.</p>
+				<div class="features">
+					<div class="feature"><strong>Modular</strong><p>Intercambiable según necesidad de prueba.</p></div>
+					<div class="feature"><strong>Impresión 3D</strong><p>Diseñado para fabricación aditiva con materiales estándar.</p></div>
+					<div class="feature"><strong>Integrable</strong><p>Acepta sensores y fijaciones para testeo.</p></div>
+				</div>
+			</div>
+		</section>
+
+		<section class="promo-gallery" id="gallery">
+			<div class="container">
+				<h2>Galería</h2>
+				<p class="muted">Imágenes reales del prototipo y variantes.</p>
+				<div class="carousel-container" id="depieCarouselContainer">
+					<!-- Quick navigation sidebar -->
+					<div class="design-thumbnails" id="carouselThumbs">
+						<!-- Thumbnails will be generated by JS -->
+					</div>
+					
+					<div class="carousel-wrapper">
+						<div class="carousel-slides" id="depieCarousel">
+							<!-- Slides generated by JS or static -->
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/1.JPG" alt="DePie Vista Frontal" class="design-img"></div>
+								<div class="design-info"><h3>Vista Frontal</h3><p>Diseño compacto y modular para fácil integración.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/2.JPEG" alt="DePie Detalle" class="design-img"></div>
+								<div class="design-info"><h3>Detalle de Sujeción</h3><p>Mecanismo de ajuste rápido para componentes.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/3.JPEG" alt="DePie Lateral" class="design-img"></div>
+								<div class="design-info"><h3>Vista Lateral</h3><p>Perfil optimizado para impresión 3D sin soportes excesivos.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/4.JPEG" alt="DePie Montaje" class="design-img"></div>
+								<div class="design-info"><h3>Montaje Versátil</h3><p>Compatible con diversos sensores y actuadores.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/5.JPEG" alt="DePie Estructura" class="design-img"></div>
+								<div class="design-info"><h3>Estructura Robusta</h3><p>Diseñado para soportar cargas de prueba en entornos de laboratorio.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/6.JPEG" alt="DePie Variantes" class="design-img"></div>
+								<div class="design-info"><h3>Variantes Modulares</h3><p>Diferentes configuraciones para adaptarse a tu proyecto.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/7.JPEG" alt="DePie Aplicación" class="design-img"></div>
+								<div class="design-info"><h3>Aplicación Real</h3><p>Ejemplo de uso en entorno de pruebas.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/8.JPEG" alt="DePie Conexiones" class="design-img"></div>
+								<div class="design-info"><h3>Conexiones</h3><p>Puertos de acceso para cableado organizado.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/9.JPEG" alt="DePie Base" class="design-img"></div>
+								<div class="design-info"><h3>Base Estable</h3><p>Base amplia para mayor estabilidad durante las pruebas.</p></div>
+							</div>
+							<div class="carousel-slide">
+								<div class="design-image"><img src="Depie/10.JPEG" alt="DePie Componentes" class="design-img"></div>
+								<div class="design-info"><h3>Componentes</h3><p>Despiece de los elementos que conforman el sistema.</p></div>
+							</div>
+							<!-- More slides can be added similarly -->
+						</div>
+						
+						<button class="carousel-btn prev-btn" id="carouselPrev">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+							</svg>
+						</button>
+						<button class="carousel-btn next-btn" id="carouselNext">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+				
+				<!-- Indicators below carousel -->
+				<div class="carousel-indicators" id="carouselIndicators">
+					<!-- Indicators generated by JS -->
+				</div>
+			</div>
+		</section>
+
+		<section class="promo-contact" id="contacto">
+			<div class="container">
+				<div class="contact-container">
+					<div class="contact-info">
+						<h2>Contáctanos</h2>
+						<p class="lead">¿Tienes preguntas sobre DePie? Escríbenos y te responderemos a la brevedad.</p>
+					</div>
+					<form id="contactForm" class="contact-form">
+						<div class="form-group">
+							<input type="text" id="contactName" placeholder="Tu Nombre" required>
+						</div>
+						<div class="form-group">
+							<input type="text" id="contactSubject" placeholder="Asunto" required>
+						</div>
+						<div class="form-group">
+							<textarea id="contactMessage" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
+						</div>
+						<button type="submit" class="whatsapp-btn">
+							<svg class="whatsapp-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/></svg>
+							Enviar cotización por WhatsApp
+						</button>
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- Lightbox modal for images -->
+	<div id="lightbox" class="lightbox" aria-hidden="true">
+		<div class="lightbox-inner">
+			<button class="lightbox-close" id="lightboxClose">×</button>
+			<img id="lightboxImg" src="" alt="">
+		</div>
+	</div>
+
+	<!-- Video modal -->
+	<div id="videoModal" class="lightbox" aria-hidden="true">
+		<div class="lightbox-inner video-inner">
+			<button class="lightbox-close" id="videoModalClose">×</button>
+			<video id="videoModalPlayer" controls src="Depie/DePie.mp4" playsinline></video>
+		</div>
+	</div>
+
+  <!-- Scripts -->
+  <script src="../../shared-components.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
+	<script src="DePie.js"></script>
+</body>
+</html>

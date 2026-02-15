@@ -19,7 +19,7 @@
                     <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
                     <h2>Roser Tecnologías</h2>
                 </a>
-                <a href="../marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
+                <a href="../Marketplace/marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
                     <img src="../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
                     <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
                 </a>
@@ -36,12 +36,10 @@
                     </div>
                     <div class="search-results" id="search-results"></div>
                 </div>
-                <button class="cart-button" id="shared-cart-button">
-                    <svg class="cart-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-                    </svg>
+                <div class="cart-icon" id="shared-cart-button" role="button" aria-label="Abrir carrito">
+                    <img src="../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
                     <span class="cart-count" id="shared-cart-count">0</span>
-                </button>
+                </div>
             </div>
             <div class="hamburger">
                 <span></span>
@@ -94,7 +92,7 @@
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="prototype-subsection">
-                        <a href="#depie">
+                        <a href="../Productos-Roser/DePie/DePie.html">
                             <img src="../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
                             DePie
                         </a>
@@ -209,6 +207,27 @@
         <p>Roser Tecnologías</p>
         <p>© 2025 Todos los derechos reservados</p>
     </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Cart modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            <div id="cartBody" class="cart-body">
+                <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0 COP</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../shared-components.js"></script>
     <script src="mision-vision.js"></script>
