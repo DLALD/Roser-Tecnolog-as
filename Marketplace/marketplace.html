@@ -260,6 +260,261 @@
                 padding: 0 25px;
             }
         }
+
+        /* Estilos Mejorados del Marketplace */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .marketplace-layout {
+            display: block;
+            max-width: 1400px;
+            margin: 100px auto 60px;
+            padding: 0 20px;
+        }
+
+        /* Sidebar (Estilo Drawer/Menú lateral) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 3000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .sidebar.open { left: 0; }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.3rem;
+            color: #1976d2;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 12px 15px;
+            color: #546e7a;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: #e3f2fd;
+            color: #1976d2;
+            transform: translateX(5px);
+        }
+
+        /* Grid de Productos */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Tarjeta de Producto */
+        .product-item {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUpCard 0.6s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
+        }
+
+        @keyframes fadeInUpCard {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: rgba(33, 150, 243, 0.3);
+        }
+
+        .product-image {
+            height: 260px;
+            background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-product-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+
+        .product-item:hover .main-product-img {
+            transform: scale(1.1) translateY(-5px);
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .product-info h3 {
+            font-size: 1.15rem;
+            color: #1a237e;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+        
+        .product-item:hover .product-info h3 {
+            color: #2196F3;
+        }
+
+        .add-to-cart-btn-grid {
+            margin-top: auto;
+            width: 100%;
+            background: white;
+            color: #2196F3;
+            border: 2px solid #2196F3;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .add-to-cart-btn-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: #2196F3;
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .add-to-cart-btn-grid:hover::before {
+            width: 100%;
+        }
+
+        .add-to-cart-btn-grid:hover {
+            color: white;
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+            transform: translateY(-2px);
+            border-color: #2196F3;
+        }
+        
+        .add-to-cart-btn-grid:active {
+            transform: translateY(0);
+        }
+        
+        /* Estilos para filtro de precio */
+        .price-filter-group {
+            padding: 10px 0;
+        }
+        
+        .price-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .price-input-row input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .apply-filter-btn {
+            width: 100%;
+            padding: 8px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .apply-filter-btn:hover {
+            background: #1565c0;
+        }
+        
+        .clear-filter-btn {
+            width: 100%;
+            padding: 8px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .clear-filter-btn:hover {
+            background: #d32f2f;
+        }
     </style>
     
     <style>
@@ -531,15 +786,44 @@
             </div>
             
             <div class="sidebar-section">
+                <h3 class="sidebar-title">Filtrar por Precio</h3>
+                <div class="price-filter-group">
+                    <div class="price-input-row">
+                        <input type="text" id="minPrice" placeholder="Mín">
+                        <span>-</span>
+                        <input type="text" id="maxPrice" placeholder="Máx">
+                    </div>
+                    <button id="clearFiltersBtn" class="clear-filter-btn">Limpiar Filtros</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
                 <h3 class="sidebar-title">Buscar por Categoría</h3>
                 <ul class="sidebar-list">
-                    <li><a href="#" class="sidebar-link category-link active" data-category="all">Todos los Productos</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="impresion-3d">Productos de Impresión 3D</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="gaming">Gaming</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="organizacion">Organización</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="seguridad">Seguridad</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="apps">Aplicaciones</a></li>
-                    <li><a href="#" class="sidebar-link category-link" data-category="servicios">Servicios</a></li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link active" data-category="all">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                            <span>Todos los Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="impresion-3d">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15zM5 15.91l6 3.38v-6.71L5 9.21v6.7zM13 12.58v6.71l6-3.38v-6.7l-6 3.37z"/></svg>
+                            <span>Productos de Impresión 3D</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="organizacion">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                            <span>Organización</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="seguridad">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                            <span>Seguridad</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </aside>
@@ -555,7 +839,6 @@
                 <div class="product-item" data-category="impresion-3d organizacion">
                     <div class="product-image" onclick="window.location.href='productos/producto-organizador-magnetico.html'">
                         <img src="../Marketplace/Organizador Magnético De Cables Hasta 80cm Hexastack H1-80/Negro/1.jpg" alt="Organizador Magnético" class="main-product-img">
-                        <div class="product-badge">Nuevo</div>
                     </div>
                     <div class="product-info">
                         <h3 onclick="window.location.href='productos/producto-organizador-magnetico.html'" style="cursor: pointer;">Organizador Magnético De Cables Hasta 80cm Hexastack H1-80</h3>
@@ -572,7 +855,6 @@
                 <div class="product-item" data-category="impresion-3d seguridad">
                     <div class="product-image" onclick="window.location.href='productos/producto-caja-tactica.html'">
                         <img src="../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" alt="Caja Táctica" class="main-product-img">
-                        <div class="product-badge">Nuevo</div>
                     </div>
                     <div class="product-info">
                         <h3 onclick="window.location.href='productos/producto-caja-tactica.html'" style="cursor: pointer;">Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1</h3>
@@ -589,7 +871,6 @@
                 <div class="product-item" data-category="impresion-3d organizacion seguridad">
                     <div class="product-image" onclick="window.location.href='productos/producto-caja-cables-cctv.html'">
                         <img src="../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Baluns Y Borneras Pequeño" class="main-product-img">
-                        <div class="product-badge">Nuevo</div>
                     </div>
                     <div class="product-info">
                         <h3 onclick="window.location.href='productos/producto-caja-cables-cctv.html'" style="cursor: pointer;">Caja Para Cables CCTV Cámaras De Seguridad</h3>
@@ -606,7 +887,6 @@
                 <div class="product-item" data-category="impresion-3d organizacion seguridad">
                     <div class="product-image" onclick="window.location.href='productos/producto-baluns-8-canales.html'">
                         <img src="../Marketplace/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/1.png" alt="Baluns Y Borneras" class="main-product-img">
-                        <div class="product-badge">Nuevo</div>
                     </div>
                     <div class="product-info">
                         <h3 onclick="window.location.href='productos/producto-baluns-8-canales.html'" style="cursor: pointer;">Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales</h3>
@@ -623,7 +903,6 @@
                 <div class="product-item" data-category="impresion-3d servicios">
                     <div class="product-image" onclick="window.location.href='productos/producto-soporte-qr.html'">
                         <img src="../Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR" class="main-product-img">
-                        <div class="product-badge">Nuevo</div>
                     </div>
                     <div class="product-info">
                         <h3 onclick="window.location.href='productos/producto-soporte-qr.html'" style="cursor: pointer;">Soporte QR para Negocios</h3>
@@ -719,55 +998,49 @@
                 }
             });
             
+            // Función unificada de filtrado
+            function filterProducts() {
+                const activeCategoryBtn = $('.category-link.active');
+                
+                const minPrice = parseInt($('#minPrice').val().replace(/\./g, '')) || 0;
+                const maxPrice = parseInt($('#maxPrice').val().replace(/\./g, '')) || 999999999;
+                
+                $('.product-item').each(function() {
+                    const item = $(this);
+                    const priceText = item.find('.product-price').text();
+                    const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+                    const matchesPrice = price >= minPrice && price <= maxPrice;
+                    
+                    let matchesContext = true;
+                    
+                    if (activeCategoryBtn.length) {
+                        const category = activeCategoryBtn.data('category');
+                        const itemCategories = item.data('category') || '';
+                        matchesContext = category === 'all' || itemCategories.includes(category);
+                    }
+                    
+                    if (matchesContext && matchesPrice) {
+                        item.fadeIn();
+                    } else {
+                        item.fadeOut();
+                    }
+                });
+            }
+            
             // Categories filter functionality
             $('.category-link').click(function(e) {
                 e.preventDefault();
                 const category = $(this).data('category');
+                const categoryName = $(this).find('span').text();
                 
                 // Update active button
                 $('.category-link').removeClass('active');
                 $(this).addClass('active');
                 
-                // Filter products
-                if (category === 'all') {
-                    $('.product-item').show();
-                } else {
-                    $('.product-item').hide();
-                    $(`.product-item[data-category*="${category}"]`).show();
-                }
-            });
-            
-            // Featured products functionality
-            $('.featured-link').click(function(e) {
-                e.preventDefault();
-                const featured = $(this).data('featured');
+                // Update title
+                $('.marketplace-content h2').text(category === 'all' ? 'Productos Disponibles' : categoryName);
                 
-                // Remove active from categories
-                $('.category-link').removeClass('active');
-                $('.featured-link').removeClass('active');
-                $(this).addClass('active');
-                
-                // Show products based on featured type
-                $('.product-item').show();
-                
-                if (featured === 'bestsellers') {
-                    // Show products with "Nuevo" badge or high prices
-                    $('.product-item').hide();
-                    $('.product-item').filter(function() {
-                        return $(this).find('.product-badge').text() === 'Nuevo' || 
-                               parseInt($(this).find('.product-price').text().replace(/[^0-9]/g, '')) > 80000;
-                    }).show();
-                } else if (featured === 'new') {
-                    // Show only new products
-                    $('.product-item').hide();
-                    $('.product-item').filter(function() {
-                        return $(this).find('.product-badge').text() === 'Nuevo';
-                    }).show();
-                } else if (featured === 'trending') {
-                    // Show gaming and 3D printing products
-                    $('.product-item').hide();
-                    $(`.product-item[data-category*="gaming"], .product-item[data-category*="impresion-3d"]`).show();
-                }
+                filterProducts();
             });
             
 
@@ -896,6 +1169,41 @@
                 
                 subsection.toggleClass('active');
                 arrow.css('transform', subsection.hasClass('active') ? 'rotate(180deg)' : 'rotate(0deg)');
+            });
+
+            // Animación escalonada para productos
+            $('.product-item').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+            });
+            
+            // Filtro de precio automático al escribir
+            $('#minPrice, #maxPrice').on('input', function() {
+                // Formatear con puntos de miles
+                let value = $(this).val().replace(/\D/g, '');
+                if (value) {
+                    value = parseInt(value).toLocaleString('es-CO');
+                }
+                $(this).val(value);
+                filterProducts();
+            });
+            
+            // Funcionalidad de limpiar filtros
+            $('#clearFiltersBtn').click(function() {
+                // Resetear inputs
+                $('#minPrice').val('');
+                $('#maxPrice').val('');
+                
+                // Resetear categorías a "Todos"
+                $('.category-link').removeClass('active');
+                $('.category-link[data-category="all"]').addClass('active');
+                $('.marketplace-content h2').text('Productos Disponibles');
+                
+                filterProducts();
+                
+                if (window.innerWidth <= 768) {
+                    $('#sidebar').removeClass('open');
+                    $('#sidebar-overlay').removeClass('active');
+                }
             });
         });
         

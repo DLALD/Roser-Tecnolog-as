@@ -6,12 +6,21 @@
     <title>Soporte QR para Negocios - Roser Tecnologías</title>
     <link rel="icon" type="image/x-icon" href="../../Imagenes/Rosero.png">
     <link rel="stylesheet" href="../../styles.css">
-    <link rel="stylesheet" href="../../marketplace.css">
     <link rel="stylesheet" href="producto.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
     
     <style>
         /* Estilos para el zoom estilo Amazon */
+        .product-gallery {
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+        
         .main-image-container {
             position: relative;
             cursor: crosshair;
@@ -77,9 +86,77 @@
                 display: none;
             }
         }
+        
+        /* Related Products */
+        .related-products {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        
+        .related-products h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .related-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .related-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .related-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        
+        .related-item h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .related-item .price {
+            color: #2196F3;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* Animación botón carrito */
+        .add-to-cart-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart-btn.added {
+            background-color: #4CAF50 !important;
+            border-color: #4CAF50 !important;
+            color: white !important;
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
+    <!--Div donde estará el botón de WhatsApp-->
+    <div id="BotonWA"></div>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -99,34 +176,26 @@
             <ul class="nav-menu"></ul>
             <div class="nav-right">
             </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
-    <!-- Product Page -->
+    <!-- Product Page Content -->
     <div class="product-page">
-        <div class="product-container" style="grid-template-columns: 1fr 1fr 350px;">
-            <!-- Gallery Section -->
+        <div class="product-container">
+            <!-- Product Images -->
             <div class="product-gallery">
-                <div class="thumbnails">
-                    <div class="thumbnail video-thumbnail active" data-type="video" data-src="../../Marketplace/Soporte QR/Soporte QR Clip Mercadolibre.mp4">
-                        <div class="play-icon">▶</div>
-                        <img src="../../Marketplace/Soporte QR/QR1.jpg" alt="Video promocional">
-                    </div>
-                    <div class="thumbnail" data-index="0">
-                        <img src="../../Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR 1">
-                    </div>
-                    <div class="thumbnail" data-index="1">
-                        <img src="../../Marketplace/Soporte QR/QR2.JPG" alt="Soporte QR 2">
-                    </div>
-                    <div class="thumbnail" data-index="2">
-                        <img src="../../Marketplace/Soporte QR/QR3.jpg" alt="Soporte QR 3">
-                    </div>
+                <div class="thumbnail-gallery-vertical" id="thumbnailGallery">
+                    <img src="../../Marketplace/Soporte QR/QR1.jpg" class="thumbnail active" onclick="changeMainImage(this)">
+                    <img src="../../Marketplace/Soporte QR/QR2.JPG" class="thumbnail" onclick="changeMainImage(this)">
+                    <img src="../../Marketplace/Soporte QR/QR3.jpg" class="thumbnail" onclick="changeMainImage(this)">
                 </div>
                 <div class="main-image-container" id="mainImageContainer">
-                    <video id="mainVideo" class="main-video" controls style="display: block;">
-                        <source src="../../Marketplace/Soporte QR/Soporte QR Clip Mercadolibre.mp4" type="video/mp4">
-                    </video>
-                    <img id="mainImage" class="main-image" src="../../Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR" style="display: none;">
+                    <img src="../../Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR" class="main-product-image" id="mainImage">
                     <div class="zoom-lens" id="zoomLens"></div>
                 </div>
                 <div class="zoom-result" id="zoomResult">
@@ -134,15 +203,24 @@
                 </div>
             </div>
 
-            <!-- Product Details -->
+            <!-- Product Info -->
             <div class="product-details">
                 <h1>Soporte QR para Negocios</h1>
-                <div class="product-price">$98.000 COP</div>
+                
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(24 valoraciones)</span>
+                </div>
+
+                <div class="product-price-section">
+                    <span class="price">$98.000 COP</span>
+                </div>
+
                 <div class="product-delivery-info">
                     <p>📦 <strong>Preparación:</strong> 5 días hábiles</p>
                     <p>🚚 <strong>Envío:</strong> Disponible a todo Colombia</p>
                 </div>
-                
+
                 <div class="product-description">
                     <h3>Acerca de este producto</h3>
                     <ul>
@@ -154,40 +232,82 @@
                         <li>Perfecto para mostradores y puntos de venta</li>
                     </ul>
                 </div>
-            </div>
-            
-            <!-- Product Actions Sidebar -->
-            <div class="product-actions-sidebar">
-                <button class="add-to-cart-btn" onclick="addToCartProduct()">Agregar al Carrito</button>
-                <button class="whatsapp-btn" onclick="contactWhatsApp()">Contactar por WhatsApp</button>
+
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <label>Cantidad:</label>
+                        <select id="quantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    
+                    <button class="add-to-cart-btn" onclick="addToCartProduct()">
+                        Agregar al Carrito
+                    </button>
+                    
+                    <button class="whatsapp-btn" onclick="contactWhatsApp('Soporte QR para Negocios')">
+                        Contactar por WhatsApp
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Specifications Section -->
         <div class="product-specs">
-            <h3>Especificaciones Técnicas</h3>
+            <h2>Especificaciones Técnicas</h2>
             <table>
                 <tr>
-                    <td>Tipo de Producto</td>
+                    <td><strong>Tipo de Producto:</strong></td>
                     <td>Soporte para Código QR</td>
                 </tr>
                 <tr>
-                    <td>Material</td>
+                    <td><strong>Material:</strong></td>
                     <td>PLA de alta calidad</td>
                 </tr>
                 <tr>
-                    <td>Compatibilidad</td>
+                    <td><strong>Compatibilidad:</strong></td>
                     <td>Universal - Todos los códigos QR</td>
                 </tr>
                 <tr>
-                    <td>Uso Recomendado</td>
+                    <td><strong>Uso Recomendado:</strong></td>
                     <td>Comercios, negocios, puntos de venta</td>
                 </tr>
                 <tr>
-                    <td>Tiempo de Preparación</td>
-                    <td>5 días hábiles</td>
+                    <td><strong>Color:</strong></td>
+                    <td>Negro (Personalizable bajo pedido)</td>
                 </tr>
             </table>
+        </div>
+
+        <!-- Related Products -->
+        <div class="related-products">
+            <h2>Productos Relacionados</h2>
+            <div class="related-grid">
+                <div class="related-item" onclick="window.location.href='producto-organizador-magnetico.html'">
+                    <img src="../../Marketplace/Organizador Magnético De Cables Hasta 80cm Hexastack H1-80/Negro/1.jpg" alt="Organizador Magnético">
+                    <h3>Organizador Magnético</h3>
+                    <p class="price">$61.069 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-caja-cables-cctv.html'">
+                    <img src="../../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Caja CCTV">
+                    <h3>Caja Para Cables CCTV</h3>
+                    <p class="price">$36.900 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-baluns-8-canales.html'">
+                    <img src="../../Marketplace/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/1.png" alt="Baluns 8 Canales">
+                    <h3>Baluns 8 Canales</h3>
+                    <p class="price">$49.800 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-caja-tactica.html'">
+                    <img src="../../Marketplace/Caja Táctica Para Munición 9mm  Roser Tactical Tacbox M9-v1/1.jpg" alt="Caja Táctica">
+                    <h3>Caja Táctica 9mm</h3>
+                    <p class="price">$81.400 COP</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -211,7 +331,17 @@
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>Roser Tecnologías</h3>
+            <p>Innovación, diseño y tecnología para el futuro.</p>
+            <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script src="../../shared-components.js"></script>
+    <script src="../../script.js"></script>
     <script>
         // Funcionalidad de zoom estilo Amazon
         function initImageZoom() {
@@ -224,7 +354,6 @@
             
             mainImageContainer.addEventListener('mousemove', function(e) {
                 const mainImg = document.getElementById('mainImage');
-                if (mainImg.style.display === 'none') return; // Solo zoom en imágenes, no en video
                 
                 const rect = mainImageContainer.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -265,37 +394,16 @@
             initImageZoom();
         });
         
-        const images = [
-            '../../Marketplace/Soporte QR/QR1.jpg',
-            '../../Marketplace/Soporte QR/QR2.JPG',
-            '../../Marketplace/Soporte QR/QR3.jpg'
-        ];
-        const videoSrc = '../../Marketplace/Soporte QR/Soporte QR Clip Mercadolibre.mp4';
-
-        // Thumbnail click handler
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-
-                const mainVideo = document.getElementById('mainVideo');
-                const mainImage = document.getElementById('mainImage');
-                const zoomImage = document.getElementById('zoomImage');
-
-                if (this.dataset.type === 'video') {
-                    mainVideo.style.display = 'block';
-                    mainImage.style.display = 'none';
-                    mainVideo.src = videoSrc;
-                    mainVideo.load();
-                } else {
-                    const index = parseInt(this.dataset.index);
-                    mainImage.src = images[index];
-                    zoomImage.src = images[index];
-                    mainVideo.style.display = 'none';
-                    mainImage.style.display = 'block';
-                }
-            });
-        });
+        window.changeMainImage = function(thumbnail) {
+            const mainImage = document.getElementById('mainImage');
+            const zoomImage = document.getElementById('zoomImage');
+            
+            mainImage.src = thumbnail.src;
+            zoomImage.src = thumbnail.src;
+            
+            $('.thumbnail').removeClass('active');
+            $(thumbnail).addClass('active');
+        };
 
         // Cart system
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -345,23 +453,36 @@
         }
 
         function addToCartProduct() {
+            const quantity = parseInt($('#quantity').val()) || 1;
             const product = {
                 id: 'soporte-qr',
                 name: 'Soporte QR para Negocios',
                 price: 98000,
                 image: '../../Marketplace/Soporte QR/QR1.jpg',
-                quantity: 1
+                quantity: quantity
             };
             const existingItem = cart.find(item => item.id === product.id);
             if (existingItem) {
-                existingItem.quantity++;
+                existingItem.quantity += quantity;
             } else {
                 cart.push(product);
             }
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
             updateCartDisplay();
-            alert('Producto agregado al carrito');
+            
+            // Animación del botón
+            const btn = document.querySelector('.add-to-cart-btn');
+            const originalText = btn.innerText;
+            btn.classList.add('added');
+            btn.innerText = '¡Agregado al Carrito!';
+            setTimeout(() => {
+                btn.classList.remove('added');
+                btn.innerText = originalText;
+            }, 2000);
+            
+            // Sonido y Notificación
+            if (window.notifyAddToCart) window.notifyAddToCart();
         }
 
         window.removeFromCart = function(index) {
@@ -409,12 +530,12 @@
             window.open(url, '_blank');
         };
 
-        function contactWhatsApp() {
+        window.contactWhatsApp = function(productName) {
             const phone = '573113579437';
-            const message = '¡Hola! Estoy interesado en el producto: Soporte QR para Negocios';
+            const message = `¡Hola! Estoy interesado en el producto: ${productName}`;
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
-        }
+        };
 
         $('#cart-button').click(function() {
             updateCartDisplay();
@@ -422,6 +543,20 @@
         });
 
         updateCartCount();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#BotonWA').floatingWhatsApp({
+                phone: '573113579437',
+                headerTitle: 'Roser Tecnologías',
+                popupMessage: '¡Hola! ¿Quieres un Soporte QR para tu negocio?',
+                showPopup: true,
+                position: "right",
+                size: "60px",
+                backgroundColor: '#25D366',
+                zIndex: 9999
+            });
+        });
     </script>
 </body>
 </html>

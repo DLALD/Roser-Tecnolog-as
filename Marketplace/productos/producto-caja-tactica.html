@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="../../styles.css">
     <link rel="stylesheet" href="producto.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
     
     <style>
         /* Estilos para el zoom estilo Amazon */
@@ -82,9 +86,77 @@
                 display: none;
             }
         }
+        
+        /* Related Products */
+        .related-products {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        
+        .related-products h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .related-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .related-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .related-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        
+        .related-item h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .related-item .price {
+            color: #2196F3;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* Animación botón carrito */
+        .add-to-cart-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart-btn.added {
+            background-color: #4CAF50 !important;
+            border-color: #4CAF50 !important;
+            color: white !important;
+            transform: scale(0.98);
+        }
     </style>
 </head>
 <body>
+    <!--Div donde estará el botón de WhatsApp-->
+    <div id="BotonWA"></div>
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -212,6 +284,33 @@
                     <td>Negro</td>
                 </tr>
             </table>
+        </div>
+
+        <!-- Related Products -->
+        <div class="related-products">
+            <h2>Productos Relacionados</h2>
+            <div class="related-grid">
+                <div class="related-item" onclick="window.location.href='producto-organizador-magnetico.html'">
+                    <img src="../../Marketplace/Organizador Magnético De Cables Hasta 80cm Hexastack H1-80/Negro/1.jpg" alt="Organizador Magnético">
+                    <h3>Organizador Magnético</h3>
+                    <p class="price">$61.069 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-caja-cables-cctv.html'">
+                    <img src="../../Marketplace/Caja Para Cables CCTV Cámaras De Seguridad/Negra/1.png" alt="Caja CCTV">
+                    <h3>Caja Para Cables CCTV</h3>
+                    <p class="price">$36.900 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-baluns-8-canales.html'">
+                    <img src="../../Marketplace/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/1.png" alt="Baluns 8 Canales">
+                    <h3>Baluns 8 Canales</h3>
+                    <p class="price">$49.800 COP</p>
+                </div>
+                <div class="related-item" onclick="window.location.href='producto-soporte-qr.html'">
+                    <img src="../../Marketplace/Soporte QR/QR1.jpg" alt="Soporte QR">
+                    <h3>Soporte QR</h3>
+                    <p class="price">$98.000 COP</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -343,9 +442,34 @@
             updateCartCount();
             updateCartDisplay();
             
-            alert('Producto agregado al carrito');
+            // Animación del botón
+            const btn = document.querySelector('.add-to-cart-btn');
+            const originalText = btn.innerText;
+            btn.classList.add('added');
+            btn.innerText = '¡Agregado al Carrito!';
+            setTimeout(() => {
+                btn.classList.remove('added');
+                btn.innerText = originalText;
+            }, 2000);
+            
+            // Sonido y Notificación
+            if (window.notifyAddToCart) window.notifyAddToCart();
         };
     </script>
     <script src="../../script.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#BotonWA').floatingWhatsApp({
+                phone: '573113579437',
+                headerTitle: 'Roser Tecnologías',
+                popupMessage: '¡Hola! ¿Te interesa la Caja Táctica 9mm?',
+                showPopup: true,
+                position: "right",
+                size: "60px",
+                backgroundColor: '#25D366',
+                zIndex: 9999
+            });
+        });
+    </script>
 </body>
 </html>
