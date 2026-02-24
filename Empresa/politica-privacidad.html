@@ -211,9 +211,28 @@
         </div>
     </div>
 
+            <!-- Modal del Carrito -->
+            <div id="cartModal" class="modal">
+                <div class="modal-content cart-modal-content">
+                    <span class="close" onclick="closeCartModal()">&times;</span>
+                    <div class="cart-header">
+                        <h2>Carrito de Compras</h2>
+                    </div>
+                    <div id="cartBody" class="cart-body">
+                        <p class="empty-cart">Tu carrito está vacío</p>
+                    </div>
+                    <div class="cart-footer">
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span id="cart-total">$0 COP</span>
+                        </div>
+                        <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../shared-components.js"></script>
     <script src="politica-privacidad.js"></script>
-    <script src="../script.js"></script>
 </body>
 </html>
