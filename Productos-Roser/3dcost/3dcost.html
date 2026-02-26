@@ -6,8 +6,18 @@
     <title>3DCost - Calculadora de Costos de Impresión 3D</title>
     <link rel="icon" type="image/x-icon" href="../../Imagenes/Rosero.png">
     <link rel="stylesheet" href="3dcost.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
 </head>
 <body>
+    <div id="BotonWA"></div>
+    
+    <!-- Botón Flotante de Métodos de Pago -->
+    <div class="floating-payment-btn" onclick="openPaymentModal()" title="Métodos de Pago">
+        <img src="../../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -94,7 +104,7 @@
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="prototype-subsection">
-                        <a href="../Productos-Roser/DePie/DePie.html">
+                        <a href="../DePie/DePie.html">
                             <img src="../../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
                             DePie
                         </a>
@@ -407,6 +417,53 @@
     </div>
 </div>
 
+    <!-- Modal de Selección de Método de Pago -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <div class="payment-header">
+                <h2>Selecciona tu Método de Pago</h2>
+                <p>Elige cómo prefieres pagar tu pedido</p>
+            </div>
+            <div class="payment-body">
+                <div class="payment-options-grid">
+                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
+                        <img src="../../Marketplace/metodos de pago/Nequi.png" alt="Nequi">
+                        <div style="font-weight: 600;">Nequi</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
+                        <img src="../../Marketplace/metodos de pago/Daviplata.png" alt="Daviplata">
+                        <div style="font-weight: 600;">Daviplata</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
+                        <img src="../../Marketplace/metodos de pago/Bancolombia.png" alt="Bancolombia">
+                        <div style="font-weight: 600;">Bancolombia</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
+                        <img src="../../Marketplace/metodos de pago/Efecty.png" alt="Efecty">
+                        <div style="font-weight: 600;">Efecty</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Visa', this)">
+                        <img src="../../Marketplace/metodos de pago/Visa.png" alt="Visa">
+                        <div style="font-weight: 600;">Visa</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
+                        <img src="../../Marketplace/metodos de pago/Mastercard.png" alt="Mastercard">
+                        <div style="font-weight: 600;">Mastercard</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('PSE', this)">
+                        <img src="../../Marketplace/metodos de pago/PSE.png" alt="PSE">
+                        <div style="font-weight: 600;">PSE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-footer">
+                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Modal -->
     <div id="cartModal" class="modal">
         <div class="modal-content cart-modal-content">
@@ -416,6 +473,10 @@
             </div>
             <div id="cartItems" class="cart-body">
                 <!-- Cart items will be loaded here -->
+            </div>
+            <div class="cart-payment-info" onclick="openPaymentModal()" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" title="Clic para cambiar método de pago">
+                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
+                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
             </div>
             <div class="cart-footer">
                 <div class="cart-total">

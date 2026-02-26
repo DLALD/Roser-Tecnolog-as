@@ -242,7 +242,7 @@ function updateCartDisplay() {
   let total = 0;
   
   cart.forEach((item, index) => {
-    const itemTotal = item.price * item.quantity;
+    const itemTotal = (item.price || 0) * item.quantity;
     total += itemTotal;
     
     html += `
@@ -250,7 +250,7 @@ function updateCartDisplay() {
         <img src="${item.image}" alt="${item.name}" class="cart-item-img">
         <div class="cart-item-details">
           <h4>${item.name}</h4>
-          <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>
+          <p class="cart-item-price">$${(item.price || 0).toLocaleString('es-CO')} COP</p>
         </div>
         <div class="cart-item-quantity">
           <button onclick="decreaseQuantity(${index})">-</button>
@@ -266,6 +266,35 @@ function updateCartDisplay() {
   html += '</div>';
   cartBody.innerHTML = html;
   document.getElementById('cart-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
+
+  // Actualizar visualización del método de pago
+  const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+  const paymentContainer = document.getElementById('cartPaymentMethod');
+  const paymentMethodLogos = {
+      'Nequi': '../Marketplace/metodos de pago/Nequi.png',
+      'Daviplata': '../Marketplace/metodos de pago/Daviplata.png',
+      'Bancolombia': '../Marketplace/metodos de pago/Bancolombia.png',
+      'Efecty': '../Marketplace/metodos de pago/Efecty.png',
+      'Visa': '../Marketplace/metodos de pago/Visa.png',
+      'Mastercard': '../Marketplace/metodos de pago/Mastercard.png',
+      'PSE': '../Marketplace/metodos de pago/PSE.png'
+  };
+
+  if (paymentContainer) {
+      if(selectedPaymentMethod) {
+          const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+          let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
+          if (logoSrc) {
+              paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+          }
+          paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
+          paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
+          paymentHtml += '</div>';
+          paymentContainer.innerHTML = paymentHtml;
+      } else {
+          paymentContainer.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
+      }
+  }
 }
 
 window.addToCart = function(id, name, price, image) {
@@ -327,12 +356,15 @@ window.checkout = function() {
   let total = 0;
   
   cart.forEach(item => {
-    const itemTotal = item.price * item.quantity;
+    const itemTotal = (item.price || 0) * item.quantity;
     total += itemTotal;
     message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
   });
   
   message += `Total: $${total.toLocaleString('es-CO')} COP`;
+  
+  const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+  message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
   
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
@@ -348,6 +380,11 @@ window.addEventListener('click', function(event) {
   if (event.target === modal) {
     closeCartModal();
   }
+});
+
+// Sincronizar cambios de almacenamiento
+window.addEventListener('storage', function(e) {
+    if (e.key === 'selectedPayment') updateCartDisplay();
 });
 
 // Variables globales para carousel

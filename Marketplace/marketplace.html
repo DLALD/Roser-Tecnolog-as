@@ -333,7 +333,7 @@
         /* Tarjeta de Producto */
         .product-item {
             background: white;
-            border-radius: 16px;
+            border-radius: 25px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -515,6 +515,205 @@
         .clear-filter-btn:hover {
             background: #d32f2f;
         }
+
+        /* Estilos para Métodos de Pago */
+        .payment-option {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: white;
+        }
+        
+        .payment-option:hover {
+            border-color: #2196F3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.15);
+        }
+        
+        .payment-option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .payment-option img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            transition: transform 0.3s;
+        }
+
+        .payment-option.selected img {
+            transform: scale(1.1);
+        }
+
+        .payment-preview-card {
+            background: white;
+            border: 1px dashed #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-preview-card:hover {
+            background: #e3f2fd;
+            border-style: solid;
+        }
+
+        .remove-payment-btn {
+            background: none;
+            border: none;
+            color: #d32f2f;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0 0 0 5px;
+            line-height: 1;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .remove-payment-btn:hover {
+            color: #b71c1c;
+        }
+
+        /* Estilos para Notificaciones Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 10000;
+            border-left: 5px solid #4CAF50;
+            min-width: 300px;
+        }
+        
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-notification.info {
+            border-left-color: #2196F3;
+        }
+        
+        .toast-notification.error {
+            border-left-color: #f44336;
+        }
+        
+        .toast-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .toast-notification.info .toast-icon {
+            background: #e3f2fd;
+            color: #2196F3;
+        }
+        
+        .toast-notification.error .toast-icon {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .toast-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .toast-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .toast-message {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Estilos para Botón Flotante de Pagos */
+        .floating-payment-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 9990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .floating-payment-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+        
+        .floating-payment-btn img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            border-radius: 0;
+        }
+
+        /* Tooltip para el botón flotante */
+        .payment-tooltip {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .floating-payment-btn:hover .payment-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 70px;
+        }
     </style>
     
     <style>
@@ -522,7 +721,7 @@
         .product-image {
             position: relative;
             overflow: hidden;
-            cursor: zoom-in;
+            cursor: pointer;
         }
         
         .product-image:hover .main-product-img {
@@ -630,6 +829,12 @@
     <!--Div donde estará el botón de WhatsApp-->
     <div id="BotonWA"></div>
     
+    <!-- Botón Flotante de Métodos de Pago -->
+    <div class="floating-payment-btn" onclick="openPaymentModal()">
+        <span class="payment-tooltip">Métodos de Pago</span>
+        <img src="metodos de pago/M.png" alt="Métodos de Pago">
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -917,8 +1122,8 @@
                     </div>
                 </div>
             </section>
-        </main>
-    </div>
+
+           
 
     <!-- Modal del Producto -->
     <div id="productModal" class="modal">
@@ -926,6 +1131,53 @@
             <span class="close" onclick="closeProductModal()">&times;</span>
             <div id="modalBody">
                 <!-- El contenido se carga dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Selección de Método de Pago -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <div class="payment-header" style="padding: 20px; border-bottom: 1px solid #eee;">
+                <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
+                <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
+            </div>
+            <div class="payment-body" style="padding: 30px 20px;">
+                <div class="payment-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px;">
+                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
+                        <img src="metodos de pago/Nequi.png" alt="Nequi">
+                        <div style="font-weight: 600;">Nequi</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
+                        <img src="metodos de pago/Daviplata.png" alt="Daviplata">
+                        <div style="font-weight: 600;">Daviplata</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
+                        <img src="metodos de pago/Bancolombia.png" alt="Bancolombia">
+                        <div style="font-weight: 600;">Bancolombia</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
+                        <img src="metodos de pago/Efecty.png" alt="Efecty">
+                        <div style="font-weight: 600;">Efecty</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Visa', this)">
+                        <img src="metodos de pago/Visa.png" alt="Visa">
+                        <div style="font-weight: 600;">Visa</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
+                        <img src="metodos de pago/Mastercard.png" alt="Mastercard">
+                        <div style="font-weight: 600;">Mastercard</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('PSE', this)">
+                        <img src="metodos de pago/PSE.png" alt="PSE">
+                        <div style="font-weight: 600;">PSE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-footer" style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
             </div>
         </div>
     </div>
@@ -939,6 +1191,10 @@
             </div>
             <div id="cartBody" class="cart-body">
                 <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-payment-info" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
+                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
             </div>
             <div class="cart-footer">
                 <div class="cart-total">
@@ -1257,6 +1513,142 @@
             window.open(url, '_blank');
         };
         
+        // Payment Method Logic
+        const paymentMethodLogos = {
+            'Nequi': 'metodos de pago/Nequi.png',
+            'Daviplata': 'metodos de pago/Daviplata.png',
+            'Bancolombia': 'metodos de pago/Bancolombia.png',
+            'Efecty': 'metodos de pago/Efecty.png',
+            'Visa': 'metodos de pago/Visa.png',
+            'Mastercard': 'metodos de pago/Mastercard.png',
+            'PSE': 'metodos de pago/PSE.png'
+        };
+        let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+        
+        // Initialize display on load
+        if(selectedPaymentMethod) {
+            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+            let sidebarHtml = '';
+            if (logoSrc) {
+                sidebarHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 20px; vertical-align: middle; margin-right: 5px;">`;
+            }
+            sidebarHtml += `<span style="vertical-align: middle;">${selectedPaymentMethod}</span>`;
+            $('#sidebarPaymentDisplay').html(sidebarHtml).css('color', '#4CAF50');
+        }
+
+        window.openPaymentModal = function() {
+            $('#paymentModal').fadeIn(300);
+            // Highlight saved method
+            if(selectedPaymentMethod) {
+                $('.payment-option').each(function() {
+                    if($(this).find('div').text() === selectedPaymentMethod) {
+                        $(this).addClass('selected');
+                    }
+                });
+            }
+        };
+
+        window.closePaymentModal = function() {
+            $('#paymentModal').fadeOut(300);
+        };
+
+        window.selectPayment = function(method, element) {
+            selectedPaymentMethod = method;
+            $('.payment-option').removeClass('selected');
+            $(element).addClass('selected');
+        };
+
+        // Función para reproducir sonido suave
+        window.playNotificationSound = function() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // Nota Do
+                osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1); // Octava arriba
+                
+                gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (e) {
+                // Ignorar si el navegador no soporta audio o está bloqueado
+            }
+        };
+
+        // Función para mostrar notificaciones con estilo
+        window.showNotification = function(title, message, type = 'success') {
+            $('.toast-notification').remove();
+            
+            let icon = '✓';
+            if (type === 'error') icon = '✕';
+            if (type === 'info') icon = 'ℹ';
+            
+            const html = `
+                <div class="toast-notification ${type}">
+                    <div class="toast-icon">${icon}</div>
+                    <div class="toast-content">
+                        <div class="toast-title">${title}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                </div>
+            `;
+            
+            $('body').append(html);
+            
+            if (type === 'success') {
+                playNotificationSound();
+            }
+            
+            setTimeout(() => {
+                $('.toast-notification').addClass('show');
+            }, 10);
+            
+            setTimeout(() => {
+                $('.toast-notification').removeClass('show');
+                setTimeout(() => {
+                    $('.toast-notification').remove();
+                }, 400);
+            }, 3000);
+        };
+
+        window.confirmPaymentSelection = function() {
+            if(selectedPaymentMethod) {
+                localStorage.setItem('selectedPayment', selectedPaymentMethod);
+
+                const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+                let sidebarHtml = '';
+                if (logoSrc) {
+                    sidebarHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 20px; vertical-align: middle; margin-right: 5px;">`;
+                }
+                sidebarHtml += `<span style="vertical-align: middle;">${selectedPaymentMethod}</span>`;
+                $('#sidebarPaymentDisplay').html(sidebarHtml).css('color', '#4CAF50');
+
+                closePaymentModal();
+                
+                showNotification('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod, 'success');
+            } else {
+                showNotification('Atención', 'Por favor selecciona un método de pago', 'info');
+            }
+        };
+
+        window.removePaymentMethod = function() {
+            selectedPaymentMethod = '';
+            localStorage.removeItem('selectedPayment');
+            $('#sidebarPaymentDisplay').text('Seleccionar Método').css('color', '#1976d2');
+            updateCartDisplay();
+            showNotification('Método Eliminado', 'Se ha quitado el método de pago.', 'error');
+        };
+
         // Cart system
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         
@@ -1307,6 +1699,21 @@
             html += '</div>';
             cartBody.html(html);
             $('#cart-total').text(`$${total.toLocaleString('es-CO')} COP`);
+            
+            // Update payment display in cart
+            if(selectedPaymentMethod) {
+                const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+                let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
+                if (logoSrc) {
+                    paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+                }
+                paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
+                paymentHtml += `<button class="remove-payment-btn" onclick="removePaymentMethod()" title="Quitar método de pago">&times;</button>`;
+                paymentHtml += '</div>';
+                $('#cartPaymentMethod').html(paymentHtml);
+            } else {
+                $('#cartPaymentMethod').html('<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>');
+            }
         }
         
         window.addToCart = function(id, name, price, image) {
@@ -1323,7 +1730,7 @@
             updateCartDisplay();
             
             // Show notification
-            alert('Producto agregado al carrito');
+            showNotification('¡Excelente!', 'Producto agregado al carrito', 'success');
         };
         
         window.removeFromCart = function(index) {
@@ -1375,6 +1782,12 @@
             });
             
             message += `Total: $${total.toLocaleString('es-CO')} COP`;
+            
+            if (selectedPaymentMethod) {
+                message += `\n\nMétodo de Pago: ${selectedPaymentMethod}`;
+            } else {
+                message += `\n\nMétodo de Pago: A convenir`;
+            }
             
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');

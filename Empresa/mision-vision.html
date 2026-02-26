@@ -6,8 +6,225 @@
     <title>Misión y Visión - Roser Tecnologías</title>
     <link rel="icon" type="image/x-icon" href="../Imagenes/Rosero.png">
     <link rel="stylesheet" href="mision-vision.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
+    <style>
+        /* Estilos para el Logo Animado */
+        .vision-icon {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+            animation: logoEntrance 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; /* Start hidden for animation */
+        }
+
+        @keyframes logoEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotate(-15deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* Estilos para Métodos de Pago */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            z-index: 10002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .payment-modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 0;
+            border: none;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .payment-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        .payment-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
+
+        .payment-close:hover { color: #333; }
+
+        .payment-body { padding: 30px 20px; }
+
+        .payment-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 20px;
+        }
+
+        .payment-option {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background: white;
+        }
+        
+        .payment-option:hover {
+            border-color: #2196F3;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.15);
+        }
+        
+        .payment-option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .payment-option img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .payment-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Botón Flotante de Pagos */
+        .floating-payment-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 9990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .floating-payment-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .floating-payment-btn img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+        }
+
+        .remove-payment-btn {
+            background: none;
+            border: none;
+            color: #d32f2f;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
+    <div id="BotonWA"></div>
+    
+    <!-- Botón Flotante de Métodos de Pago -->
+    <div class="floating-payment-btn" onclick="openPaymentModal()" title="Métodos de Pago">
+        <img src="../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
+    </div>
+
+    <!-- Modal de Selección de Método de Pago -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <div class="payment-header">
+                <span class="payment-close" onclick="closePaymentModal()">&times;</span>
+                <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
+                <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
+            </div>
+            <div class="payment-body">
+                <div class="payment-options-grid">
+                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
+                        <img src="../Marketplace/metodos de pago/Nequi.png" alt="Nequi">
+                        <div style="font-weight: 600;">Nequi</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
+                        <img src="../Marketplace/metodos de pago/Daviplata.png" alt="Daviplata">
+                        <div style="font-weight: 600;">Daviplata</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
+                        <img src="../Marketplace/metodos de pago/Bancolombia.png" alt="Bancolombia">
+                        <div style="font-weight: 600;">Bancolombia</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
+                        <img src="../Marketplace/metodos de pago/Efecty.png" alt="Efecty">
+                        <div style="font-weight: 600;">Efecty</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Visa', this)">
+                        <img src="../Marketplace/metodos de pago/Visa.png" alt="Visa">
+                        <div style="font-weight: 600;">Visa</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
+                        <img src="../Marketplace/metodos de pago/Mastercard.png" alt="Mastercard">
+                        <div style="font-weight: 600;">Mastercard</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('PSE', this)">
+                        <img src="../Marketplace/metodos de pago/PSE.png" alt="PSE">
+                        <div style="font-weight: 600;">PSE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-footer">
+                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -208,7 +425,6 @@
         <p>© 2025 Todos los derechos reservados</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Cart modal -->
     <div id="cartModal" class="modal">
         <div class="modal-content cart-modal-content">
@@ -218,6 +434,10 @@
             </div>
             <div id="cartBody" class="cart-body">
                 <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-payment-info" onclick="openPaymentModal()" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" title="Clic para cambiar método de pago">
+                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
+                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
             </div>
             <div class="cart-footer">
                 <div class="cart-total">
@@ -231,5 +451,123 @@
 
     <script src="../shared-components.js"></script>
     <script src="mision-vision.js"></script>
+    <script>
+        // Lógica de Métodos de Pago
+        let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+        const paymentMethodLogos = {
+            'Nequi': '../Marketplace/metodos de pago/Nequi.png',
+            'Daviplata': '../Marketplace/metodos de pago/Daviplata.png',
+            'Bancolombia': '../Marketplace/metodos de pago/Bancolombia.png',
+            'Efecty': '../Marketplace/metodos de pago/Efecty.png',
+            'Visa': '../Marketplace/metodos de pago/Visa.png',
+            'Mastercard': '../Marketplace/metodos de pago/Mastercard.png',
+            'PSE': '../Marketplace/metodos de pago/PSE.png'
+        };
+
+        window.openPaymentModal = function() {
+            selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+            $('#paymentModal').fadeIn(300);
+            if(selectedPaymentMethod) {
+                $('.payment-option').removeClass('selected');
+                $('.payment-option').each(function() {
+                    if($(this).find('div').text().trim() === selectedPaymentMethod) {
+                        $(this).addClass('selected');
+                    }
+                });
+            }
+        };
+
+        window.closePaymentModal = function() {
+            $('#paymentModal').fadeOut(300);
+        };
+
+        window.selectPayment = function(method, element) {
+            selectedPaymentMethod = method;
+            $('.payment-option').removeClass('selected');
+            $(element).addClass('selected');
+        };
+
+        window.confirmPaymentSelection = function() {
+            if(selectedPaymentMethod) {
+                localStorage.setItem('selectedPayment', selectedPaymentMethod);
+                closePaymentModal();
+                updatePaymentDisplay();
+                if(window.showToast) {
+                    window.playSuccessSound();
+                    window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod);
+                } else {
+                    alert('Método de pago actualizado: ' + selectedPaymentMethod);
+                }
+            } else {
+                alert('Por favor selecciona un método de pago');
+            }
+        };
+
+        window.removePaymentMethod = function() {
+            selectedPaymentMethod = '';
+            localStorage.removeItem('selectedPayment');
+            updatePaymentDisplay();
+        };
+
+        function updatePaymentDisplay() {
+            selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+            const container = $('#cartPaymentMethod');
+            if(selectedPaymentMethod) {
+                const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+                let html = '<div style="display: flex; align-items: center; gap: 8px;">';
+                if (logoSrc) {
+                    html += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+                }
+                html += `<span>${selectedPaymentMethod}</span>`;
+                html += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método">&times;</button></div>`;
+                container.html(html);
+            } else {
+                container.html('<span style="color: #f57c00; cursor: pointer;">No seleccionado (Clic para elegir)</span>');
+            }
+        }
+        
+        // Sobrescribir checkout para incluir método de pago
+        const originalCheckout = window.checkout;
+        window.checkout = function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            
+            const phone = '573113579437';
+            let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+            let total = 0;
+            cart.forEach(item => {
+                const itemTotal = (item.price || 0) * item.quantity;
+                total += itemTotal;
+                message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
+            });
+            message += `Total: $${total.toLocaleString('es-CO')} COP`;
+            
+            const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+            message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
+            
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        };
+
+        // Inicializar visualización
+        $(document).ready(function() {
+            updatePaymentDisplay();
+            
+            // Inicializar WhatsApp
+            $('#BotonWA').floatingWhatsApp({
+                phone: '573113579437',
+                headerTitle: 'Roser Tecnologías',
+                popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+                showPopup: true,
+                position: "right",
+                size: "60px",
+                backgroundColor: '#25D366',
+                zIndex: 9999
+            });
+        });
+    </script>
 </body>
 </html>

@@ -144,6 +144,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     attachFallbacks();
     const totalEl = document.getElementById('cart-total'); if (totalEl) totalEl.textContent = `$${total.toLocaleString('es-CO')} COP`;
+
+    // Actualizar visualización del método de pago
+    const paymentMethodLogos = {
+        'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+        'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+        'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+        'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+        'Visa': '../../Marketplace/metodos de pago/Visa.png',
+        'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+        'PSE': '../../Marketplace/metodos de pago/PSE.png'
+    };
+    
+    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const paymentContainer = document.getElementById('cartPaymentMethod');
+    if (paymentContainer) {
+        if(selectedPaymentMethod) {
+            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+            let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
+            if (logoSrc) {
+                paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+            }
+            paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
+            paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
+            paymentHtml += '</div>';
+            paymentContainer.innerHTML = paymentHtml;
+        } else {
+            paymentContainer.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
+        }
+    }
   }
 
   window.addToCart = function(id, name, price, image) {
@@ -158,16 +187,41 @@ document.addEventListener('DOMContentLoaded', function() {
   window.increaseQuantity = function(index){ cart[index].quantity++; localStorage.setItem('cart', JSON.stringify(cart)); updateCartCount(); updateCartDisplay(); };
   window.decreaseQuantity = function(index){ if (cart[index].quantity>1){ cart[index].quantity--; localStorage.setItem('cart', JSON.stringify(cart)); updateCartCount(); updateCartDisplay(); } };
 
+  window.removePaymentMethod = function() {
+      localStorage.removeItem('selectedPayment');
+      updateCartDisplay();
+  };
+
   window.openCartModal = function() { updateCartDisplay(); const modal = document.getElementById('cartModal'); if (window.$ && modal) $('#cartModal').show(); else if (modal) modal.style.display='block'; };
   window.closeCartModal = function() { const modal = document.getElementById('cartModal'); if (window.$ && modal) $('#cartModal').hide(); else if (modal) modal.style.display='none'; };
 
-  window.checkout = function(){ if (cart.length===0){ alert('Tu carrito está vacío'); return; } const phone='573113579437'; let message='¡Hola! Quiero realizar el siguiente pedido:\n\n'; let total=0; cart.forEach(item=>{ const itemTotal=(item.price||0)*item.quantity; total+=itemTotal; message+=`• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`; }); message+=`Total: $${total.toLocaleString('es-CO')} COP`; const url=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`; window.open(url,'_blank'); };
+  window.checkout = function(){ 
+    if (cart.length===0){ alert('Tu carrito está vacío'); return; } 
+    const phone='573113579437'; 
+    let message='¡Hola! Quiero realizar el siguiente pedido:\n\n'; 
+    let total=0; 
+    cart.forEach(item=>{ 
+      const itemTotal=(item.price||0)*item.quantity; 
+      total+=itemTotal; 
+      message+=`• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`; 
+    }); 
+    message+=`Total: $${total.toLocaleString('es-CO')} COP`; 
+    
+    const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
+
+    const url=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`; 
+    window.open(url,'_blank'); 
+  };
 
   // Initialize
   updateCartCount(); updateCartDisplay();
 
   // React to localStorage changes from Marketplace or other pages
-  window.addEventListener('storage', function(e){ if (e.key==='cart'){ cart = JSON.parse(e.newValue) || []; updateCartCount(); updateCartDisplay(); } });
+  window.addEventListener('storage', function(e){ 
+      if (e.key==='cart'){ cart = JSON.parse(e.newValue) || []; updateCartCount(); updateCartDisplay(); } 
+      if (e.key==='selectedPayment'){ updateCartDisplay(); }
+  });
 
   // Close modal when clicking outside
   window.addEventListener('click', function(e){ const modal = document.getElementById('cartModal'); if (modal && e.target === modal) closeCartModal(); });
@@ -375,7 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
         headerColor: '#128C7E',
         backgroundColor: '#25D366',
         size: '60px',
-        position: 'right'
+        position: 'right',
+        zIndex: 9999
       });
     } else if (document.getElementById('BotonWA')) {
       // Fallback: simple link button

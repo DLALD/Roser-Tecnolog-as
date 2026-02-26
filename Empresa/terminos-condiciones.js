@@ -211,6 +211,10 @@ window.checkout = function() {
         message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
     });
     message += `Total: $${total.toLocaleString('es-CO')} COP`;
+
+    const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
+
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 }

@@ -353,6 +353,9 @@ document.getElementById('btnQuote').addEventListener('click', () => {
         return;
     }
     
+    // Obtener el método de pago seleccionado
+    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    
     let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
     let total = 0;
     
@@ -367,10 +370,16 @@ document.getElementById('btnQuote').addEventListener('click', () => {
     });
     
     if (total > 0) {
-        message += `Total: $${total.toLocaleString('es-CO')} COP\n\n`;
+        message += `Total: $${total.toLocaleString('es-CO')} COP`;
     }
     
-    message += '\n¿Podrían proporcionarme más información?';
+    if (selectedPaymentMethod) {
+        message += `\n\nMétodo de Pago: ${selectedPaymentMethod}`;
+    } else {
+        message += `\n\nMétodo de Pago: A convenir`;
+    }
+    
+    message += '\n\n¿Podrían proporcionarme más información?';
     
     const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');

@@ -331,6 +331,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar carrito
     updateCartUI();
     
+    // Sincronizar método de pago al cargar
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'selectedPayment') {
+            updateCartUI();
+        }
+    });
+    
+    // Evento para abrir modal desde el carrito (delegación)
+    document.body.addEventListener('click', function(e) {
+        if (e.target.closest('.cart-payment-info')) {
+            openPaymentModal();
+        }
+    });
+    
     // Inicializar preloader solo si no es una recarga
     if (!sessionStorage.getItem('visited')) {
         initPreloader();
@@ -444,6 +458,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Cart from localStorage
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Payment Method Logos
+const paymentMethodLogos = {
+    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+};
+
+// Cart button click
+const cartIcon = document.querySelector('.cart-icon');
+if (cartIcon) {
+    cartIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openCartModal();
+    });
+}
 
 // Search Functionality
 const searchBox = document.querySelector('.search-box');
@@ -568,16 +603,57 @@ if (cartModal) {
     });
 }
 
-// Cart button click
-document.querySelector('.cart-icon').addEventListener('click', function() {
-    openCartModal();
-});
+window.openPaymentModal = function() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const modal = document.getElementById('paymentModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.querySelectorAll('.payment-option').forEach(el => {
+            el.classList.remove('selected');
+            if (el.innerText.trim() === selectedPaymentMethod) el.classList.add('selected');
+        });
+    }
+};
+
+window.closePaymentModal = function() {
+    const modal = document.getElementById('paymentModal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.selectPayment = function(method, element) {
+    selectedPaymentMethod = method;
+    document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+    element.classList.add('selected');
+};
+
+window.confirmPaymentSelection = function() {
+    if (selectedPaymentMethod) {
+        localStorage.setItem('selectedPayment', selectedPaymentMethod);
+        closePaymentModal();
+        updateCartUI();
+        if(window.showToast) {
+            window.playSuccessSound();
+            window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod);
+        } else {
+            alert('Método de pago actualizado: ' + selectedPaymentMethod);
+        }
+    } else {
+        alert('Por favor selecciona un método de pago');
+    }
+};
+
+window.removePaymentMethod = function() {
+    selectedPaymentMethod = '';
+    localStorage.removeItem('selectedPayment');
+    updateCartUI();
+};
 
 // Update Cart UI
 function updateCartUI() {
     const cartCount = document.getElementById('cart-count');
     const cartItems = document.getElementById('cartItems');
     const cartTotal = document.getElementById('cartTotal');
+    const cartPaymentMethod = document.getElementById('cartPaymentMethod');
     
     if (!cartCount || !cartItems || !cartTotal) return;
     
@@ -636,6 +712,24 @@ function updateCartUI() {
             cartTotal.textContent = 'Cotización';
         }
     }
+
+    // Update payment method display in cart
+    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    if (cartPaymentMethod) {
+        if (selectedPaymentMethod) {
+            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+            let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
+            if (logoSrc) {
+                paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+            }
+            paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
+            paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
+            paymentHtml += '</div>';
+            cartPaymentMethod.innerHTML = paymentHtml;
+        } else {
+            cartPaymentMethod.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
+        }
+    }
 }
 
 // WhatsApp Quote
@@ -647,16 +741,20 @@ if (btnQuote) {
             return;
         }
         
-        let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
-        cart.forEach((item, index) => {
-            message += `${index + 1}. ${item.name}`;
-            if (item.quantity > 1) {
-                message += ` (x${item.quantity})`;
-            }
-            message += '\n';
-        });
-        message += '\n¿Podrían proporcionarme más información?';
+        let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+        let total = 0;
         
+        cart.forEach(item => {
+            const itemTotal = (item.price || 0) * item.quantity;
+            total += itemTotal;
+            message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
+        });
+        
+        message += `Total: $${total.toLocaleString('es-CO')} COP`;
+        
+        const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+        message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
+
         const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     });
@@ -680,6 +778,20 @@ function removeFromCart(index) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartUI();
 }
+
+// Initialize WhatsApp Widget
+$(function () {
+    $('#BotonWA').floatingWhatsApp({
+        phone: '573113579437',
+        headerTitle: 'Roser Tecnologías',
+        popupMessage: '¡Hola! ¿En qué podemos ayudarte con 3DCost?',
+        showPopup: true,
+        position: "right",
+        size: "60px",
+        backgroundColor: '#25D366',
+        zIndex: 9999
+    });
+});
 
 // Debug cart images
 console.log('Cart items:', cart);

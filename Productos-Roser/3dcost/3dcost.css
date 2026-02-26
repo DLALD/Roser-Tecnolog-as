@@ -971,7 +971,8 @@
 .scroll-to-top {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
+    right: auto;
     width: 50px;
     height: 50px;
     background: linear-gradient(135deg, var(--secondary-color), #45a049);
@@ -1829,6 +1830,11 @@ button:active, .btn:active {
     backdrop-filter: blur(5px);
 }
 
+/* Asegurar que el modal de pagos esté por encima del carrito */
+#paymentModal {
+    z-index: 2001;
+}
+
 .modal-content {
     background-color: white;
     margin: 5% auto;
@@ -2045,4 +2051,105 @@ button:active, .btn:active {
     background: #1da851;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* Estilos para Métodos de Pago */
+.payment-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.payment-option {
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: white;
+}
+
+.payment-option:hover {
+    border-color: #2196F3;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(33, 150, 243, 0.15);
+}
+
+.payment-option.selected {
+    border-color: #4CAF50;
+    background: #e8f5e9;
+}
+
+.payment-option img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.payment-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.payment-header p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.payment-footer {
+    padding: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Botón Flotante de Pagos */
+.floating-payment-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.floating-payment-btn:hover {
+    transform: scale(1.1);
+}
+
+.floating-payment-btn img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.remove-payment-btn {
+    background: none;
+    border: none;
+    color: #d32f2f;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: 10px;
 }
