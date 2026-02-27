@@ -104,9 +104,20 @@ document.addEventListener('DOMContentLoaded', function(){
         cart.forEach((item, index) => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
+
+            // Ajustar ruta de la imagen para la ubicación actual (Empresa/Politicas y Privacidad/)
+            let imagePath = item.image;
+            if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
+                if (imagePath.includes('Marketplace/')) {
+                    imagePath = '../../Marketplace/' + imagePath.split('Marketplace/')[1];
+                } else if (imagePath.includes('Imagenes/')) {
+                    imagePath = '../../Imagenes/' + imagePath.split('Imagenes/')[1];
+                }
+            }
+
             html += `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
                     <div class="cart-item-details">
                         <h4>${item.name}</h4>
                         <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>

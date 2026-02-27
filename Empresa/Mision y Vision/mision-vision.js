@@ -120,11 +120,11 @@ const searchInput = document.querySelector("#shared-search-input");
 const searchResults = document.querySelector("#search-results");
 
 const products = [
-    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
-    { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
-    { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
-    { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
-    { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
+    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../../Marketplace/productos/producto-organizador-magnetico.html" },
+    { name: "Caja Táctica para Munición 9mm", url: "../../Marketplace/productos/producto-caja-tactica.html" },
+    { name: "Organizador de Cables CCTV 4 Canales", url: "../../Marketplace/productos/producto-caja-cables-cctv.html" },
+    { name: "Baluns CCTV 8 Canales", url: "../../Marketplace/productos/producto-baluns-8-canales.html" },
+    { name: "Soporte QR para Negocios", url: "../../Marketplace/productos/producto-soporte-qr.html" }
 ];
 
 if (searchBtn && searchInput && searchBox && searchResults) {
@@ -201,7 +201,7 @@ if (cartButton) {
         if (typeof openCartModal === 'function') {
             openCartModal();
         } else {
-            window.location.href = '../Marketplace/marketplace.html';
+            window.location.href = '../../Marketplace/marketplace.html';
         }
     });
 }
@@ -225,9 +225,20 @@ function updateCartDisplay() {
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
+
+        // Ajustar ruta de la imagen para la ubicación actual (Empresa/Mision y Vision/)
+        let imagePath = item.image;
+        if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
+            if (imagePath.includes('Marketplace/')) {
+                imagePath = '../../Marketplace/' + imagePath.split('Marketplace/')[1];
+            } else if (imagePath.includes('Imagenes/')) {
+                imagePath = '../../Imagenes/' + imagePath.split('Imagenes/')[1];
+            }
+        }
+
         html += `
             <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>

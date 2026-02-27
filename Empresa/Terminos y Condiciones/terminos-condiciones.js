@@ -1,4 +1,4 @@
-// Mobile menu toggle
+// Menu and dropdown behavior (similar to other Empresa pages)
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 const menuButton = document.querySelector('.menu-button');
@@ -12,7 +12,6 @@ if (hamburger && navMenu) {
     });
 }
 
-// Menu button toggle
 if (menuButton && sidebarDropdown) {
     menuButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -20,7 +19,6 @@ if (menuButton && sidebarDropdown) {
     });
 }
 
-// Section headers toggle
 sectionHeaders.forEach(sectionHeader => {
     sectionHeader.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -90,119 +88,6 @@ document.querySelectorAll('.sidebar-dropdown a:not(.apps-header)').forEach(n => 
     }
 }));
 
-// Photo enlargement animation
-document.querySelectorAll('.member-photo img').forEach(img => {
-    img.addEventListener('click', function() {
-        // Remove enlarged class from all images
-        document.querySelectorAll('.member-photo img').forEach(otherImg => {
-            if (otherImg !== this) {
-                otherImg.classList.remove('enlarged');
-            }
-        });
-        
-        // Toggle enlarged class on clicked image
-        this.classList.toggle('enlarged');
-        
-        // Remove enlarged class after 3 seconds
-        if (this.classList.contains('enlarged')) {
-            setTimeout(() => {
-                this.classList.remove('enlarged');
-            }, 3000);
-        }
-    });
-    
-    // Remove enlarged class when mouse leaves the image
-    img.addEventListener('mouseleave', function() {
-        this.classList.remove('enlarged');
-    });
-});
-
-// Smooth scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target); // Stop observing once animated
-        }
-    });
-}, observerOptions);
-
-// Observe team members
-document.querySelectorAll('.team-member').forEach(el => {
-    observer.observe(el);
-});
-
-// Search functionality
-const searchBox = document.querySelector(".search-box");
-const searchBtn = document.querySelector("#shared-search-btn");
-const searchInput = document.querySelector("#shared-search-input");
-const searchResults = document.querySelector("#search-results");
-
-const products = [
-    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
-    { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
-    { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
-    { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
-    { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
-];
-
-if (searchBtn && searchInput && searchBox && searchResults) {
-    searchBtn.onclick = () => {
-        searchBox.classList.add("active");
-        searchBtn.classList.add("active");
-        searchInput.classList.add("active");
-        searchInput.focus();
-    };
-    
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-        
-        if (searchTerm === '') {
-            searchResults.classList.remove("show");
-            return;
-        }
-        
-        const filteredProducts = products.filter(product => 
-            product.name.toLowerCase().includes(searchTerm)
-        );
-        
-        if (filteredProducts.length === 0) {
-            searchResults.classList.remove("show");
-            return;
-        }
-        
-        let html = '';
-        filteredProducts.forEach(product => {
-            html += `
-                <div class="search-result-item" onclick="window.location.href='${product.url}'">
-                    <svg class="search-result-icon" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    ${product.name}
-                </div>
-            `;
-        });
-        
-        searchResults.innerHTML = html;
-        searchResults.classList.add("show");
-    });
-    
-    document.addEventListener('click', (e) => {
-        if (!searchBox.contains(e.target)) {
-            searchBox.classList.remove("active");
-            searchBtn.classList.remove("active");
-            searchInput.classList.remove("active");
-            searchResults.classList.remove("show");
-            searchInput.value = "";
-        }
-    });
-}
-
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -232,7 +117,6 @@ if (cartButton) {
 
 updateCartCount();
 
-// Cart display and actions (adapted from Marketplace)
 function updateCartDisplay() {
     const cartBodyEl = document.getElementById('cartBody');
     if (!cartBodyEl) return;
@@ -249,9 +133,20 @@ function updateCartDisplay() {
     cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
+
+        // Ajustar ruta de la imagen para la ubicación actual (Empresa/Terminos y Condiciones/)
+        let imagePath = item.image;
+        if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
+            if (imagePath.includes('Marketplace/')) {
+                imagePath = '../../Marketplace/' + imagePath.split('Marketplace/')[1];
+            } else if (imagePath.includes('Imagenes/')) {
+                imagePath = '../../Imagenes/' + imagePath.split('Imagenes/')[1];
+            }
+        }
+
         html += `
             <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>
@@ -327,10 +222,10 @@ window.checkout = function() {
         message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
     });
     message += `Total: $${total.toLocaleString('es-CO')} COP`;
-    
+
     const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
     message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
-    
+
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 }
