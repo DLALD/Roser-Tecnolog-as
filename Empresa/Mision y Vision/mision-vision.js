@@ -304,18 +304,25 @@ window.closeCartModal = function() {
 }
 
 window.checkout = function() {
-    console.log('[DEBUG] checkout() called on mision-vision.js', { time: Date.now(), cartLength: cart.length });
-    console.trace();
-    if (cart.length === 0) { alert('Tu carrito está vacío'); return; }
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+    }
+    
     const phone = '573113579437';
     let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
     let total = 0;
     cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = (item.price || 0) * item.quantity;
         total += itemTotal;
         message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
     });
     message += `Total: $${total.toLocaleString('es-CO')} COP`;
+    
+    const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
+    
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 }
@@ -340,4 +347,95 @@ window.addEventListener('storage', (e) => {
         cart = JSON.parse(e.newValue) || [];
         updateCartCount();
     }
+});
+
+// Lógica de Métodos de Pago
+let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+const paymentMethodLogos = {
+    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+};
+
+window.openPaymentModal = function() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    $('#paymentModal').fadeIn(300);
+    if(selectedPaymentMethod) {
+        $('.payment-option').removeClass('selected');
+        $('.payment-option').each(function() {
+            if($(this).find('div').text().trim() === selectedPaymentMethod) {
+                $(this).addClass('selected');
+            }
+        });
+    }
+};
+
+window.closePaymentModal = function() {
+    $('#paymentModal').fadeOut(300);
+};
+
+window.selectPayment = function(method, element) {
+    selectedPaymentMethod = method;
+    $('.payment-option').removeClass('selected');
+    $(element).addClass('selected');
+};
+
+window.confirmPaymentSelection = function() {
+    if(selectedPaymentMethod) {
+        localStorage.setItem('selectedPayment', selectedPaymentMethod);
+        closePaymentModal();
+        updatePaymentDisplay();
+        if(window.showToast) {
+            window.playSuccessSound();
+            window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod);
+        } else {
+            alert('Método de pago actualizado: ' + selectedPaymentMethod);
+        }
+    } else {
+        alert('Por favor selecciona un método de pago');
+    }
+};
+
+window.removePaymentMethod = function() {
+    selectedPaymentMethod = '';
+    localStorage.removeItem('selectedPayment');
+    updatePaymentDisplay();
+};
+
+function updatePaymentDisplay() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const container = $('#cartPaymentMethod');
+    if(selectedPaymentMethod) {
+        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+        let html = '<div style="display: flex; align-items: center; gap: 8px;">';
+        if (logoSrc) {
+            html += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+        }
+        html += `<span>${selectedPaymentMethod}</span>`;
+        html += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método">&times;</button></div>`;
+        container.html(html);
+    } else {
+        container.html('<span style="color: #f57c00; cursor: pointer;">No seleccionado (Clic para elegir)</span>');
+    }
+}
+
+// Inicializar visualización
+$(document).ready(function() {
+    updatePaymentDisplay();
+    
+    // Inicializar WhatsApp
+    $('#BotonWA').floatingWhatsApp({
+        phone: '573113579437',
+        headerTitle: 'Roser Tecnologías',
+        popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+        showPopup: true,
+        position: "right",
+        size: "60px",
+        backgroundColor: '#25D366',
+        zIndex: 9999
+    });
 });

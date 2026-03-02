@@ -1,4 +1,4 @@
-// Menu and dropdown behavior (similar to other Empresa pages)
+// Mobile menu toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 const menuButton = document.querySelector('.menu-button');
@@ -12,6 +12,7 @@ if (hamburger && navMenu) {
     });
 }
 
+// Menu button toggle
 if (menuButton && sidebarDropdown) {
     menuButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -19,6 +20,7 @@ if (menuButton && sidebarDropdown) {
     });
 }
 
+// Section headers toggle
 sectionHeaders.forEach(sectionHeader => {
     sectionHeader.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -110,13 +112,14 @@ if (cartButton) {
         if (typeof openCartModal === 'function') {
             openCartModal();
         } else {
-            window.location.href = '../Marketplace/marketplace.html';
+            window.location.href = '../../Marketplace/marketplace.html';
         }
     });
 }
 
 updateCartCount();
 
+// Cart display and actions
 function updateCartDisplay() {
     const cartBodyEl = document.getElementById('cartBody');
     if (!cartBodyEl) return;
@@ -134,7 +137,7 @@ function updateCartDisplay() {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
 
-        // Ajustar ruta de la imagen para la ubicación actual (Empresa/Terminos y Condiciones/)
+        // Ajustar ruta de la imagen
         let imagePath = item.image;
         if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
             if (imagePath.includes('Marketplace/')) {
@@ -167,41 +170,9 @@ function updateCartDisplay() {
     if (cartTotalEl) cartTotalEl.textContent = `$${total.toLocaleString('es-CO')} COP`;
 }
 
-window.addToCart = function(id, name, price, image) {
-    const existing = cart.find(i => i.id === id);
-    if (existing) existing.quantity++;
-    else cart.push({ id, name, price, image, quantity: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-    alert('Producto agregado al carrito');
-}
-
-window.removeFromCart = function(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-}
-
-window.increaseQuantity = function(index) {
-    cart[index].quantity++;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-}
-
-window.decreaseQuantity = function(index) {
-    if (cart[index].quantity > 1) {
-        cart[index].quantity--;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        updateCartDisplay();
-    }
-}
-
 window.openCartModal = function() {
     updateCartDisplay();
+    if (typeof updatePaymentDisplay === 'function') updatePaymentDisplay();
     if (window.$) $('#cartModal').show();
     else document.getElementById('cartModal').style.display = 'block';
 }
@@ -212,58 +183,116 @@ window.closeCartModal = function() {
 }
 
 window.checkout = function() {
-    if (cart.length === 0) { alert('Tu carrito está vacío'); return; }
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+    }
+    
     const phone = '573113579437';
     let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
     let total = 0;
     cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = (item.price || 0) * item.quantity;
         total += itemTotal;
         message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
     });
     message += `Total: $${total.toLocaleString('es-CO')} COP`;
-
+    
     const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
     message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
-
+    
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 }
 
-window.addEventListener('storage', (e) => {
-    if (e.key === 'cart') {
-        cart = JSON.parse(e.newValue) || [];
-        updateCartCount();
+// Lógica de Métodos de Pago
+let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+const paymentMethodLogos = {
+    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+};
+
+window.openPaymentModal = function() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    $('#paymentModal').fadeIn(300);
+    if(selectedPaymentMethod) {
+        $('.payment-option').removeClass('selected');
+        $('.payment-option').each(function() {
+            if($(this).find('div').text().trim() === selectedPaymentMethod) {
+                $(this).addClass('selected');
+            }
+        });
     }
-});
+};
 
-// Close modal when clicking outside content or pressing ESC
-(function() {
-    const modalSelector = '#cartModal';
+window.closePaymentModal = function() {
+    $('#paymentModal').fadeOut(300);
+};
 
-    function hideModal() {
-        if (window.$) $(modalSelector).hide();
-        else {
-            const m = document.querySelector(modalSelector);
-            if (m) m.style.display = 'none';
+window.selectPayment = function(method, element) {
+    selectedPaymentMethod = method;
+    $('.payment-option').removeClass('selected');
+    $(element).addClass('selected');
+};
+
+window.confirmPaymentSelection = function() {
+    if(selectedPaymentMethod) {
+        localStorage.setItem('selectedPayment', selectedPaymentMethod);
+        closePaymentModal();
+        updatePaymentDisplay();
+        if(window.showToast) {
+            window.playSuccessSound();
+            window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod);
+        } else {
+            alert('Método de pago actualizado: ' + selectedPaymentMethod);
         }
-    }
-
-    function onOverlayClick(e) {
-        const modal = document.querySelector(modalSelector);
-        if (!modal) return;
-        if (e.target === modal) hideModal();
-    }
-
-    function onKeyDown(e) {
-        if (e.key === 'Escape' || e.key === 'Esc') hideModal();
-    }
-
-    if (window.$) {
-        $(document).on('click', function(e) { onOverlayClick(e); });
-        $(document).on('keydown', function(e) { onKeyDown(e); });
     } else {
-        document.addEventListener('click', onOverlayClick);
-        document.addEventListener('keydown', onKeyDown);
+        alert('Por favor selecciona un método de pago');
     }
-})();
+};
+
+window.removePaymentMethod = function() {
+    selectedPaymentMethod = '';
+    localStorage.removeItem('selectedPayment');
+    updatePaymentDisplay();
+};
+
+function updatePaymentDisplay() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const container = $('#cartPaymentMethod');
+    if(selectedPaymentMethod) {
+        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+        let html = '<div style="display: flex; align-items: center; gap: 8px;">';
+        if (logoSrc) {
+            html += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+        }
+        html += `<span>${selectedPaymentMethod}</span>`;
+        html += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método">&times;</button></div>`;
+        container.html(html);
+    } else {
+        container.html('<span style="color: #f57c00; cursor: pointer;">No seleccionado (Clic para elegir)</span>');
+    }
+}
+
+// Inicializar visualización
+$(document).ready(function() {
+    updatePaymentDisplay();
+    
+    // Inicializar WhatsApp
+    $('#BotonWA').floatingWhatsApp({
+        phone: '573113579437',
+        headerTitle: 'Roser Tecnologías',
+        popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+        showPopup: true,
+        position: "right",
+        size: "60px",
+        backgroundColor: '#25D366',
+        zIndex: 9999
+    });
+});

@@ -318,6 +318,7 @@ window.decreaseQuantity = function(index) {
 
 window.openCartModal = function() {
     updateCartDisplay();
+    if (typeof updatePaymentDisplay === 'function') updatePaymentDisplay();
     if (window.$) $('#cartModal').show();
     else document.getElementById('cartModal').style.display = 'block';
 }
@@ -383,3 +384,126 @@ window.addEventListener('storage', (e) => {
         document.addEventListener('keydown', onKeyDown);
     }
 })();
+
+// Payment Methods Logic
+let currentPaymentSelection = '';
+const paymentMethodLogos = {
+    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+};
+
+window.openPaymentModal = function() {
+    const saved = localStorage.getItem('selectedPayment') || '';
+    currentPaymentSelection = saved;
+    
+    if (window.$) {
+        $('#paymentModal').fadeIn(300);
+    } else {
+        const modal = document.getElementById('paymentModal');
+        if (modal) modal.style.display = 'block';
+    }
+    
+    if(currentPaymentSelection) {
+        if (window.$) {
+            $('.payment-option').removeClass('selected');
+            $('.payment-option').each(function() {
+                if($(this).find('div').text().trim() === currentPaymentSelection) {
+                    $(this).addClass('selected');
+                }
+            });
+        } else {
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.querySelector('div').textContent.trim() === currentPaymentSelection) {
+                    opt.classList.add('selected');
+                }
+            });
+        }
+    }
+};
+
+window.closePaymentModal = function() {
+    if (window.$) {
+        $('#paymentModal').fadeOut(300);
+    } else {
+        const modal = document.getElementById('paymentModal');
+        if (modal) modal.style.display = 'none';
+    }
+};
+
+window.selectPayment = function(method, element) {
+    currentPaymentSelection = method;
+    if (window.$) {
+        $('.payment-option').removeClass('selected');
+        $(element).addClass('selected');
+    } else {
+        document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+};
+
+window.confirmPaymentSelection = function() {
+    if(currentPaymentSelection) {
+        localStorage.setItem('selectedPayment', currentPaymentSelection);
+        closePaymentModal();
+        updatePaymentDisplay();
+        if(window.showToast) {
+            window.playSuccessSound();
+            window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + currentPaymentSelection);
+        } else {
+            alert('Método de pago actualizado: ' + currentPaymentSelection);
+        }
+    } else {
+        alert('Por favor selecciona un método de pago');
+    }
+};
+
+window.removePaymentMethod = function() {
+    localStorage.removeItem('selectedPayment');
+    updatePaymentDisplay();
+};
+
+window.updatePaymentDisplay = function() {
+    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const container = document.getElementById('cartPaymentMethod');
+    
+    if (!container) return;
+    
+    let htmlContent = '';
+    if(selectedPaymentMethod) {
+        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+        htmlContent = '<div style="display: flex; align-items: center; gap: 8px;">';
+        if (logoSrc) {
+            htmlContent += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+        }
+        htmlContent += `<span>${selectedPaymentMethod}</span>`;
+        htmlContent += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método">&times;</button></div>`;
+    } else {
+        htmlContent = '<span style="color: #f57c00; cursor: pointer;">No seleccionado (Clic para elegir)</span>';
+    }
+    
+    container.innerHTML = htmlContent;
+};
+
+// Initialize visualization and WhatsApp
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof updatePaymentDisplay === 'function') updatePaymentDisplay();
+    
+    if (window.$ && $.fn.floatingWhatsApp) {
+        $('#BotonWA').floatingWhatsApp({
+            phone: '573113579437',
+            headerTitle: 'Roser Tecnologías',
+            popupMessage: '¡Hola! ¿En qué podemos ayudarte?',
+            showPopup: true,
+            position: "right",
+            size: "60px",
+            backgroundColor: '#25D366',
+            zIndex: 9999
+        });
+    }
+});
