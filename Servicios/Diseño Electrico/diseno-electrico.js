@@ -119,26 +119,26 @@ if (searchBox && searchIcon && searchInput && cancelIcon) {
   
 // Funcionalidad de búsqueda con redirección - Updated v2
   const products = {
-    'organizador magnético de cables hexastack h1-80': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'organizador magnético': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'hexastack': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'caja táctica para munición 9mm': '../Marketplace/productos/producto-caja-tactica.html',
-    'caja táctica': '../Marketplace/productos/producto-caja-tactica.html',
-    'munición': '../Marketplace/productos/producto-caja-tactica.html',
-    'tacbox': '../Marketplace/productos/producto-caja-tactica.html',
-    'caja para cables cctv cámaras de seguridad': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cables cctv': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cctv 4 canales': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'baluns y borneras caja para cables cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'baluns cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'borneras': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'soporte qr para negocios': '../Marketplace/productos/producto-soporte-qr.html',
-    'soporte qr': '../Marketplace/productos/producto-soporte-qr.html',
-    'código qr': '../Marketplace/productos/producto-soporte-qr.html',
-    '3dcost': '../Productos-Roser/3dcost/3dcost.html',
-    'marketplace': '../Marketplace/marketplace.html',
-    'impresión 3d': 'impresiones-3d.html',
-    'diseño 3d': 'disenos-3.html'
+    'organizador magnético de cables hexastack h1-80': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'hexastack': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'caja táctica para munición 9mm': '../../Marketplace/productos/producto-caja-tactica.html',
+    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
+    'munición': '../../Marketplace/productos/producto-caja-tactica.html',
+    'tacbox': '../../Marketplace/productos/producto-caja-tactica.html',
+    'caja para cables cctv cámaras de seguridad': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'cctv 4 canales': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'baluns y borneras caja para cables cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'baluns cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'borneras': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'soporte qr para negocios': '../../Marketplace/productos/producto-soporte-qr.html',
+    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
+    'código qr': '../../Marketplace/productos/producto-soporte-qr.html',
+    '3dcost': '../../Productos-Roser/3dcost/3dcost.html',
+    'marketplace': '../../Marketplace/marketplace.html',
+    'impresión 3d': '../impresiones-3d.html',
+    'diseño 3d': '../disenos-3.html'
   };
   
   searchInput.addEventListener('input', (e) => {
@@ -229,7 +229,7 @@ function updateCartCount() {
   }
 }
 
-function updateCartDisplay() {
+function updateCartUI() {
   const cartBody = document.getElementById('cartBody');
   
   if (cart.length === 0) {
@@ -242,15 +242,25 @@ function updateCartDisplay() {
   let total = 0;
   
   cart.forEach((item, index) => {
-    const itemTotal = (item.price || 0) * item.quantity;
+    const itemTotal = item.price * item.quantity;
     total += itemTotal;
     
+    // Ajustar ruta de la imagen para la ubicación actual
+    let imagePath = item.image;
+    if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
+        if (imagePath.includes('Marketplace/')) {
+            imagePath = '../../Marketplace/' + imagePath.split('Marketplace/')[1];
+        } else if (imagePath.includes('Imagenes/')) {
+            imagePath = '../../Imagenes/' + imagePath.split('Imagenes/')[1];
+        }
+    }
+
     html += `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+        <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
         <div class="cart-item-details">
           <h4>${item.name}</h4>
-          <p class="cart-item-price">$${(item.price || 0).toLocaleString('es-CO')} COP</p>
+          <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>
         </div>
         <div class="cart-item-quantity">
           <button onclick="decreaseQuantity(${index})">-</button>
@@ -266,35 +276,6 @@ function updateCartDisplay() {
   html += '</div>';
   cartBody.innerHTML = html;
   document.getElementById('cart-total').textContent = `$${total.toLocaleString('es-CO')} COP`;
-
-  // Actualizar visualización del método de pago
-  const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-  const paymentContainer = document.getElementById('cartPaymentMethod');
-  const paymentMethodLogos = {
-      'Nequi': '../Marketplace/metodos de pago/Nequi.png',
-      'Daviplata': '../Marketplace/metodos de pago/Daviplata.png',
-      'Bancolombia': '../Marketplace/metodos de pago/Bancolombia.png',
-      'Efecty': '../Marketplace/metodos de pago/Efecty.png',
-      'Visa': '../Marketplace/metodos de pago/Visa.png',
-      'Mastercard': '../Marketplace/metodos de pago/Mastercard.png',
-      'PSE': '../Marketplace/metodos de pago/PSE.png'
-  };
-
-  if (paymentContainer) {
-      if(selectedPaymentMethod) {
-          const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-          let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
-          if (logoSrc) {
-              paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
-          }
-          paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
-          paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
-          paymentHtml += '</div>';
-          paymentContainer.innerHTML = paymentHtml;
-      } else {
-          paymentContainer.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
-      }
-  }
 }
 
 window.addToCart = function(id, name, price, image) {
@@ -308,7 +289,7 @@ window.addToCart = function(id, name, price, image) {
   
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-  updateCartDisplay();
+  if (typeof updateCartDisplay === 'function') updateCartDisplay(); else updateCartUI();
   
   alert('Producto agregado al carrito');
 };
@@ -317,14 +298,14 @@ window.removeFromCart = function(index) {
   cart.splice(index, 1);
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-  updateCartDisplay();
+  if (typeof updateCartDisplay === 'function') updateCartDisplay(); else updateCartUI();
 };
 
 window.increaseQuantity = function(index) {
   cart[index].quantity++;
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-  updateCartDisplay();
+  if (typeof updateCartDisplay === 'function') updateCartDisplay(); else updateCartUI();
 };
 
 window.decreaseQuantity = function(index) {
@@ -332,12 +313,12 @@ window.decreaseQuantity = function(index) {
     cart[index].quantity--;
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    updateCartDisplay();
+    if (typeof updateCartDisplay === 'function') updateCartDisplay(); else updateCartUI();
   }
 };
 
 window.openCartModal = function() {
-  updateCartDisplay();
+  if (typeof updateCartDisplay === 'function') updateCartDisplay(); else updateCartUI();
   document.getElementById('cartModal').style.display = 'block';
 };
 
@@ -356,23 +337,22 @@ window.checkout = function() {
   let total = 0;
   
   cart.forEach(item => {
-    const itemTotal = (item.price || 0) * item.quantity;
+    const itemTotal = item.price * item.quantity;
     total += itemTotal;
     message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
   });
   
   message += `Total: $${total.toLocaleString('es-CO')} COP`;
   
-  const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
-  message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
-  
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 };
 
+
+
 // Initialize cart
 updateCartCount();
-updateCartDisplay();
+updateCartUI();
 
 // Close modal when clicking outside
 window.addEventListener('click', function(event) {
@@ -382,122 +362,106 @@ window.addEventListener('click', function(event) {
   }
 });
 
-// Sincronizar cambios de almacenamiento
-window.addEventListener('storage', function(e) {
-    if (e.key === 'selectedPayment') updateCartDisplay();
-});
-
-// Variables globales para carousel
-let currentSlide = 0;
-let totalSlides = 5;
-
-// Funciones globales para carousel
-function changeDesignSlide(direction) {
-  currentSlide += direction;
-  
-  if (currentSlide >= totalSlides) {
-    currentSlide = 0;
-  } else if (currentSlide < 0) {
-    currentSlide = totalSlides - 1;
-  }
-  
-  updateCarousel();
-}
-
-function goToDesignSlide(slideIndex) {
-  currentSlide = slideIndex;
-  updateCarousel();
-}
-
-function updateCarousel() {
-  const carousel = document.getElementById('designCarousel');
-  const progressBars = document.querySelectorAll('.progress-bar');
-  const thumbnails = document.querySelectorAll('.thumbnail');
-  
-  if (carousel) {
-    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-  }
-  
-  // Update progress bars
-  progressBars.forEach((bar, index) => {
-    if (index === currentSlide) {
-      bar.classList.add('active');
-    } else {
-      bar.classList.remove('active');
-    }
-  });
-  
-  // Update thumbnails
-  thumbnails.forEach((thumbnail, index) => {
-    if (index === currentSlide) {
-      thumbnail.classList.add('active');
-    } else {
-      thumbnail.classList.remove('active');
-    }
-  });
-}
-
-// Modal functions
-function openImageModal(imageSrc) {
-  const modal = document.getElementById('imageModal');
-  const modalImage = document.getElementById('modalImage');
-  
-  modalImage.src = imageSrc;
-  modal.style.display = 'block';
-}
-
-function closeImageModal() {
-  const modal = document.getElementById('imageModal');
-  modal.style.display = 'none';
-}
-
-// Funciones para modal 3D
-function open3DModal(modelSrc) {
-  const modal = document.getElementById('model3DModal');
-  const modelViewer = document.getElementById('modal3DViewer');
-  
-  modelViewer.src = modelSrc;
-  modal.style.display = 'block';
-}
-
-function close3DModal() {
-  const modal = document.getElementById('model3DModal');
-  modal.style.display = 'none';
-}
-
-// Add click functionality to progress bars
+// Solución para botones no clickeables y funcionalidad de cotización
 document.addEventListener('DOMContentLoaded', function() {
-  const progressBars = document.querySelectorAll('.progress-bar');
-  progressBars.forEach((bar, index) => {
-    bar.addEventListener('click', () => {
-      goToDesignSlide(index);
-    });
-  });
-  
-  // Close modal when clicking outside the image
-  document.getElementById('imageModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      closeImageModal();
-    }
-  });
-  
-  // Close modal when clicking outside 3D model
-  document.getElementById('model3DModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      close3DModal();
-    }
-  });
-  
-  // Close modal with ESC key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeImageModal();
-      close3DModal();
-    }
-  });
-});
+    // 1. Corrección de estilos (Z-Index)
+    const style = document.createElement('style');
+    style.textContent = `
+        .hero-text, .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        .hero-text a, .hero-text button, .whatsapp-button, .btn-primary, .btn {
+            position: relative;
+            z-index: 20 !important;
+            cursor: pointer;
+        }
+        .hero-image, .model-viewer-container {
+            z-index: 1;
+        }
+        
+        /* Corrección del Modal del Carrito (Estilo Index - Optimizado) */
+        #cartModal .modal-content {
+            max-width: 600px !important;
+            width: 90% !important;
+            margin: 5% auto !important;
+            max-height: 85vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 0 !important;
+            border-radius: 16px !important;
+            overflow: hidden !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+        }
 
-// Auto-play
-setInterval(function() {
-  changeDesignSlide(1);
-}, 6000);
+        #cartModal .cart-header {
+            padding: 20px 25px !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            flex-shrink: 0;
+            background: #fff;
+            position: relative;
+        }
+
+        #cartModal .cart-header h2 {
+            font-size: 1.5rem !important;
+            margin: 0 !important;
+            color: #333;
+        }
+
+        #cartModal .cart-body {
+            padding: 20px 25px !important;
+            overflow-y: auto !important;
+            flex-grow: 1;
+            overscroll-behavior: contain;
+        }
+
+        #cartModal .cart-footer {
+            padding: 20px 25px !important;
+            border-top: 1px solid #f0f0f0 !important;
+            flex-shrink: 0;
+            background: #f9f9f9;
+        }
+
+        #cartModal .close {
+            top: 20px !important;
+            right: 25px !important;
+            font-size: 28px !important;
+            line-height: 1 !important;
+            z-index: 10;
+            color: #aaa;
+            opacity: 1;
+        }
+        
+        #cartModal .close:hover {
+            color: #333;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. Asignar funcionalidad al botón de Cotizar (Igual que en Diseño 3D)
+    const heroBtns = document.querySelectorAll('.hero-text a, .hero-text button, .whatsapp-button, a[href="#cotizar"]');
+    heroBtns.forEach(btn => {
+        // Verificar si es un botón de cotizar
+        if (btn.textContent.toLowerCase().includes('cotizar') || btn.classList.contains('whatsapp-button') || btn.getAttribute('href') === '#cotizar') {
+            
+            const phone = '573113579437';
+            const message = 'Hola, me interesa solicitar una cotización para Diseño Eléctrico.';
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+            
+            // Si es un enlace <a>, actualizamos el href directamente para que funcione nativamente
+            if (btn.tagName === 'A') {
+                btn.href = url;
+                btn.target = '_blank';
+            }
+            
+            btn.addEventListener('click', function(e) {
+                // Si es un botón (no enlace), abrimos la ventana manualmente
+                if (this.tagName !== 'A') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(url, '_blank');
+                }
+            });
+        }
+    });
+});

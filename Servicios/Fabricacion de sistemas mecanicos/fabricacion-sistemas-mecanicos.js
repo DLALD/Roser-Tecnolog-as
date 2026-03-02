@@ -2,51 +2,51 @@
 const services = [
     {
         id: 1,
-        name: "Diseño de Piezas Mecánicas",
-        description: "Diseño CAD de piezas mecánicas personalizadas con especificaciones técnicas detalladas",
+        name: "Mecanizado CNC",
+        description: "Fabricación de piezas de alta precisión mediante mecanizado CNC en diversos materiales",
         details: [
-            "Modelado 3D preciso",
-            "Especificaciones técnicas",
-            "Tolerancias dimensionales",
-            "Selección de materiales"
+            "Torneado CNC",
+            "Fresado CNC",
+            "Tolerancias milimétricas",
+            "Acabados profesionales"
         ],
-        icon: "Diseños mecanicos/3.png"
+        icon: "Sistemas mecanicos/1.png"
     },
     {
         id: 2,
-        name: "Diseño de Ensambles",
-        description: "Diseño completo de ensambles mecánicos con análisis de interferencias",
+        name: "Soldadura Industrial",
+        description: "Servicios de soldadura especializada para estructuras y componentes mecánicos",
         details: [
-            "Ensambles complejos",
-            "Análisis de interferencias",
-            "Lista de materiales (BOM)",
-            "Explosionados técnicos"
+            "Soldadura MIG/MAG",
+            "Soldadura TIG",
+            "Soldadura por arco",
+            "Certificación de calidad"
         ],
-        icon: "Diseños mecanicos/4.png"
+        icon: "Sistemas mecanicos/2.png"
     },
     {
         id: 3,
-        name: "Planos Técnicos",
-        description: "Elaboración de planos técnicos normalizados para fabricación",
+        name: "Ensamble de Sistemas",
+        description: "Ensamble completo de sistemas mecánicos con control de calidad riguroso",
         details: [
-            "Planos normalizados",
-            "Vistas y cortes técnicos",
-            "Acotación detallada",
-            "Notas de fabricación"
+            "Ensamble de precisión",
+            "Pruebas funcionales",
+            "Control de calidad",
+            "Documentación técnica"
         ],
-        icon: "Diseños mecanicos/5.png"
+        icon: "Sistemas mecanicos/3.png"
     },
     {
         id: 4,
-        name: "Diseño de Mecanismos",
-        description: "Diseño de mecanismos y sistemas de transmisión de movimiento",
+        name: "Fabricación de Prototipos",
+        description: "Desarrollo y fabricación de prototipos funcionales para validación de diseños",
         details: [
-            "Sistemas de transmisión",
-            "Análisis cinemático",
-            "Cálculo de fuerzas",
-            "Optimización de movimiento"
+            "Prototipos rápidos",
+            "Validación funcional",
+            "Iteración de diseño",
+            "Pruebas de campo"
         ],
-        icon: "Diseños mecanicos/6.png"
+        icon: "Sistemas mecanicos/4.png"
     }
 ];
 
@@ -100,7 +100,7 @@ function addToCart(serviceId) {
             name: service.name,
             price: 0,
             quantity: 1,
-            image: '../Imagenes/D_mecanico.png'
+            image: service.icon
         });
     }
     
@@ -147,9 +147,19 @@ function updateCartUI() {
         cartItems.innerHTML = '<div class="cart-empty">El carrito está vacío</div>';
         cartTotal.textContent = '$0 COP';
     } else {
-        cartItems.innerHTML = cart.map((item, index) => `
+        cartItems.innerHTML = cart.map((item, index) => {
+            let imagePath = item.image;
+            // Ajustar ruta de la imagen si es relativa y pertenece a carpetas conocidas
+            if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
+                if (imagePath.includes('Marketplace/')) {
+                    imagePath = '../../Marketplace/' + imagePath.split('Marketplace/')[1];
+                } else if (imagePath.includes('Imagenes/')) {
+                    imagePath = '../../Imagenes/' + imagePath.split('Imagenes/')[1];
+                }
+            }
+            return `
             <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p class="cart-item-price">${item.price > 0 ? '$' + item.price.toLocaleString('es-CO') + ' COP' : 'Cotización'}</p>
@@ -162,7 +172,7 @@ function updateCartUI() {
                 <div class="cart-item-total">${item.price > 0 ? '$' + (item.price * item.quantity).toLocaleString('es-CO') + ' COP' : 'Cotización'}</div>
                 <button class="remove-item" onclick="removeFromCart(${index})">&times;</button>
             </div>
-        `).join('');
+        `}).join('');
         
         if (totalPrice > 0) {
             cartTotal.textContent = '$' + totalPrice.toLocaleString('es-CO') + ' COP';
@@ -194,34 +204,35 @@ function showNotification(message) {
     }, 2000);
 }
 
-// Search Functionality - Copied from diseño eléctrico
+// Search Functionality
 const searchBox = document.querySelector('.search-box');
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.getElementById('searchInput');
 const cancelIcon = document.querySelector('.cancel-icon');
 
 const products = {
-    'organizador magnético de cables hexastack h1-80': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'organizador magnético': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'hexastack': '../Marketplace/productos/producto-organizador-magnetico.html',
-    'caja táctica para munición 9mm': '../Marketplace/productos/producto-caja-tactica.html',
-    'caja táctica': '../Marketplace/productos/producto-caja-tactica.html',
-    'munición': '../Marketplace/productos/producto-caja-tactica.html',
-    'tacbox': '../Marketplace/productos/producto-caja-tactica.html',
-    'caja para cables cctv cámaras de seguridad': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cables cctv': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cctv 4 canales': '../Marketplace/productos/producto-caja-cables-cctv.html',
-    'baluns y borneras caja para cables cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'baluns cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'borneras': '../Marketplace/productos/producto-baluns-8-canales.html',
-    'soporte qr para negocios': '../Marketplace/productos/producto-soporte-qr.html',
-    'soporte qr': '../Marketplace/productos/producto-soporte-qr.html',
-    'código qr': '../Marketplace/productos/producto-soporte-qr.html',
-    '3dcost': '../Productos-Roser/3dcost/3dcost.html',
-    'marketplace': '../Marketplace/marketplace.html',
-    'impresión 3d': 'impresiones-3d.html',
-    'diseño 3d': 'disenos-3.html',
-    'diseño eléctrico': 'diseno-electrico.html'
+    'organizador magnético de cables hexastack h1-80': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'hexastack': '../../Marketplace/productos/producto-organizador-magnetico.html',
+    'caja táctica para munición 9mm': '../../Marketplace/productos/producto-caja-tactica.html',
+    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
+    'munición': '../../Marketplace/productos/producto-caja-tactica.html',
+    'tacbox': '../../Marketplace/productos/producto-caja-tactica.html',
+    'caja para cables cctv cámaras de seguridad': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'cctv 4 canales': '../../Marketplace/productos/producto-caja-cables-cctv.html',
+    'baluns y borneras caja para cables cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'baluns cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'borneras': '../../Marketplace/productos/producto-baluns-8-canales.html',
+    'soporte qr para negocios': '../../Marketplace/productos/producto-soporte-qr.html',
+    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
+    'código qr': '../../Marketplace/productos/producto-soporte-qr.html',
+    '3dcost': '../../Productos-Roser/3dcost/3dcost.html',
+    'marketplace': '../../Marketplace/marketplace.html',
+    'impresión 3d': '../Impresiones-3D/impresiones-3d.html',
+    'diseño 3d': '../Diseños-3D/disenos-3d.html',
+    'diseño eléctrico': '../Diseño Electrico/diseno-electrico.html',
+    'diseño mecánico': '../Diseño mecanico/diseno-mecanico.html'
 };
 
 if (searchBox && searchIcon && searchInput && cancelIcon) {
@@ -353,33 +364,15 @@ document.getElementById('btnQuote').addEventListener('click', () => {
         return;
     }
     
-    // Obtener el método de pago seleccionado
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    
     let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
-    let total = 0;
-    
-    cart.forEach(item => {
-        const itemTotal = (item.price || 0) * item.quantity;
-        total += itemTotal;
-        message += `• ${item.name}\n  Cantidad: ${item.quantity}`;
-        if (item.price > 0) {
-            message += `\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP`;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.name}`;
+        if (item.quantity > 1) {
+            message += ` (x${item.quantity})`;
         }
-        message += '\n\n';
+        message += '\n';
     });
-    
-    if (total > 0) {
-        message += `Total: $${total.toLocaleString('es-CO')} COP`;
-    }
-    
-    if (selectedPaymentMethod) {
-        message += `\n\nMétodo de Pago: ${selectedPaymentMethod}`;
-    } else {
-        message += `\n\nMétodo de Pago: A convenir`;
-    }
-    
-    message += '\n\n¿Podrían proporcionarme más información?';
+    message += '\n¿Podrían proporcionarme más información?';
     
     const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -435,34 +428,8 @@ $(document).ready(function() {
 loadServices();
 updateCartUI();
 
-// Zoom on Scroll Animation
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('zoomed');
-        }
-    });
-}, observerOptions);
-
-// Observe all zoom elements after a small delay to ensure DOM is ready
+// Slide in animation for hero image
 setTimeout(() => {
-    document.querySelectorAll('.zoom-on-scroll').forEach(element => {
-        observer.observe(element);
-        // Add click event to restart animation
-        element.addEventListener('click', () => {
-            element.classList.remove('zoomed');
-            setTimeout(() => {
-                element.classList.add('zoomed');
-            }, 10);
-        });
-    });
-    
-    // Add click event to hero image
     const heroImage = document.querySelector('.slide-in-right');
     if (heroImage) {
         heroImage.addEventListener('click', () => {

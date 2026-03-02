@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diseño Mecánico - Roser Tecnologías</title>
-    <link rel="icon" type="image/x-icon" href="../Imagenes/Rosero.png">
-    <link rel="stylesheet" href="diseno-mecanico.css">
+    <title>Fabricación de Sistemas Mecánicos - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="../../Imagenes/Rosero.png">
+    <link rel="stylesheet" href="fabricacion-sistemas-mecanicos.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
     <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
     <style>
-        /* Estilos para el Modal de Pagos (Independiente del CSS original) */
-        .payment-modal {
+        /* Estilos Generales para Modales (Payment & Cart) */
+        .modal {
             display: none;
             position: fixed;
-            z-index: 10001; /* Mayor que el navbar */
+            z-index: 10000;
             left: 0;
             top: 0;
             width: 100%;
@@ -24,7 +24,7 @@
             backdrop-filter: blur(5px);
         }
 
-        .payment-modal-content {
+        .modal .modal-content {
             background-color: #fff;
             margin: 5% auto;
             padding: 0;
@@ -33,7 +33,9 @@
             max-width: 600px;
             border-radius: 16px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: left;
             animation: modalFadeIn 0.3s;
+            position: relative;
         }
 
         @keyframes modalFadeIn {
@@ -41,35 +43,32 @@
             to {opacity: 1; transform: translateY(0);}
         }
 
-        .payment-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            position: relative;
-        }
-
-        .payment-close {
+        .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
-            cursor: pointer;
             position: absolute;
             right: 20px;
             top: 15px;
+            cursor: pointer;
+            z-index: 10;
+            line-height: 1;
         }
+        .close:hover { color: #333; }
 
-        .payment-close:hover { color: #333; }
-
+        /* Estilos para Métodos de Pago */
         .payment-option {
             border: 2px solid #eee;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             background: white;
         }
@@ -83,66 +82,37 @@
         .payment-option.selected {
             border-color: #4CAF50;
             background: #e8f5e9;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
         }
 
         .payment-option img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-        }
-
-        /* Botón Flotante de Pagos */
-        .floating-payment-btn {
-            position: fixed;
-            bottom: 100px;
-            right: 25px;
             width: 60px;
             height: 60px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 9990;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
+            object-fit: contain;
+            margin-bottom: 5px;
+            transition: transform 0.3s;
         }
-        
-        .floating-payment-btn:hover {
+
+        .payment-option.selected img {
             transform: scale(1.1);
         }
-        
-        .floating-payment-btn img {
-            width: 60%;
-            height: 60%;
-            object-fit: contain;
+
+        .remove-payment-btn {
+            background: none;
+            border: none;
+            color: #d32f2f;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0 0 0 5px;
+            line-height: 1;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .remove-payment-btn:hover {
+            color: #b71c1c;
         }
 
-        .payment-tooltip {
-            position: absolute;
-            right: 75px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .floating-payment-btn:hover .payment-tooltip {
-            opacity: 1;
-            visibility: visible;
-            right: 70px;
-        }
-
-        /* Notificaciones Toast */
+        /* Estilos para Notificaciones Toast */
         .toast-notification {
             position: fixed;
             bottom: 30px;
@@ -156,16 +126,17 @@
             gap: 15px;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.4s;
-            z-index: 10002;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 10000;
             border-left: 5px solid #4CAF50;
+            min-width: 300px;
         }
         
         .toast-notification.show {
             transform: translateY(0);
             opacity: 1;
         }
-
+        
         .toast-notification.info {
             border-left-color: #2196F3;
         }
@@ -215,14 +186,59 @@
             color: #666;
         }
 
-        .remove-payment-btn {
-            background: none;
-            border: none;
-            color: #d32f2f;
+        /* Estilos para Botón Flotante de Pagos */
+        .floating-payment-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             cursor: pointer;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-left: 10px;
+            z-index: 9990;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .floating-payment-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+        
+        .floating-payment-btn img {
+            width: 60%;
+            height: 60%;
+            object-fit: contain;
+            border-radius: 0;
+        }
+
+        /* Tooltip para el botón flotante */
+        .payment-tooltip {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .floating-payment-btn:hover .payment-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 70px;
         }
     </style>
 </head>
@@ -232,7 +248,7 @@
     <!-- Botón Flotante de Métodos de Pago -->
     <div class="floating-payment-btn" onclick="openPaymentModal()">
         <span class="payment-tooltip">Métodos de Pago</span>
-        <img src="../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
+        <img src="../../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
     </div>
     
     <!-- Navbar -->
@@ -242,19 +258,19 @@
                 <span class="menu-lines">☰</span>
             </div>
             <div class="nav-logo">
-                <a href="../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-                    <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                <a href="../../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <img src="../../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
                     <h2>Roser Tecnologías</h2>
                 </a>
-                <a href="../Marketplace/marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
-                    <img src="../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
+                <a href="../../Marketplace/marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
+                    <img src="../../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
                     <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
                 </a>
             </div>
             <ul class="nav-menu"></ul>
             <div class="nav-right">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Buscar productos...">
+                    <input type="text" id="searchInput" placeholder="Buscar servicios...">
                     <div class="search-icon">
                         <svg viewBox="0 0 24 24">
                             <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -268,7 +284,7 @@
                 </div>
             </div>
             <div class="cart-icon" id="cartIcon">
-                <img src="../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+                <img src="../../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
                 <span class="cart-count" id="cart-count">0</span>
             </div>
         </div>
@@ -277,59 +293,59 @@
         <div class="sidebar-dropdown">
             <div class="dropdown-section">
                 <div class="section-header">
-                    <img src="../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+                    <img src="../../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
                     <span class="section-title">Servicios</span>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
-                    <a href="disenos-3.html">
-                        <img src="../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+                    <a href="../Diseños-3D/disenos-3.html">
+                        <img src="../../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
                         Diseños 3D
                     </a>
-                    <a href="impresiones-3d.html">
-                        <img src="../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+                    <a href="../Impresiones-3D/impresiones-3d.html">
+                        <img src="../../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
                         Impresión 3D
                     </a>
-                    <a href="diseno-electrico.html">
-                        <img src="../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+                    <a href="../Diseño Electrico/diseno-electrico.html">
+                        <img src="../../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
                         Diseño Eléctrico
                     </a>
-                    <a href="diseno-mecanico.html">
-                        <img src="../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+                    <a href="../Diseño mecanico/diseno-mecanico.html">
+                        <img src="../../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
                         Diseño Mecánico
                     </a>
                     <a href="fabricacion-sistemas-mecanicos.html">
-                        <img src="../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+                        <img src="../../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
                         Fabricación de Sistemas Mecánicos
                     </a>
                 </div>
             </div>
             <div class="dropdown-section">
                 <div class="section-header">
-                    <img src="../Imagenes/PTS.png" alt="Productos" class="section-icon">
+                    <img src="../../Imagenes/PTS.png" alt="Productos" class="section-icon">
                     <span class="section-title">Productos</span>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
                     <div class="prototypes-header">
-                        <img src="../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                        <img src="../../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
                         Prototipos
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="prototype-subsection">
-                        <a href="../Productos-Roser/DePie/DePie.html">
-                            <img src="../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                        <a href="../../Productos-Roser/DePie/DePie.html">
+                            <img src="../../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
                             DePie
                         </a>
                     </div>
                     <div class="apps-header" data-toggle="apps">
-                        <img src="../Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                        <img src="../../Imagenes/apps.png" alt="Apps" class="subsection-icon">
                         Apps
                         <span class="section-arrow">▼</span>
                     </div>
                     <div class="sub-subsection">
-                        <a href="../Productos-Roser/3dcost/3dcost.html">
-                            <img src="../Imagenes/3D.png" alt="3D" class="subsection-icon">
+                        <a href="../../Productos-Roser/3dcost/3dcost.html">
+                            <img src="../../Imagenes/3D.png" alt="3D" class="subsection-icon">
                             3DCost
                         </a>
                     </div>
@@ -337,25 +353,25 @@
             </div>
             <div class="dropdown-section">
                 <div class="section-header">
-                    <img src="../Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <img src="../../Imagenes/empresa.png" alt="Empresa" class="section-icon">
                     <span class="section-title">Empresa</span>
                     <span class="section-arrow">▼</span>
                 </div>
                 <div class="subsection">
-                    <a href="../Empresa/Conocenos/conocenos.html">
-                        <img src="../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                    <a href="../../Empresa/Conocenos/conocenos.html">
+                        <img src="../../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
                         Conocenos
                     </a>
-                    <a href="../Empresa/Mision y Vision/mision-vision.html">
-                        <img src="../Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                    <a href="../../Empresa/Mision y Vision/mision-vision.html">
+                        <img src="../../Imagenes/vision.png" alt="Vision" class="subsection-icon">
                         Misión y Visión
                     </a>
-                    <a href="../Empresa/Terminos y Condiciones/terminos-condiciones.html">
-                        <img src="../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                    <a href="../../Empresa/Terminos y Condiciones/terminos-condiciones.html">
+                        <img src="../../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
                         Términos y Condiciones
                     </a>
-                    <a href="../Empresa/Politicas y Privacidad/politica-privacidad.html" target="_self">
-                        <img src="../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                    <a href="../../Empresa/Politicas y Privacidad/politica-privacidad.html" target="_self">
+                        <img src="../../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
                         Privacidad
                     </a>
                 </div>
@@ -366,10 +382,10 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="header-banner">
-            <img src="../Imagenes/Rosero.png" alt="Roser Tecnologías" class="header-logo">
+            <img src="../../Imagenes/Rosero.png" alt="Roser Tecnologías" class="header-logo">
             <div class="header-text">
-                <h1>Diseño Mecánico</h1>
-                <p class="subtitle">Soluciones profesionales de diseño mecánico para tus proyectos</p>
+                <h1>Fabricación de Sistemas Mecánicos</h1>
+                <p class="subtitle">Transformamos diseños en realidad con precisión y calidad</p>
             </div>
         </div>
         
@@ -377,10 +393,10 @@
         <section class="hero-section">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h2>¿Una pieza crítica que no está disponible en el mercado?</h2>
-                    <p>Nuestro equipo la diseña y fabrica según tus necesidades en tiempo récord.</p>
-                    <p class="hero-subtitle">Explora nuestras soluciones y solicita tu cotización personalizada ahora.</p>
-                    <button class="btn-hero" onclick="window.open('https://wa.me/573113579437?text=Hola, quiero solicitar una cotización de diseño mecánico', '_blank')">
+                    <h2>De la idea al producto final</h2>
+                    <p>Fabricamos sistemas mecánicos completos con los más altos estándares de calidad.</p>
+                    <p class="hero-subtitle">Contamos con tecnología de punta y personal altamente capacitado.</p>
+                    <button class="btn-hero" onclick="window.open('https://wa.me/573113579437?text=Hola, quiero solicitar una cotización de fabricación de sistemas mecánicos', '_blank')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;">
                             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
                         </svg>
@@ -388,98 +404,183 @@
                     </button>
                 </div>
                 <div class="hero-image slide-in-right">
-                    <img src="Diseños mecanicos/1.png" alt="Diseño Mecánico">
+                    <img src="Sistemas mecanicos/1.png" alt="Fabricación Mecánica">
                 </div>
             </div>
         </section>
 
-        <!-- Innovation Section -->
-        <section class="info-section">
-            <div class="info-content reverse">
-                <div class="info-image zoom-on-scroll">
-                    <img src="Diseños mecanicos/2.png" alt="Innovación y Precisión">
+        <!-- Benefits Section -->
+        <section class="benefits-section">
+            <h2 class="section-title">Beneficios de Nuestros Sistemas Mecánicos</h2>
+            <p class="section-subtitle">Integramos soluciones personalizadas que optimizan procesos, minimizan costos y permiten una expansión flexible. La ingeniería detrás de cada beneficio responde a estándares técnicos internacionales y necesidades reales de planta.</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/5.png" alt="Flexibilidad"></div>
+                    <h3>Flexibilidad de diseño</h3>
+                    <p>Permite diseños adaptables combinados en una sola línea continua ajustable.</p>
                 </div>
-                <div class="info-text">
-                    <h2>Innovación, precisión y confiabilidad para su industria</h2>
-                    <p>En Roser Tecnologías desarrollamos soluciones de diseño mecánico que convierten ideas o necesidades en componentes, mecanismos y sistemas listos para producir. Nuestro enfoque se adapta tanto a la creación de nuevos diseños, como a la optimización de piezas y maquinarias ya existentes, aplicando ingeniería inversa y mejoras funcionales que prolongan la vida útil de sus equipos.</p>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/6.png" alt="Bajo costo"></div>
+                    <h3>Bajo costo de mantenimiento</h3>
+                    <p>Diseño con pocas partes móviles, lo que reduce fallas y gastos operativos.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/7.png" alt="Control"></div>
+                    <h3>Control de calidad</h3>
+                    <p>Monitorea el proceso en tiempo real, optimiza flujos y permite trazabilidad.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/8.png" alt="Hermeticidad"></div>
+                    <h3>Hermeticidad</h3>
+                    <p>Sistema cerrado que evita contaminación cruzada y cumple normas sanitarias.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/9.png" alt="Múltiples rutas"></div>
+                    <h3>Múltiples rutas de destino</h3>
+                    <p>Facilita la distribución a distintos puntos desde una sola línea mediante válvulas.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/10.png" alt="Personalizado"></div>
+                    <h3>Diseño personalizado</h3>
+                    <p>Soluciones adaptadas a cada planta, proceso y tipo de material.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/11.png" alt="Reducción"></div>
+                    <h3>Reducción de pérdidas</h3>
+                    <p>Minimiza desperdicios durante el transporte, mejorando el rendimiento.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/12.png" alt="Integración"></div>
+                    <h3>Integración con procesos</h3>
+                    <p>Compatible con líneas ya instaladas, reduciendo tiempos de implementación.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/13.png" alt="Eficiencia"></div>
+                    <h3>Alta eficiencia energética</h3>
+                    <p>Optimización del consumo energético en todos los procesos de fabricación.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/14.png" alt="Seguridad"></div>
+                    <h3>Seguridad operativa</h3>
+                    <p>Sistemas con protocolos de seguridad industrial certificados.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/15.png" alt="Escalabilidad"></div>
+                    <h3>Escalabilidad</h3>
+                    <p>Diseños modulares que permiten crecimiento según demanda productiva.</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><img src="Sistemas mecanicos/16.png" alt="Precisión"></div>
+                    <h3>Precisión dimensional</h3>
+                    <p>Tolerancias milimétricas garantizadas en cada componente fabricado.</p>
                 </div>
             </div>
         </section>
 
-        <!-- CAE Section -->
-        <section class="info-section dark">
-            <div class="info-content">
-                <div class="info-text">
-                    <h2>Simulación CAE</h2>
-                    <p>En Roser aplicamos herramientas de Simulación CAE para predecir, analizar y optimizar el comportamiento de piezas, moldes y sistemas mecánicos antes de su fabricación.</p>
-                    <p>A través de métodos de análisis estructural, térmico, de flujo y deformación, evaluamos el desempeño de los diseños bajo condiciones reales de operación, identificando oportunidades de mejora en resistencia, peso, disipación térmica o durabilidad.</p>
-                    <p>Esta tecnología nos permite reducir tiempos de desarrollo, minimizar errores y garantizar la eficiencia del diseño final, logrando soluciones más confiables y competitivas desde la etapa de ingeniería.</p>
-                    <p>En Roser convertimos los datos en decisiones inteligentes para una ingeniería más precisa y eficiente.</p>
+        <!-- Industries Section -->
+        <section class="industries-section">
+            <div class="industries-content">
+                <div class="industries-text">
+                    <h2>OPERACIÓN Y RESPALDO MUNDIAL</h2>
+                    <p class="highlight-text">Sistemas de Fabricación Mecánica Industrial para Diversos Sectores</p>
+                    <p>En <strong>Roser Tecnologías</strong> diseñamos, fabricamos e instalamos sistemas mecánicos para diversas industrias.</p>
+                    
+                    <div class="info-block">
+                        <div class="info-icon">🏭</div>
+                        <div>
+                            <h3>Industrias donde operamos</h3>
+                            <ul>
+                                <li>Plásticos, resinas y PVC.</li>
+                                <li>Alimentos y Sector Pet Food.</li>
+                                <li>Industria de Azúcar / Ingenios Azucareros.</li>
+                                <li>Cementos, agregados y minerales.</li>
+                                <li>Industria química y farmacéutica.</li>
+                                <li>Procesos de manejo de café.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="info-block">
+                        <div class="info-icon">⚗️</div>
+                        <div>
+                            <h3>Tipos de materiales fabricados</h3>
+                            <p>Acero inoxidable, acero al carbono, aluminio, cobre, bronce, plásticos industriales, materiales compuestos, entre otros.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-image zoom-on-scroll">
-                    <img src="Diseños mecanicos/3.jpg" alt="Simulación CAE">
+                <div class="industries-image">
+                    <img src="Sistemas mecanicos/2.png" alt="Sistemas Industriales">
                 </div>
             </div>
         </section>
 
-        <!-- Engineering Section -->
-        <section class="info-section">
-            <div class="info-content reverse">
-                <div class="info-image zoom-on-scroll">
-                    <img src="Diseños mecanicos/4.jpg" alt="Ingeniería de Detalle">
+        <!-- How It Works Section -->
+        <section class="how-works-section">
+            <div class="how-works-content">
+                <div class="how-works-text">
+                    <h2>¿Cómo funciona la fabricación mecánica industrial?</h2>
+                    <p>La fabricación mecánica permite crear componentes, estructuras y sistemas completos mediante procesos de mecanizado, soldadura, ensamble y control de calidad. Es una solución segura, precisa y eficiente para automatizar y optimizar procesos en múltiples industrias.</p>
+                    <p>Ideal para plantas que exigen precisión, durabilidad y control en la fabricación de piezas y sistemas.</p>
+                    
+                    <div class="info-block">
+                        <div class="info-icon">⚙️</div>
+                        <div>
+                            <h3>Eficiencia, precisión y automatización</h3>
+                            <p>Sistema rápido, preciso y confiable que minimiza errores, mejora la seguridad operativa y se integra fácilmente con procesos industriales automatizados.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="info-text">
-                    <h2>Ingeniería de detalle para el diseño o rediseño de plantas productivas</h2>
-                    <p>Transformamos ideas en proyectos estructurados. A través del servicio de Ingeniería Conceptual, analizamos la viabilidad técnica y económica de la planta, escuchando, entendiendo y evaluando tus necesidades productivas.</p>
-                    <p>Definimos los lineamientos generales del diseño — capacidad, cantidad de equipos, materiales y configuración de áreas—, estableciendo las bases que determinarán el costo final y la eficiencia operativa de la instalación.</p>
-                    <p>Esta fase permite tomar decisiones acertadas desde el inicio, maximizando los esfuerzos de optimización y asegurando una visión clara antes de avanzar a etapas posteriores.</p>
+                <div class="how-works-images">
+                    <div class="stat-badge">+500 Proyectos</div>
+                    <img src="Sistemas mecanicos/3.png" alt="Proceso de Fabricación" class="main-image">
                 </div>
             </div>
         </section>
 
         <!-- Services Grid -->
-        <h2 class="services-title">Nuestros Servicios</h2>
+        <h2 class="services-title">Nuestros Servicios de Fabricación</h2>
         <div class="services-grid" id="servicesGrid">
             <!-- Services will be loaded here by JS -->
         </div>
     </main>
 
     <!-- Modal de Selección de Método de Pago -->
-    <div id="paymentModal" class="payment-modal">
-        <div class="payment-modal-content">
-            <div class="payment-header">
-                <span class="payment-close" onclick="closePaymentModal()">&times;</span>
+    <div id="paymentModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <div class="payment-header" style="padding: 20px; border-bottom: 1px solid #eee;">
                 <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
                 <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
             </div>
             <div class="payment-body" style="padding: 30px 20px;">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px;">
+                <div class="payment-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px;">
                     <div class="payment-option" onclick="selectPayment('Nequi', this)">
-                        <img src="../Marketplace/metodos de pago/Nequi.png" alt="Nequi">
+                        <img src="../../Marketplace/metodos de pago/Nequi.png" alt="Nequi">
                         <div style="font-weight: 600;">Nequi</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('Daviplata', this)">
-                        <img src="../Marketplace/metodos de pago/Daviplata.png" alt="Daviplata">
+                        <img src="../../Marketplace/metodos de pago/Daviplata.png" alt="Daviplata">
                         <div style="font-weight: 600;">Daviplata</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
-                        <img src="../Marketplace/metodos de pago/Bancolombia.png" alt="Bancolombia">
+                        <img src="../../Marketplace/metodos de pago/Bancolombia.png" alt="Bancolombia">
                         <div style="font-weight: 600;">Bancolombia</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('Efecty', this)">
-                        <img src="../Marketplace/metodos de pago/Efecty.png" alt="Efecty">
+                        <img src="../../Marketplace/metodos de pago/Efecty.png" alt="Efecty">
                         <div style="font-weight: 600;">Efecty</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('Visa', this)">
-                        <img src="../Marketplace/metodos de pago/Visa.png" alt="Visa">
+                        <img src="../../Marketplace/metodos de pago/Visa.png" alt="Visa">
                         <div style="font-weight: 600;">Visa</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('Mastercard', this)">
-                        <img src="../Marketplace/metodos de pago/Mastercard.png" alt="Mastercard">
+                        <img src="../../Marketplace/metodos de pago/Mastercard.png" alt="Mastercard">
                         <div style="font-weight: 600;">Mastercard</div>
                     </div>
                     <div class="payment-option" onclick="selectPayment('PSE', this)">
-                        <img src="../Marketplace/metodos de pago/PSE.png" alt="PSE">
+                        <img src="../../Marketplace/metodos de pago/PSE.png" alt="PSE">
                         <div style="font-weight: 600;">PSE</div>
                     </div>
                 </div>
@@ -517,19 +618,19 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
-    <script src="diseno-mecanico.js"></script>
+    <script src="fabricacion-sistemas-mecanicos.js"></script>
     
     <script>
         // Lógica de Métodos de Pago (Inyectada sin romper el JS original)
         let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
         const paymentMethodLogos = {
-            'Nequi': '../Marketplace/metodos de pago/Nequi.png',
-            'Daviplata': '../Marketplace/metodos de pago/Daviplata.png',
-            'Bancolombia': '../Marketplace/metodos de pago/Bancolombia.png',
-            'Efecty': '../Marketplace/metodos de pago/Efecty.png',
-            'Visa': '../Marketplace/metodos de pago/Visa.png',
-            'Mastercard': '../Marketplace/metodos de pago/Mastercard.png',
-            'PSE': '../Marketplace/metodos de pago/PSE.png'
+            'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+            'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+            'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+            'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+            'Visa': '../../Marketplace/metodos de pago/Visa.png',
+            'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+            'PSE': '../../Marketplace/metodos de pago/PSE.png'
         };
 
         window.openPaymentModal = function() {
@@ -615,38 +716,58 @@
         };
 
         // Sobrescribir checkout para incluir el método de pago en el mensaje
-        window.checkout = function() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cart.length === 0) {
-                alert('Tu carrito está vacío');
-                return;
+        // Clonamos el botón para eliminar el listener original y agregar el nuevo
+        $(document).ready(function() {
+            const btnQuote = document.getElementById('btnQuote');
+            if(btnQuote) {
+                const newBtn = btnQuote.cloneNode(true);
+                btnQuote.parentNode.replaceChild(newBtn, btnQuote);
+                
+                newBtn.addEventListener('click', function() {
+                     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    if (cart.length === 0) {
+                        alert('El carrito está vacío');
+                        return;
+                    }
+                    
+                    // Obtener el método de pago actual directamente del almacenamiento para asegurar que esté actualizado
+                    const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+                    
+                    const phone = '573113579437';
+                    let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+                    let total = 0;
+                    
+                    cart.forEach(item => {
+                        const itemTotal = (item.price || 0) * item.quantity;
+                        total += itemTotal;
+                        message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
+                    });
+                    
+                    message += `Total: $${total.toLocaleString('es-CO')} COP`;
+                    
+                    if (currentPaymentMethod) {
+                        message += `\n\nMétodo de Pago: ${currentPaymentMethod}`;
+                    } else {
+                        message += `\n\nMétodo de Pago: A convenir`;
+                    }
+                    
+                    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+                    window.open(whatsappUrl, '_blank');
+                });
             }
             
-            // Obtener el método de pago actual directamente del almacenamiento para asegurar que esté actualizado
-            const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
-            
-            const phone = '573113579437';
-            let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
-            
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name}`;
-                if (item.quantity > 1) {
-                    message += ` (x${item.quantity})`;
-                }
-                message += '\n';
+            // Actualizar método de pago al abrir el carrito
+            $('#cartIcon').on('click', function() {
+                updatePaymentDisplay();
             });
-            
-            if (currentPaymentMethod) {
-                message += `\n\nMétodo de Pago: ${currentPaymentMethod}`;
-            } else {
-                message += `\n\nMétodo de Pago: A convenir`;
-            }
-            
-            message += '\n¿Podrían proporcionarme más información?';
-            
-            const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        };
+
+            // Sincronizar automáticamente si cambia en otra pestaña
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'selectedPayment') {
+                    updatePaymentDisplay();
+                }
+            });
+        });
 
         // Sistema de Notificaciones y Sonido
         window.playNotificationSound = function() {
@@ -693,21 +814,6 @@
                 setTimeout(() => { $('.toast-notification').remove(); }, 400);
             }, 3000);
         };
-
-        // Sincronización y Eventos adicionales
-        $(document).ready(function() {
-            // Actualizar método de pago al abrir el carrito
-            $('#cartIcon').on('click', function() {
-                updatePaymentDisplay();
-            });
-
-            // Sincronizar automáticamente si cambia en otra pestaña
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'selectedPayment') {
-                    updatePaymentDisplay();
-                }
-            });
-        });
     </script>
 </body>
 </html>
