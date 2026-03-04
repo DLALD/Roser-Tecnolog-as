@@ -210,30 +210,7 @@ const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.getElementById('searchInput');
 const cancelIcon = document.querySelector('.cancel-icon');
 
-const products = {
-    'organizador magnético de cables hexastack h1-80': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'hexastack': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'caja táctica para munición 9mm': '../../Marketplace/productos/producto-caja-tactica.html',
-    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
-    'munición': '../../Marketplace/productos/producto-caja-tactica.html',
-    'tacbox': '../../Marketplace/productos/producto-caja-tactica.html',
-    'caja para cables cctv cámaras de seguridad': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cctv 4 canales': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'baluns y borneras caja para cables cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'baluns cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'borneras': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'soporte qr para negocios': '../../Marketplace/productos/producto-soporte-qr.html',
-    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
-    'código qr': '../../Marketplace/productos/producto-soporte-qr.html',
-    '3dcost': '../../Productos-Roser/3dcost/3dcost.html',
-    'marketplace': '../../Marketplace/marketplace.html',
-    'impresión 3d': '../Impresiones-3D/impresiones-3d.html',
-    'diseño 3d': '../Diseños-3D/disenos-3d.html',
-    'diseño eléctrico': '../Diseño Electrico/diseno-electrico.html',
-    'diseño mecánico': '../Diseño mecanico/diseno-mecanico.html'
-};
+  const products = getProductRoutes('../../');
 
 if (searchBox && searchIcon && searchInput && cancelIcon) {
     searchIcon.addEventListener('click', () => {
@@ -440,3 +417,183 @@ setTimeout(() => {
         });
     }
 }, 100);
+
+// Payment Method Logic
+const paymentMethodLogos = {
+    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+};
+
+let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+
+window.openPaymentModal = function() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    $('#paymentModal').fadeIn(300);
+    if(selectedPaymentMethod) {
+        $('.payment-option').removeClass('selected');
+        $('.payment-option').each(function() {
+            if($(this).find('div').text().trim() === selectedPaymentMethod) {
+                $(this).addClass('selected');
+            }
+        });
+    }
+};
+
+window.closePaymentModal = function() {
+    $('#paymentModal').fadeOut(300);
+};
+
+window.closeCartModal = function() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = '';
+    }
+};
+
+window.selectPayment = function(method, element) {
+    selectedPaymentMethod = method;
+    $('.payment-option').removeClass('selected');
+    $(element).addClass('selected');
+};
+
+window.confirmPaymentSelection = function() {
+    if(selectedPaymentMethod) {
+        localStorage.setItem('selectedPayment', selectedPaymentMethod);
+        closePaymentModal();
+        updatePaymentDisplay();
+        showNotificationToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod, 'success');
+    } else {
+        showNotificationToast('Atención', 'Por favor selecciona un método de pago', 'info');
+    }
+};
+
+window.removePaymentMethod = function() {
+    selectedPaymentMethod = '';
+    localStorage.removeItem('selectedPayment');
+    updatePaymentDisplay();
+    showNotificationToast('Método Eliminado', 'Se ha quitado el método de pago.', 'error');
+};
+
+function updatePaymentDisplay() {
+    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+    const container = $('#cartPaymentMethod');
+    if(selectedPaymentMethod) {
+        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
+        let html = '<div style="display: flex; align-items: center; gap: 8px;">';
+        if (logoSrc) {
+            html += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
+        }
+        html += `<span>${selectedPaymentMethod}</span>`;
+        html += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método">&times;</button></div>`;
+        container.html(html);
+    } else {
+        container.html('<span style="color: #f57c00; cursor: pointer;">No seleccionado (Clic para elegir)</span>');
+    }
+}
+
+function playNotificationSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+    } catch (e) {}
+}
+
+function showNotificationToast(title, message, type = 'success') {
+    $('.toast-notification').remove();
+    let icon = '✓';
+    if (type === 'error') icon = '✕';
+    if (type === 'info') icon = 'ℹ';
+    
+    const html = `
+        <div class="toast-notification ${type}">
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        </div>
+    `;
+    
+    $('body').append(html);
+    if (type === 'success') playNotificationSound();
+    
+    setTimeout(() => { $('.toast-notification').addClass('show'); }, 10);
+    setTimeout(() => {
+        $('.toast-notification').removeClass('show');
+        setTimeout(() => { $('.toast-notification').remove(); }, 400);
+    }, 3000);
+}
+
+// Update cart UI to include payment display
+const originalUpdateCartUI = updateCartUI;
+updateCartUI = function() {
+    originalUpdateCartUI();
+    updatePaymentDisplay();
+};
+
+// Update checkout to include payment method
+$(document).ready(function() {
+    const btnQuote = document.getElementById('btnQuote');
+    if(btnQuote) {
+        const newBtn = btnQuote.cloneNode(true);
+        btnQuote.parentNode.replaceChild(newBtn, btnQuote);
+        
+        newBtn.addEventListener('click', function() {
+            if (cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            
+            const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
+            const phone = '573113579437';
+            let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name}`;
+                if (item.quantity > 1) {
+                    message += ` (x${item.quantity})`;
+                }
+                message += '\n';
+            });
+            
+            if (currentPaymentMethod) {
+                message += `\nMétodo de Pago: ${currentPaymentMethod}`;
+            } else {
+                message += `\nMétodo de Pago: A convenir`;
+            }
+            
+            message += '\n\n¿Podrían proporcionarme más información?';
+            
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+    
+    $('#cartIcon').on('click', function() {
+        updatePaymentDisplay();
+    });
+
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'selectedPayment') {
+            updatePaymentDisplay();
+        }
+    });
+});

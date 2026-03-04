@@ -1170,3 +1170,118 @@ body {
 .animated-float {
   animation: float 3s ease-in-out infinite;
 }
+
+
+/* Payment Modal Styles */
+.payment-option {
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: white;
+}
+
+.payment-option:hover {
+  border-color: #2196F3;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.15);
+}
+
+.payment-option.selected {
+  border-color: #4CAF50;
+  background: #e8f5e9;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.payment-option img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 5px;
+  transition: transform 0.3s;
+}
+
+.payment-option.selected img {
+  transform: scale(1.1);
+}
+
+.floating-payment-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.floating-payment-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+
+.floating-payment-btn img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.payment-tooltip {
+  position: absolute;
+  right: 70px;
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+
+.payment-tooltip::before {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-left-color: #333;
+}
+
+.floating-payment-btn:hover .payment-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Z-index adjustments for buttons */
+.cta-button {
+  position: relative;
+  z-index: 100;
+}
+
+.whatsapp-btn {
+  position: relative;
+  z-index: 100;
+}
+
+.submit-btn {
+  position: relative;
+  z-index: 100;
+}

@@ -593,3 +593,27 @@ document.addEventListener('DOMContentLoaded', function() {
 setInterval(function() {
   changeDesignSlide(1);
 }, 6000);
+
+
+// Funciones para modal 3D
+function open3DModal(modelSrc) {
+  const modal = document.getElementById('model3DModal');
+  const modelViewer = document.getElementById('modal3DViewer');
+  
+  modelViewer.src = modelSrc;
+  modal.style.display = 'block';
+}
+
+function close3DModal() {
+  const modal = document.getElementById('model3DModal');
+  modal.style.display = 'none';
+}
+
+// Close modal when clicking outside
+if (document.getElementById('model3DModal')) {
+  document.getElementById('model3DModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      close3DModal();
+    }
+  });
+}

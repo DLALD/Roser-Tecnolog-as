@@ -90,6 +90,108 @@ document.querySelectorAll('.sidebar-dropdown a:not(.apps-header)').forEach(n => 
     }
 }));
 
+// Search functionality
+const searchBox = document.querySelector(".search-box");
+const searchIcon = document.querySelector(".search-icon");
+const searchInput = document.querySelector("#shared-search-input");
+
+// Verificar que product-routes.js esté cargado
+if (typeof getProductRoutes !== 'function') {
+    console.error('getProductRoutes no está definido. Verifica que product-routes.js esté cargado.');
+}
+
+const products = typeof getProductRoutes === 'function' ? getProductRoutes('../../') : {};
+console.log('Productos cargados:', products);
+
+if (searchBox && searchIcon && searchInput) {
+    searchIcon.addEventListener('click', () => {
+        searchBox.classList.add('active');
+        searchIcon.classList.add('active');
+        searchInput.classList.add('active');
+        searchInput.focus();
+    });
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        if (query.length > 0) {
+            const results = Object.keys(products).filter(product => 
+                product.includes(query)
+            );
+            showSearchResults(results, products);
+        } else {
+            hideSearchResults();
+        }
+    });
+    
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = e.target.value.toLowerCase();
+            const exactMatch = Object.keys(products).find(product => 
+                product.includes(query)
+            );
+            if (exactMatch) {
+                window.location.href = products[exactMatch];
+            }
+        }
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!searchBox.contains(e.target)) {
+            searchBox.classList.remove('active');
+            searchIcon.classList.remove('active');
+            searchInput.classList.remove('active');
+            searchInput.value = '';
+            hideSearchResults();
+        }
+    });
+}
+
+function showSearchResults(results, products) {
+    let dropdown = document.querySelector('.search-dropdown');
+    
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.className = 'search-dropdown';
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = '50px';
+        dropdown.style.left = '0';
+        dropdown.style.width = '100%';
+        dropdown.style.background = 'white';
+        dropdown.style.border = '1px solid #e0e0e0';
+        dropdown.style.borderRadius = '8px';
+        dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        dropdown.style.maxHeight = '300px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.zIndex = '9999';
+        dropdown.style.padding = '8px 0';
+        searchBox.appendChild(dropdown);
+    }
+    
+    if (results.length > 0) {
+        dropdown.innerHTML = results.map(result => `
+            <div style="padding: 12px 16px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px;" 
+                 onmouseover="this.style.background='#f8f9fa'" 
+                 onmouseout="this.style.background='white'"
+                 onclick="window.location.href='${products[result]}'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#664AFF">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
+            </div>
+        `).join('');
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+function hideSearchResults() {
+    const dropdown = document.querySelector('.search-dropdown');
+    if (dropdown) {
+        dropdown.style.display = 'none';
+    }
+}
+
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
