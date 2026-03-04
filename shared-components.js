@@ -471,11 +471,11 @@ function initializeSharedSearch() {
 
     // Lista de productos (URLs construidas desde la ubicación actual)
     const products = [
-        { name: "Organizador Magnético de Cables HexaStack H1-80", url: _upPrefix + "Marketplace/productos/producto-organizador-magnetico.html" },
-        { name: "Caja Táctica para Munición 9mm", url: _upPrefix + "Marketplace/productos/producto-caja-tactica.html" },
-        { name: "Organizador de Cables CCTV 4 Canales", url: _upPrefix + "Marketplace/productos/producto-caja-cables-cctv.html" },
-        { name: "Baluns CCTV 8 Canales", url: _upPrefix + "Marketplace/productos/producto-baluns-8-canales.html" },
-        { name: "Soporte QR para Negocios", url: _upPrefix + "Marketplace/productos/producto-soporte-qr.html" }
+        { name: "Organizador Magnético de Cables HexaStack H1-80", url: _upPrefix + "Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html" },
+        { name: "Caja Táctica para Munición 9mm", url: _upPrefix + "Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica-9mm.html" },
+        { name: "Organizador de Cables CCTV 4 Canales", url: _upPrefix + "Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-organizador-cables-cctv.html" },
+        { name: "Baluns CCTV 8 Canales", url: _upPrefix + "Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-balun-cctv.html" },
+        { name: "Soporte QR para Negocios", url: _upPrefix + "Marketplace/productos/Soporte QR/producto-soporte-qr.html" }
     ];
 
     if (searchBtn && searchInput && searchBox && searchResults) {

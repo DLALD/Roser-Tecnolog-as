@@ -461,13 +461,13 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 // Payment Method Logos
 const paymentMethodLogos = {
-    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
-    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
-    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
-    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
-    'Visa': '../../Marketplace/metodos de pago/Visa.png',
-    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
-    'PSE': '../../Marketplace/metodos de pago/PSE.png'
+    'Nequi': '../../../Marketplace/metodos de pago/Nequi.png',
+    'Daviplata': '../../../Marketplace/metodos de pago/Daviplata.png',
+    'Bancolombia': '../../../Marketplace/metodos de pago/Bancolombia.png',
+    'Efecty': '../../../Marketplace/metodos de pago/Efecty.png',
+    'Visa': '../../../Marketplace/metodos de pago/Visa.png',
+    'Mastercard': '../../../Marketplace/metodos de pago/Mastercard.png',
+    'PSE': '../../../Marketplace/metodos de pago/PSE.png'
 };
 
 // Cart button click
@@ -487,16 +487,12 @@ const searchInput = document.getElementById('searchInput');
 const cancelIcon = document.querySelector('.cancel-icon');
 
 const products = {
-    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
-    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
-    'marketplace': '../../Marketplace/marketplace.html',
-    'impresión 3d': '../../Servicios/impresiones-3d.html',
-    'diseño 3d': '../../Servicios/disenos-3.html',
-    'diseño eléctrico': '../../Servicios/diseno-electrico.html',
-    'diseño mecánico': '../../Servicios/diseno-mecanico.html',
-    'fabricación': '../../Servicios/fabricacion-sistemas-mecanicos.html'
+    'organizador magnético': '../../../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
+      'caja táctica': '../../../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
+      'cables cctv': '../../../Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-caja-cables-cctv.html',
+      'baluns': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
+      'Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
+      'soporte qr': '../../../Marketplace/productos/Soporte QR/producto-soporte-qr.html',
 };
 
 if (searchBox && searchIcon && searchInput && cancelIcon) {
@@ -683,10 +679,10 @@ function updateCartUI() {
                 // Si ya contiene Marketplace/, extraer la parte después de Marketplace/
                 const marketplaceIndex = imagePath.indexOf('Marketplace/');
                 const relativePath = imagePath.substring(marketplaceIndex + 12); // 12 = length of 'Marketplace/'
-                imagePath = '../../Marketplace/' + relativePath;
+                imagePath = '../../../Marketplace/' + relativePath;
             } else {
                 // Si no tiene prefijo, asumir que es relativa al Marketplace
-                imagePath = '../../Marketplace/' + imagePath;
+                imagePath = '../../../Marketplace/' + imagePath;
             }
             
             return `

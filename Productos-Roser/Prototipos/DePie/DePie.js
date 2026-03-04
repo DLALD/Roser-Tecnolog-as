@@ -1,7 +1,5 @@
 // DePie page scripts: sidebar menu + cart sync (copied behavior from site canonical files)
 document.addEventListener('DOMContentLoaded', function() {
-  addDePieStyles(); // Inyectar estilos del carrusel
-
   // Sidebar/menu toggle
   const menuButton = document.querySelector('.menu-button');
   const sidebarDropdown = document.querySelector('.sidebar-dropdown');
@@ -147,13 +145,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Actualizar visualización del método de pago
     const paymentMethodLogos = {
-        'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
-        'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
-        'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
-        'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
-        'Visa': '../../Marketplace/metodos de pago/Visa.png',
-        'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
-        'PSE': '../../Marketplace/metodos de pago/PSE.png'
+        'Nequi': '../../../Marketplace/metodos de pago/Nequi.png',
+        'Daviplata': '../../../Marketplace/metodos de pago/Daviplata.png',
+        'Bancolombia': '../../../Marketplace/metodos de pago/Bancolombia.png',
+        'Efecty': '../../../Marketplace/metodos de pago/Efecty.png',
+        'Visa': '../../../Marketplace/metodos de pago/Visa.png',
+        'Mastercard': '../../../Marketplace/metodos de pago/Mastercard.png',
+        'PSE': '../../../Marketplace/metodos de pago/PSE.png'
     };
     
     const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
@@ -190,6 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
   window.removePaymentMethod = function() {
       localStorage.removeItem('selectedPayment');
       updateCartDisplay();
+      if(window.showToast) {
+          window.showToast('Método Eliminado', 'Se ha quitado el método de pago.');
+      }
   };
 
   window.openCartModal = function() { updateCartDisplay(); const modal = document.getElementById('cartModal'); if (window.$ && modal) $('#cartModal').show(); else if (modal) modal.style.display='block'; };
@@ -334,10 +335,47 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function renderThumbs(){
-    // Ocultar contenedor de miniaturas
+    // Mostrar contenedor de miniaturas
     if (thumbsContainer) {
-        thumbsContainer.style.display = 'none';
+        thumbsContainer.style.display = 'flex';
         thumbsContainer.innerHTML = '';
+        
+        const maxVisible = 4;
+        const remaining = slides.length - maxVisible;
+        
+        // Generar miniaturas (máximo 4 visibles + 1 con contador)
+        slides.forEach((slide, i) => {
+            if (i < maxVisible) {
+                const img = slide.querySelector('img');
+                if (img) {
+                    const thumb = document.createElement('div');
+                    thumb.className = `thumbnail ${i === currentIndex ? 'active' : ''}`;
+                    thumb.innerHTML = `<img src="${img.src}" alt="${img.alt || 'Thumbnail ' + (i+1)}">`;
+                    thumb.addEventListener('click', () => goToSlide(i));
+                    thumbsContainer.appendChild(thumb);
+                }
+            }
+        });
+        
+        // Agregar miniatura con contador si hay más imágenes
+        if (remaining > 0) {
+            const lastSlide = slides[maxVisible];
+            const lastImg = lastSlide ? lastSlide.querySelector('img') : null;
+            const thumb = document.createElement('div');
+            thumb.className = `thumbnail ${currentIndex >= maxVisible ? 'active' : ''}`;
+            if (lastImg) {
+                thumb.innerHTML = `
+                    <img src="${lastImg.src}" alt="Ver más">
+                    <div class="thumb-overlay">+${remaining}</div>
+                `;
+            } else {
+                thumb.innerHTML = `<div class="thumb-overlay">+${remaining}</div>`;
+            }
+            thumb.addEventListener('click', () => {
+                openGalleryModal();
+            });
+            thumbsContainer.appendChild(thumb);
+        }
     }
 
     if (indicatorsContainer) indicatorsContainer.innerHTML = '';
@@ -576,494 +614,242 @@ document.addEventListener('DOMContentLoaded', function() {
       videoBtn.parentNode.insertBefore(waBtn, videoBtn.nextSibling);
   }
 
+  // --- Payment Modal Logic (Moved from HTML) ---
+  window.openPaymentModal = function() {
+      const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
+      const modal = document.getElementById('paymentModal');
+      if (modal) {
+          if (window.$) $(modal).fadeIn(300); else modal.style.display = 'block';
+          
+          const options = modal.querySelectorAll('.payment-option');
+          options.forEach(opt => {
+              opt.classList.remove('selected');
+              if(opt.innerText.trim() === selectedPaymentMethod) {
+                  opt.classList.add('selected');
+              }
+          });
+      }
+  };
+
+  window.closePaymentModal = function() {
+      const modal = document.getElementById('paymentModal');
+      if (modal) {
+          if (window.$) $(modal).fadeOut(300); else modal.style.display = 'none';
+      }
+  };
+
+  window.selectPayment = function(method, element) {
+      const options = document.querySelectorAll('.payment-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      if(element) element.classList.add('selected');
+      // Store temporarily or just use the selection for confirmation
+      window._tempPaymentSelection = method;
+  };
+
+  window.confirmPaymentSelection = function() {
+      const method = window._tempPaymentSelection || localStorage.getItem('selectedPayment');
+      if(method) {
+          localStorage.setItem('selectedPayment', method);
+          closePaymentModal();
+          updateCartDisplay();
+          if(window.showToast) {
+              window.playSuccessSound();
+              window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + method);
+          } else {
+              alert('Método de pago actualizado: ' + method);
+          }
+      } else {
+          alert('Por favor selecciona un método de pago');
+      }
+  };
+
+  // --- Search Bar Functionality (Updated Links) ---
+  const searchBox = document.querySelector('.search-box');
+  const searchIcon = document.querySelector('#shared-search-btn');
+  const searchInput = document.querySelector('#shared-search-input');
+  const cancelIcon = document.querySelector('.cancel-icon');
+  const searchResults = document.getElementById('search-results');
+
+  // Product database with corrected relative paths (Up 3 levels to root)
+ const products = {
+    'organizador magnético': '../../../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
+      'caja táctica': '../../../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
+      'cables cctv': '../../../Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-caja-cables-cctv.html',
+      'baluns': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
+      'Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
+      'soporte qr': '../../../Marketplace/productos/Soporte QR/producto-soporte-qr.html',
+};
+
+  if (searchIcon && searchInput && searchBox) {
+      searchIcon.addEventListener('click', () => {
+          searchBox.classList.add('active');
+          searchIcon.classList.add('active');
+          searchInput.classList.add('active');
+          if(cancelIcon) cancelIcon.classList.add('active');
+          searchInput.focus();
+      });
+
+      if(cancelIcon) {
+          cancelIcon.addEventListener('click', () => {
+              searchBox.classList.remove('active');
+              searchIcon.classList.remove('active');
+              searchInput.classList.remove('active');
+              cancelIcon.classList.remove('active');
+              searchInput.value = '';
+              if(searchResults) searchResults.innerHTML = '';
+          });
+      }
+
+      searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase();
+          if(searchResults) {
+              if (query.length > 0) {
+                  const results = Object.keys(products).filter(product => product.includes(query));
+                  if (results.length > 0) {
+                      searchResults.innerHTML = results.map(result => `
+                          <div class="search-result-item" onclick="window.location.href='${products[result]}'">
+                              <svg class="search-result-icon" viewBox="0 0 24 24" width="16" height="16" fill="#664AFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                              <span style="text-transform: capitalize;">${result}</span>
+                          </div>
+                      `).join('');
+                      searchResults.style.display = 'block';
+                  } else {
+                      searchResults.style.display = 'none';
+                  }
+              } else {
+                  searchResults.style.display = 'none';
+              }
+          }
+      });
+
+      // Close search when clicking outside
+      document.addEventListener('click', (e) => {
+          if (!searchBox.contains(e.target)) {
+              searchBox.classList.remove('active');
+              searchIcon.classList.remove('active');
+              searchInput.classList.remove('active');
+              if(cancelIcon) cancelIcon.classList.remove('active');
+              if(searchResults) searchResults.style.display = 'none';
+          }
+      });
+  }
 });
 
-function addDePieStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        /* Estilos inyectados para DePie (basados en Diseño 3D) */
-        .carousel-container {
-            position: relative;
-            max-width: 100%;
-            margin: 0 auto;
-            display: flex;
-            gap: 2rem;
-            align-items: flex-start;
-        }
-        
-        /* Barra lateral de miniaturas */
-        #carouselThumbs {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            width: 100px;
-            flex-shrink: 0;
-            max-height: 500px;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-        
-        #carouselThumbs::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .thumbnail {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .thumbnail:hover {
-            border-color: #1e88e5;
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(30, 136, 229, 0.2);
-        }
-        
-        .thumbnail.active {
-            border-color: #1e88e5;
-            background: #e3f2fd;
-            box-shadow: 0 4px 15px rgba(30, 136, 229, 0.3);
-        }
-        
-        .thumbnail img {
-            width: 100%;
-            height: 70px;
-            object-fit: contain;
-            border-radius: 4px;
-            display: block;
-        }
-        
-        /* Contenedor principal del carrusel */
-        .carousel-wrapper {
-            overflow: hidden;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-            flex: 1;
-            position: relative;
-            background: #ffffff;
-            padding-bottom: 0;
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        
-        #depieCarousel {
-            display: flex;
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-            height: 100%;
-        }
-        
-        #depieCarousel > div, .carousel-slide {
-            min-width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at center, #ffffff 0%, #f8f9fa 100%);
-            height: 500px;
-            padding: 40px;
-        }
-        
-        #depieCarousel img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12));
-            transition: transform 0.4s ease;
-        }
-        
-        #depieCarousel img:hover {
-            transform: scale(1.03) translateY(-5px);
-        }
-        
-        /* Botones de navegación */
-        #carouselPrev, #carouselNext {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: 2px solid #f1f3f4;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
-            font-size: 24px;
-            color: #546e7a;
-        }
-        
-        #carouselPrev:hover, #carouselNext:hover {
-            background: #1e88e5;
-            border-color: #1e88e5;
-            color: white;
-            transform: translateY(-50%) scale(1.15);
-            box-shadow: 0 10px 25px rgba(30, 136, 229, 0.3);
-        }
-        
-        #carouselPrev { left: 20px; }
-        #carouselNext { right: 20px; }
-        
-        /* Indicadores */
-        #carouselIndicators {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            position: absolute;
-            bottom: 25px;
-            left: 0;
-            right: 0;
-            z-index: 10;
-        }
-        
-        .progress-bar {
-            width: 32px;
-            height: 6px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: none;
-        }
-        
-        .progress-bar:hover {
-            background: rgba(30, 136, 229, 0.2);
-            width: 40px;
-        }
-        
-        .progress-bar.active {
-            background: rgba(30, 136, 229, 0.15);
-            width: 48px;
-        }
-        
-        .progress-bar.active .progress-fill {
-            height: 100%;
-            background: #1e88e5;
-            border-radius: 10px;
-            animation: progressFill 5s linear forwards;
-        }
-        
-        @keyframes progressFill {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-        
-        .thumb-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 6px;
-            pointer-events: none;
-        }
-        
-        /* Sección de galería con fondo gris */
-        .gallery-section {
-            background-color: #f8f9fa;
-            padding: 60px 0;
-            margin: 40px 0;
-            width: 100%;
-            border-top: 1px solid #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
-            border-radius: 20px;
-        }
 
-        /* Estilos para el encabezado de la galería */
-        .gallery-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            
-            /* Animación inicial */
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        
-        .gallery-title.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+// Animaciones del Hero
+document.addEventListener('DOMContentLoaded', function() {
+    const heroTitle = document.querySelector('.promo-hero .hero-copy h1');
+    
+    if (heroTitle) {
+        // Remover el borde después de completar la animación de typewriter
+        setTimeout(() => {
+            heroTitle.classList.add('typing-complete');
+        }, 3800);
+    }
+});
 
-        .gallery-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: #1e88e5;
-            border-radius: 2px;
-        }
-        
-        .gallery-description {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #555;
-            margin-bottom: 40px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
 
-        /* Estilos para la sección Hero (Imagen a la derecha, pequeña y animada) */
-        .promo-container {
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .hero-copy {
-            flex: 1;
-            text-align: left !important;
-        }
-        
-        .hero-media {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .hero-media img {
-            max-width: 280px !important; /* Imagen más pequeña */
-            width: 100%;
-            height: auto;
-            border-radius: 20px;
-            position: relative;
-            z-index: 5;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
-            animation: heroEntrance 1.2s ease-out forwards, floatHero 4s ease-in-out infinite 1.2s !important;
-        }
+// Animaciones de la sección Sobre DePie
+const observerOptions = {
+    threshold: 0.2,
+    rootMargin: '0px 0px -100px 0px'
+};
 
-        @keyframes heroEntrance {
-            from { opacity: 0; transform: translateX(50px) scale(0.9); }
-            to { opacity: 1; transform: translateX(0) scale(1); }
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const features = entry.target.querySelectorAll('.feature');
+            features.forEach(feature => {
+                feature.classList.add('animate');
+            });
+            observer.unobserve(entry.target);
         }
-        
-        @keyframes floatHero {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @media (max-width: 768px) {
-            .carousel-container {
-                flex-direction: column-reverse;
-                height: auto;
-            }
-            
-            #carouselThumbs {
-                width: 100%;
-                flex-direction: row;
-                overflow-x: auto;
-                height: auto;
-                padding: 15px;
-                gap: 10px;
-            }
-            
-            .thumbnail {
-                min-width: 120px;
-                width: 120px;
-                padding: 6px;
-            }
-            
-            .thumbnail img {
-                height: 80px;
-            }
-            
-            .carousel-wrapper {
-                height: 400px;
-            }
-            
-            .promo-container {
-                flex-direction: column-reverse !important;
-                text-align: center !important;
-            }
-            .hero-copy { text-align: center !important; }
-        }
+    });
+}, observerOptions);
 
-        /* Efecto Typewriter para el título */
-        .hero-copy h1 {
-            display: inline-block;
-            overflow: hidden;
-            border-right: 3px solid #1e88e5;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
-            max-width: fit-content;
-        }
+const aboutSection = document.querySelector('.promo-about');
+if (aboutSection) {
+    observer.observe(aboutSection);
+}
 
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
 
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #1e88e5; }
+// Función para expandir todas las miniaturas
+function expandThumbs() {
+    const thumbsContainer = document.getElementById('carouselThumbs');
+    if (!thumbsContainer) return;
+    
+    const carousel = document.getElementById('depieCarousel');
+    const slides = carousel ? Array.from(carousel.children) : [];
+    
+    thumbsContainer.innerHTML = '';
+    
+    slides.forEach((slide, i) => {
+        const img = slide.querySelector('img');
+        if (img) {
+            const thumb = document.createElement('div');
+            thumb.className = `thumbnail ${i === window.currentCarouselIndex ? 'active' : ''}`;
+            thumb.innerHTML = `<img src="${img.src}" alt="${img.alt || 'Thumbnail ' + (i+1)}">`;
+            thumb.addEventListener('click', () => {
+                if (window.goToSlide) window.goToSlide(i);
+            });
+            thumbsContainer.appendChild(thumb);
         }
+    });
+}
 
-        /* Efecto de pulso para el botón de video */
-        #openVideoBtn {
-            position: relative;
-            z-index: 1;
-            animation: pulse 2s infinite;
-            border-radius: 50px; /* Asegurar que el pulso sea circular */
-        }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 15px rgba(30, 136, 229, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0);
-            }
-        }
-
-        /* Animación del Logo Roser */
-        .logo-roser-anim {
-            animation: logoPulse 3s infinite ease-in-out;
-        }
-        @keyframes logoPulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(30, 136, 229, 0.3)); }
-            50% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(30, 136, 229, 0.6)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(30, 136, 229, 0.3)); }
-        }
-
-        /* Estilos Sección Sobre DePie (Nuevos) */
-        .promo-about {
-            background: linear-gradient(180deg, #f4faff 0%, #ffffff 100%);
-            padding: 80px 0;
-            position: relative;
-        }
-        
-        .promo-about h2 {
-            color: #1565c0;
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-        
-        .promo-about > .container > p {
-            text-align: center;
-            max-width: 750px;
-            margin: 0 auto 4rem auto;
-            color: #546e7a;
-            font-size: 1.15rem;
-            line-height: 1.7;
-        }
-
-        .features {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .feature {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(30, 136, 229, 0.08);
-            flex: 1;
-            min-width: 280px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(227, 242, 253, 0.8);
-            position: relative;
-            overflow: hidden;
-            opacity: 0; 
-            animation: fadeInUpFeature 0.8s ease-out forwards;
-        }
-        
-        /* Barra superior azul en las tarjetas */
-        .feature::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, #42a5f5, #1e88e5);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-        
-        .feature:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature:nth-child(1) { animation-delay: 0.2s; }
-        .feature:nth-child(2) { animation-delay: 0.4s; }
-        .feature:nth-child(3) { animation-delay: 0.6s; }
-
-        .feature:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 50px rgba(30, 136, 229, 0.15);
-            border-color: rgba(30, 136, 229, 0.2);
-        }
-
-        .feature strong {
-            display: block;
-            font-size: 1.4rem;
-            color: #0d47a1;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .feature p {
-            color: #607d8b;
-            font-size: 1rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        @keyframes fadeInUpFeature {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+// Modal de galería con barra lateral
+function openGalleryModal() {
+    const carousel = document.getElementById('depieCarousel');
+    const slides = carousel ? Array.from(carousel.children) : [];
+    
+    // Crear modal
+    const modal = document.createElement('div');
+    modal.id = 'galleryModal';
+    modal.className = 'gallery-modal';
+    modal.innerHTML = `
+        <div class="gallery-modal-content">
+            <button class="gallery-modal-close">&times;</button>
+            <div class="gallery-modal-sidebar">
+                ${slides.map((slide, i) => {
+                    const img = slide.querySelector('img');
+                    return img ? `<div class="gallery-modal-thumb ${i === 0 ? 'active' : ''}" data-index="${i}">
+                        <img src="${img.src}" alt="${img.alt || 'Imagen ' + (i+1)}">
+                    </div>` : '';
+                }).join('')}
+            </div>
+            <div class="gallery-modal-main">
+                <img id="galleryModalImg" src="${slides[0]?.querySelector('img')?.src || ''}" alt="">
+            </div>
+        </div>
     `;
-    document.head.appendChild(style);
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    // Event listeners
+    modal.querySelector('.gallery-modal-close').addEventListener('click', closeGalleryModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeGalleryModal();
+    });
+    
+    modal.querySelectorAll('.gallery-modal-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            const index = parseInt(thumb.dataset.index);
+            const img = slides[index]?.querySelector('img');
+            if (img) {
+                document.getElementById('galleryModalImg').src = img.src;
+                modal.querySelectorAll('.gallery-modal-thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+            }
+        });
+    });
+}
+
+function closeGalleryModal() {
+    const modal = document.getElementById('galleryModal');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = '';
+    }
 }
