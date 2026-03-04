@@ -124,19 +124,7 @@ $(function () {
     const cancelIcon = $('.cancel-icon');
     
     // Product database
-    const products = {
-        'organizador magnético de cables hexastack h1-80': '../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
-        'organizador magnético': '../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
-        'hexastack': '../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
-        'caja táctica para munición 9mm': '../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
-        'caja táctica': '../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
-        'munición': '../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
-        'caja para cables cctv cámaras de seguridad': '../Marketplace/productos/producto-caja-cables-cctv.html',
-        'cables cctv': '../Marketplace/productos/producto-caja-cables-cctv.html',
-        'baluns y borneras caja para cables cctv 8 canales': '../Marketplace/productos/producto-baluns-8-canales.html',
-        'soporte qr para negocios': '../Marketplace/productos/producto-soporte-qr.html',
-        'soporte qr': '../Marketplace/productos/producto-soporte-qr.html'
-    };
+const products = getProductRoutes('../');
     
     searchIcon.click(function() {
         searchBox.addClass('active');

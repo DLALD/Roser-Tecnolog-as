@@ -671,14 +671,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const searchResults = document.getElementById('search-results');
 
   // Product database with corrected relative paths (Up 3 levels to root)
- const products = {
-    'organizador magnético': '../../../Marketplace/productos/Organizador Magnético De Cables/producto-organizador-magnetico.html',
-      'caja táctica': '../../../Marketplace/productos/Caja Táctica Para Munición 9mm/producto-caja-tactica.html',
-      'cables cctv': '../../../Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-caja-cables-cctv.html',
-      'baluns': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
-      'Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales': '../../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html',
-      'soporte qr': '../../../Marketplace/productos/Soporte QR/producto-soporte-qr.html',
-};
+ const products = getProductRoutes('../../../');
 
   if (searchIcon && searchInput && searchBox) {
       searchIcon.addEventListener('click', () => {

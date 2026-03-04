@@ -118,28 +118,7 @@ if (searchBox && searchIcon && searchInput && cancelIcon) {
   });
   
 // Funcionalidad de búsqueda con redirección - Updated v2
-  const products = {
-    'organizador magnético de cables hexastack h1-80': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'organizador magnético': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'hexastack': '../../Marketplace/productos/producto-organizador-magnetico.html',
-    'caja táctica para munición 9mm': '../../Marketplace/productos/producto-caja-tactica.html',
-    'caja táctica': '../../Marketplace/productos/producto-caja-tactica.html',
-    'munición': '../../Marketplace/productos/producto-caja-tactica.html',
-    'tacbox': '../../Marketplace/productos/producto-caja-tactica.html',
-    'caja para cables cctv cámaras de seguridad': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cables cctv': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'cctv 4 canales': '../../Marketplace/productos/producto-caja-cables-cctv.html',
-    'baluns y borneras caja para cables cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'baluns cctv 8 canales': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'borneras': '../../Marketplace/productos/producto-baluns-8-canales.html',
-    'soporte qr para negocios': '../../Marketplace/productos/producto-soporte-qr.html',
-    'soporte qr': '../../Marketplace/productos/producto-soporte-qr.html',
-    'código qr': '../../Marketplace/productos/producto-soporte-qr.html',
-    '3dcost': '../../Productos-Roser/3dcost/3dcost.html',
-    'marketplace': '../../Marketplace/marketplace.html',
-    'impresión 3d': '../impresiones-3d.html',
-    'diseño 3d': 'disenos-3.html'
-  };
+ const products = getProductRoutes('../../');
   
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.toLowerCase();

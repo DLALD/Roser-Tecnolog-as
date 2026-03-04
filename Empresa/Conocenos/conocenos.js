@@ -143,13 +143,7 @@ const searchBtn = document.querySelector("#shared-search-btn");
 const searchInput = document.querySelector("#shared-search-input");
 const searchResults = document.querySelector("#search-results");
 
-const products = [
-    { name: "Organizador Magnético de Cables HexaStack H1-80", url: "../Marketplace/productos/producto-organizador-magnetico.html" },
-    { name: "Caja Táctica para Munición 9mm", url: "../Marketplace/productos/producto-caja-tactica.html" },
-    { name: "Organizador de Cables CCTV 4 Canales", url: "../Marketplace/productos/producto-caja-cables-cctv.html" },
-    { name: "Baluns CCTV 8 Canales", url: "../Marketplace/productos/producto-baluns-8-canales.html" },
-    { name: "Soporte QR para Negocios", url: "../Marketplace/productos/producto-soporte-qr.html" }
-];
+const products = getProductRoutes('../../');
 
 if (searchBtn && searchInput && searchBox && searchResults) {
     searchBtn.onclick = () => {
