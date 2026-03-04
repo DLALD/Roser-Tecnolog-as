@@ -98,13 +98,13 @@ function addSharedComponents() {
 
             .cart-count {
                 position: absolute;
-                top: -2px;
-                right: -2px;
+                top: -5px;
+                right: -5px;
                 background: #f44336;
                 color: white;
                 border-radius: 50%;
-                width: 18px;
-                height: 18px;
+                width: 20px;
+                height: 20px;
                 display: none;
                 align-items: center;
                 justify-content: center;

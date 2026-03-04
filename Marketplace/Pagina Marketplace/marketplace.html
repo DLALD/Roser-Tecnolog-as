@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - Roser Tecnologías</title>
+    <link rel="icon" type="image/x-icon" href="../../Imagenes/Rosero.png">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="marketplace.css">
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Floating WhatsApp css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
+    <!--Floating WhatsApp javascript-->
+    <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
+</head>
+<body>
+    <!--Div donde estará el botón de WhatsApp-->
+    <div id="BotonWA"></div>
+    
+    <!-- Botón Flotante de Métodos de Pago -->
+    <div class="floating-payment-btn" onclick="openPaymentModal()">
+        <span class="payment-tooltip">Métodos de Pago</span>
+        <img src="../metodos de pago/M.png" alt="Métodos de Pago">
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <div class="menu-button">
+                        <span class="menu-lines">☰</span>
+                    </div>
+                </button>
+                <div class="nav-logo">
+                    <a href="../../Pagina Principal/index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                        <img src="../../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
+                        <h2>Roser Tecnologías</h2>
+                    </a>
+                </div>
+                <button class="categories-btn">
+                    <img src="../../Marketplace/Iconos/categorias.png" alt="Categorías" class="categories-icon">
+                    <span>Categorías</span>
+                </button>
+            </div>
+            
+            <div class="nav-right">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar productos...">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </div>
+                    <div class="cancel-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="cart-icon">
+                    <img src="../../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="sidebar-dropdown">
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="../../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+                    <span class="section-title">Servicios</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="../../Servicios/Diseños-3D/disenos-3.html">
+                        <img src="../../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+                        Diseños 3D
+                    </a>
+                    <a href="../../Servicios/Impresiones-3D/impresiones-3d.html">
+                        <img src="../../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+                        Impresión 3D
+                    </a>
+                    <a href="../../Servicios/Diseño Electrico/diseno-electrico.html">
+                        <img src="../../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+                        Diseño Eléctrico
+                    </a>
+                    <a href="../../Servicios/Diseño mecanico/diseno-mecanico.html">
+                        <img src="../../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+                        Diseño Mecánico
+                    </a>
+                    <a href="../../Servicios/Fabricacion de sistemas mecanicos/fabricacion-sistemas-mecanicos.html">
+                        <img src="../../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+                        Fabricación de Sistemas Mecánicos
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="../../Imagenes/PTS.png" alt="Productos" class="section-icon">
+                    <span class="section-title">Productos</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <div class="prototypes-header">
+                        <img src="../../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                        Prototipos
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="prototype-subsection">
+                        <a href="../../Productos-Roser/DePie/DePie.html">
+                            <img src="../../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                            DePie
+                        </a>
+                    </div>
+                    <div class="apps-header" data-toggle="apps">
+                        <img src="../../Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                        Apps
+                        <span class="section-arrow">▼</span>
+                    </div>
+                    <div class="sub-subsection">
+                        <a href="../../Productos-Roser/3dcost/3dcost.html">
+                            <img src="../../Imagenes/3D.png" alt="3D" class="subsection-icon">
+                            3DCost
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown-section">
+                <div class="section-header">
+                    <img src="../../Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                    <span class="section-title">Empresa</span>
+                    <span class="section-arrow">▼</span>
+                </div>
+                <div class="subsection">
+                    <a href="../../Empresa/Conocenos/conocenos.html">
+                        <img src="../../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                        Conocenos
+                    </a>
+                    <a href="../../Empresa/Mision y Vision/mision-vision.html">
+                        <img src="../../Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                        Misión y Visión
+                    </a>
+                    <a href="../../Empresa/Terminos y Condiciones/terminos-condiciones.html">
+                        <img src="../../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                        Términos y Condiciones
+                    </a>
+                    <a href="../../Empresa/Politicas y Privacidad/politica-privacidad.html" target="_self">
+                        <img src="../../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                        Privacidad
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <div class="marketplace-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Categorías</h3>
+                <button class="sidebar-close" id="sidebar-close">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Productos Destacados</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="bestsellers">Más Vendidos</a></li>
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="new">Nuevos Lanzamientos</a></li>
+                    <li><a href="#" class="sidebar-link featured-link" data-featured="trending">Productos del Momento</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Filtrar por Precio</h3>
+                <div class="price-filter-group">
+                    <div class="price-input-row">
+                        <input type="text" id="minPrice" placeholder="Mín">
+                        <span>-</span>
+                        <input type="text" id="maxPrice" placeholder="Máx">
+                    </div>
+                    <button id="clearFiltersBtn" class="clear-filter-btn">Limpiar Filtros</button>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Buscar por Categoría</h3>
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#" class="sidebar-link category-link active" data-category="all">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                            <span>Todos los Productos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="impresion-3d">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15zM5 15.91l6 3.38v-6.71L5 9.21v6.7zM13 12.58v6.71l6-3.38v-6.7l-6 3.37z"/></svg>
+                            <span>Productos de Impresión 3D</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="organizacion">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                            <span>Organización</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-link category-link" data-category="seguridad">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right: 8px;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                            <span>Seguridad</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="marketplace-content">
+                <div class="container">
+                    <h2>Productos Disponibles</h2>
+                    <div class="products-grid">
+
+                <!-- Producto: Organizador Magnético -->
+                <div class="product-item" data-category="impresion-3d organizacion">
+                    <div class="product-image" onclick="window.location.href='../productos/Organizador Magnético De Cables/producto-organizador-magnetico.html'">
+                        <img src="../../Marketplace/productos/Organizador Magnético De Cables/Imagenes-Organizador/Negro/1.jpg" alt="Organizador Magnético" class="main-product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="window.location.href='../productos/producto-organizador-magnetico.html'" style="cursor: pointer;">Organizador Magnético De Cables Hasta 80cm Hexastack H1-80</h3>
+                        <p class="product-description">Organizador magnético de cables hasta 80cm, disponible en 5 colores</p>
+                        <div class="product-price">$61.069 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                        <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('organizador-magnetico', 'Organizador Magnético De Cables Hasta 80cm Hexastack H1-80', 61069, '../../Marketplace/productos/Organizador Magnético De Cables/Imagenes-Organizador/Negro/1.jpg')">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <!-- Producto: Caja Táctica -->
+                <div class="product-item" data-category="impresion-3d seguridad">
+                    <div class="product-image" onclick="window.location.href='../productos/Caja Táctica para Munición 9mm/producto-caja-tactica.html'">
+                        <img src="../../Marketplace/productos/Caja Táctica Para Munición 9mm/Imagenes-caja-tactica/1.jpg" alt="Caja Táctica" class="main-product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="window.location.href='../productos/Caja Táctica para Munición 9mm/producto-caja-tactica.html'" style="cursor: pointer;">Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1</h3>
+                        <p class="product-description">Caja táctica profesional para almacenamiento seguro de munición 9mm</p>
+                        <div class="product-price">$81.400 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 2 días</span>
+                        </div>
+                        <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('caja-tactica', 'Caja Táctica Para Munición 9mm Roser Tactical Tacbox M9-v1', 81400, '../../Marketplace/productos/Caja Táctica para Munición 9mm/Imagenes-caja-tactica/1.jpg')">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <!-- Producto: Baluns Y Borneras Pequeño -->
+                <div class="product-item" data-category="impresion-3d organizacion seguridad">
+                    <div class="product-image" onclick="window.location.href='../productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-caja-cables-cctv.html'">
+                        <img src="../../Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/Imagenes-Caja Para Cables CCTV/Negra/1.png " alt="Baluns Y Borneras Pequeño" class="main-product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="window.location.href='../productos/Caja Para Cables CCTV Cámaras De Seguridad/producto-caja-cables-cctv.html'" style="cursor: pointer;">Caja Para Cables CCTV Cámaras De Seguridad</h3>
+                        <p class="product-description">Caja compacta organizadora para cables de cámaras CCTV con baluns y borneras</p>
+                        <div class="product-price">$36.900 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                        <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('caja-cables-cctv', 'Caja Para Cables CCTV Cámaras De Seguridad', 36900, '../../Marketplace/productos/Caja Para Cables CCTV Cámaras De Seguridad/Imagenes-Caja Para Cables CCTV/Negra/1.png')">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <!-- Producto: Baluns Y Borneras -->
+                <div class="product-item" data-category="impresion-3d organizacion seguridad">
+                    <div class="product-image" onclick="window.location.href='../productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html'">
+                        <img src="../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/Imagenes-Baluns Y Borneras Caja Para Cables/1.png" alt="Baluns Y Borneras" class="main-product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="window.location.href='../productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/producto-baluns-8-canales.html'" style="cursor: pointer;">Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales</h3>
+                        <p class="product-description">Caja organizadora para cables de cámaras CCTV con baluns y borneras de 8 canales</p>
+                        <div class="product-price">$49.800 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 3 días</span>
+                        </div>
+                        <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('baluns-8-canales', 'Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales', 49800, '../../Marketplace/productos/Baluns Y Borneras Caja Para Cables Cctv Cámaras 8 Canales/Imagenes-Baluns Y Borneras Caja Para Cables/1.png')">Agregar al Carrito</button>
+                    </div>
+                </div>
+                
+                <!-- Producto: Soporte QR -->
+                <div class="product-item" data-category="impresion-3d servicios">
+                    <div class="product-image" onclick="window.location.href='../productos/Soporte%20QR/producto-soporte-qr.html'">
+                        <img src="../productos/Soporte%20QR/Imagenes-Soporte%20QR/QR1.jpg" alt="Soporte QR" class="main-product-img">
+                    </div>
+                    <div class="product-info">
+                        <h3 onclick="window.location.href='../productos/Soporte QR/producto-soporte-qr.html'" style="cursor: pointer;">Soporte QR para Negocios</h3>
+                        <p class="product-description">Soporte universal para códigos QR de cualquier plataforma de pago digital</p>
+                        <div class="product-price">$98.000 COP</div>
+                        <div class="product-delivery">
+                            <span class="delivery-time">📦 Preparación: 5 días</span>
+                        </div>
+                        <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('soporte-qr', 'Soporte QR para Negocios', 98000, '../../Marketplace/productos/Soporte%20QR/Imagenes-Soporte%20QR/QR1.jpg')">Agregar al Carrito</button>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </section>
+
+           
+
+    <!-- Modal del Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <div id="modalBody">
+                <!-- El contenido se carga dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Selección de Método de Pago -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <div class="payment-header" style="padding: 20px; border-bottom: 1px solid #eee;">
+                <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
+                <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
+            </div>
+            <div class="payment-body" style="padding: 30px 20px;">
+                <div class="payment-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px;">
+                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
+                        <img src="../metodos de pago/Nequi.png" alt="Nequi">
+                        <div style="font-weight: 600;">Nequi</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
+                        <img src="../metodos de pago/Daviplata.png" alt="Daviplata">
+                        <div style="font-weight: 600;">Daviplata</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
+                        <img src="../metodos de pago/Bancolombia.png" alt="Bancolombia">
+                        <div style="font-weight: 600;">Bancolombia</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
+                        <img src="../metodos de pago/Efecty.png" alt="Efecty">
+                        <div style="font-weight: 600;">Efecty</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Visa', this)">
+                        <img src="../metodos de pago/Visa.png" alt="Visa">
+                        <div style="font-weight: 600;">Visa</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
+                        <img src="../metodos de pago/Mastercard.png" alt="Mastercard">
+                        <div style="font-weight: 600;">Mastercard</div>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('PSE', this)">
+                        <img src="../metodos de pago/PSE.png" alt="PSE">
+                        <div style="font-weight: 600;">PSE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-footer" style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+            </div>
+            <div id="cartBody" class="cart-body">
+                <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-payment-info" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
+                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0 COP</span>
+                </div>
+                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Zoom de Imagen -->
+    <div id="imageZoomModal" class="zoom-modal">
+        <div class="zoom-modal-content">
+            <span class="zoom-close" onclick="closeImageZoom()">&times;</span>
+            <div class="zoom-container">
+                <img id="zoomImage" src="" alt="Imagen ampliada">
+                <div class="zoom-lens"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>Roser Tecnologías</h3>
+            <p>Innovación, diseño y tecnología para el futuro.</p>
+            <p>&copy; 2025 Roser Tecnologías. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="marketplace.js"></script>
+    <script src="../../script.js"></script>
+</body>
+</html>
