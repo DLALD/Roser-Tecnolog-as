@@ -1,4 +1,11 @@
 $(function () {
+    // Esperar a que el navbar se genere
+    setTimeout(() => {
+        initializeApp();
+    }, 100);
+});
+
+function initializeApp() {
     $('#BotonWA').floatingWhatsApp({
         phone: '573113579437',
         headerTitle: 'Roser Tecnologías',
@@ -9,20 +16,13 @@ $(function () {
         backgroundColor: '#25D366',
         zIndex: 9999
     });
-    
     // Cart system
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
     
-    const paymentMethodLogos = {
-        'Nequi': '../Marketplace/metodos de pago/Nequi.png',
-        'Daviplata': '../Marketplace/metodos de pago/Daviplata.png',
-        'Bancolombia': '../Marketplace/metodos de pago/Bancolombia.png',
-        'Efecty': '../Marketplace/metodos de pago/Efecty.png',
-        'Visa': '../Marketplace/metodos de pago/Visa.png',
-        'Mastercard': '../Marketplace/metodos de pago/Mastercard.png',
-        'PSE': '../Marketplace/metodos de pago/PSE.png'
-    };
+    const paymentMethodLogos = Object.fromEntries(
+        PaymentModal.methods.map(m => [m.name, m.logo])
+    );
     
     function updateCartCount() {
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -36,6 +36,7 @@ $(function () {
     
     function updateCartDisplay() {
         const cartBody = $('#cartBody');
+        selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
         
         if (cart.length === 0) {
             cartBody.html('<p class="empty-cart">Tu carrito está vacío</p>');
@@ -96,7 +97,7 @@ $(function () {
             paymentHtml += '</div>';
             $('#cartPaymentMethod').html(paymentHtml);
         } else {
-            $('#cartPaymentMethod').html('<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>');
+            $('#cartPaymentMethod').html('<span style="color: #f57c00; cursor: pointer;" onclick="selectPaymentMethod();">No seleccionado (Clic para elegir)</span>');
         }
     }
     
@@ -252,6 +253,7 @@ const products = getProductRoutes('../');
         const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(whatsappMessage)}`;
         window.open(whatsappUrl, '_blank');
     });
+
     window.removeFromCart = function(index) {
         cart.splice(index, 1);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -275,92 +277,19 @@ const products = getProductRoutes('../');
         }
     };
 
-    // Payment Method Functions
-    window.openPaymentModal = function() {
-        $('#paymentModal').fadeIn(300);
-        if(selectedPaymentMethod) {
-            $('.payment-option').each(function() {
-                if($(this).find('div').text() === selectedPaymentMethod) {
-                    $(this).addClass('selected');
-                }
-            });
-        }
-    };
-
-    window.closePaymentModal = function() {
-        $('#paymentModal').fadeOut(300);
-    };
-
-    window.selectPayment = function(method, element) {
-        selectedPaymentMethod = method;
-        $('.payment-option').removeClass('selected');
-        $(element).addClass('selected');
-    };
-
-    window.confirmPaymentSelection = function() {
-        if(selectedPaymentMethod) {
-            localStorage.setItem('selectedPayment', selectedPaymentMethod);
-            closePaymentModal();
-            updateCartDisplay();
-            showNotification('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod, 'success');
-        } else {
-            showNotification('Atención', 'Por favor selecciona un método de pago', 'info');
-        }
-    };
-
     window.removePaymentMethod = function() {
         selectedPaymentMethod = '';
         localStorage.removeItem('selectedPayment');
         updateCartDisplay();
-        showNotification('Método Eliminado', 'Se ha quitado el método de pago.', 'error');
     };
 
-    // Notification System
-    window.playNotificationSound = function() {
-        try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.05, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.5);
-        } catch (e) {}
+    window.selectPaymentMethod = function() {
+        PaymentModal.open((method) => {
+            selectedPaymentMethod = method;
+            updateCartDisplay();
+        });
     };
-
-    window.showNotification = function(title, message, type = 'success') {
-        $('.toast-notification').remove();
-        let icon = '✓';
-        if (type === 'error') icon = '✕';
-        if (type === 'info') icon = 'ℹ';
-        
-        const html = `
-            <div class="toast-notification ${type}">
-                <div class="toast-icon">${icon}</div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-            </div>
-        `;
-        
-        $('body').append(html);
-        if (type === 'success') playNotificationSound();
-        
-        setTimeout(() => { $('.toast-notification').addClass('show'); }, 10);
-        setTimeout(() => {
-            $('.toast-notification').removeClass('show');
-            setTimeout(() => { $('.toast-notification').remove(); }, 400);
-        }, 3000);
-    };
-});
+}
 
 function closeCartModal() {
     $('#cartModal').hide();
