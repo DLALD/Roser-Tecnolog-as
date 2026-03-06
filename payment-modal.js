@@ -2,22 +2,28 @@
 const PaymentModal = {
     selectedMethod: null,
     callback: null,
+    basePath: '../Marketplace/metodos de pago/',
+    methods: [],
 
-    methods: [
-        { name: 'Nequi', logo: '../Marketplace/metodos de pago/Nequi.png' },
-        { name: 'Daviplata', logo: '../Marketplace/metodos de pago/Daviplata.png' },
-        { name: 'Bancolombia', logo: '../Marketplace/metodos de pago/Bancolombia.png' },
-        { name: 'Efecty', logo: '../Marketplace/metodos de pago/Efecty.png' },
-        { name: 'Visa', logo: '../Marketplace/metodos de pago/Visa.png' },
-        { name: 'Mastercard', logo: '../Marketplace/metodos de pago/Mastercard.png' },
-        { name: 'PSE', logo: '../Marketplace/metodos de pago/PSE.png' }
-    ],
-
-    init() {
+    init(config = {}) {
+        this.basePath = config.basePath || '../Marketplace/metodos de pago/';
+        this.methods = [
+            { name: 'Nequi', logo: this.basePath + 'Nequi.png' },
+            { name: 'Daviplata', logo: this.basePath + 'Daviplata.png' },
+            { name: 'Bancolombia', logo: this.basePath + 'Bancolombia.png' },
+            { name: 'Efecty', logo: this.basePath + 'Efecty.png' },
+            { name: 'Visa', logo: this.basePath + 'Visa.png' },
+            { name: 'Mastercard', logo: this.basePath + 'Mastercard.png' },
+            { name: 'PSE', logo: this.basePath + 'PSE.png' }
+        ];
         if (!document.getElementById('paymentModal')) {
             document.body.insertAdjacentHTML('beforeend', this.getHTML());
             this.attachEvents();
             this.addStyles();
+        }
+        // Crear botón flotante si no existe
+        if (!document.querySelector('.floating-payment-btn')) {
+            this.createFloatingButton();
         }
     },
 
@@ -69,9 +75,43 @@ const PaymentModal = {
                 #paymentModal .close:hover {
                     color: #d32f2f;
                 }
+                .floating-payment-btn {
+                    position: fixed;
+                    bottom: 100px;
+                    right: 30px;
+                    width: 60px;
+                    height: 60px;
+                    background: white;
+                    border-radius: 50%;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    cursor: pointer;
+                    z-index: 9998;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s ease;
+                }
+                .floating-payment-btn:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+                }
+                .floating-payment-btn img {
+                    width: 35px;
+                    height: 35px;
+                    object-fit: contain;
+                }
             `;
             document.head.appendChild(style);
         }
+    },
+
+    createFloatingButton() {
+        const btn = document.createElement('div');
+        btn.className = 'floating-payment-btn';
+        btn.title = 'Métodos de Pago';
+        btn.onclick = () => this.open();
+        btn.innerHTML = `<img src="${this.basePath}M.png" alt="Métodos de Pago">`;
+        document.body.appendChild(btn);
     },
 
     getHTML() {
@@ -216,12 +256,7 @@ const PaymentModal = {
     }
 };
 
-// Inicializar automáticamente cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => PaymentModal.init());
-} else {
-    PaymentModal.init();
-}
+// No auto-inicializar, esperar configuración manual
 
 // Funciones globales para compatibilidad con código existente
 function openPaymentModal(callback) {

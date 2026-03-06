@@ -77,17 +77,7 @@ body {
     mix-blend-mode: multiply;
 }
 
-.logo-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: opacity 0.3s;
-}
-
-.logo-link:hover {
-    opacity: 0.8;
-}
+/* Removed duplicate logo-link styles - now in search section */
 
 .nav-logo h2 {
     color: #2c5aa0;
@@ -101,72 +91,30 @@ body {
     margin-left: auto;
 }
 
-/* Search and Cart Styles */
-.search-box {
-    position: relative;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
+/* Search and Cart Styles - Using shared-components.js and navbar-component.js styles */
 
-.search-box.active {
-    width: 300px;
-}
-
-.search-box input {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 50px;
-    background: #fff;
-    outline: none;
-    padding: 0 50px 0 20px;
-    font-size: 14px;
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.search-box input.active {
-    opacity: 1;
-}
-
-.search-box .search-icon {
-    position: absolute;
-    right: 0px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 40px;
-    width: 40px;
-    background: #fff;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
-    z-index: 1;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+/* Logo link animation */
+.logo-link {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: transform 0.2s;
 }
 
-.search-box .search-icon svg {
-    width: 18px;
-    height: 18px;
-    fill: #2196F3;
+.logo-link:hover {
+    transform: scale(1.02);
 }
 
-.search-box .search-icon.active {
-    right: 5px;
-    height: 35px;
-    width: 35px;
-    background: #2196F3;
-    transform: translateY(-50%) rotate(360deg);
+/* Marketplace link hover animation */
+.marketplace-link:hover {
+    background: #1976d2 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
-.search-box .search-icon.active svg {
-    fill: #fff;
+.marketplace-link:hover span {
+    color: white !important;
 }
 
 .cart-icon {
@@ -212,49 +160,6 @@ body {
 }
 
 .cart-count.show { display: flex; }
-
-.search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-    max-height: 300px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-    margin-top: 10px;
-}
-
-.search-results.show {
-    display: block;
-}
-
-.search-result-item {
-    padding: 12px 20px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    transition: background 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-result-item:hover {
-    background: #f5f5f5;
-}
-
-.search-result-item:last-child {
-    border-bottom: none;
-}
-
-.search-result-icon {
-    width: 16px;
-    height: 16px;
-    fill: #2196F3;
-}
 
 .hamburger {
     display: none;

@@ -1,3 +1,221 @@
+// Inicialización cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Limpiar navbar existente y reinicializar con rutas correctas
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+        existingNavbar.remove();
+    }
+    
+    // Inicializar componentes compartidos con rutas correctas
+    NavbarComponent.init({
+        logoPath: '../../Imagenes/Rosero.png',
+        homeUrl: '../../Pagina Principal/index.html',
+        marketplaceUrl: '../../Marketplace/Pagina Marketplace/marketplace.html',
+        marketplaceIcon: '../../Marketplace/Iconos/Marketplace.png',
+        cartIcon: '../../Imagenes/Carrito.png',
+        sidebarBasePath: '../../'
+    });
+    
+    PaymentModal.init({
+        basePath: '../../Marketplace/metodos de pago/'
+    });
+    
+    CartSystem.init({
+        imageBasePath: '../../'
+    });
+    
+    // Inicializar sidebar y búsqueda después de que el navbar esté listo
+    setTimeout(() => {
+        initializeSidebar();
+        initializeSearch();
+    }, 100);
+    
+    // Inicializar WhatsApp Widget
+    $('#BotonWA').floatingWhatsApp({
+        phone: '573113579437',
+        headerTitle: 'Roser Tecnologías',
+        popupMessage: '¡Hola! ¿En qué podemos ayudarte con diseño mecánico?',
+        showPopup: true,
+        position: "right",
+        size: "60px",
+        backgroundColor: '#25D366',
+        zIndex: 9999
+    });
+    
+    // Cargar servicios
+    loadServices();
+});
+
+// Función para inicializar sidebar
+function initializeSidebar() {
+    const menuButton = document.querySelector('.menu-button');
+    const hamburger = document.querySelector('.hamburger');
+    const dropdown = document.querySelector('.sidebar-dropdown');
+    const sectionHeaders = document.querySelectorAll('.section-header');
+    const appsHeader = document.querySelector('.apps-header');
+    const prototypesHeader = document.querySelector('.prototypes-header');
+    
+    if (menuButton && dropdown) {
+        menuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        });
+    }
+    
+    if (hamburger && dropdown) {
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        });
+    }
+    
+    document.addEventListener('click', function(e) {
+        if (dropdown && !dropdown.contains(e.target) && !menuButton?.contains(e.target) && !hamburger?.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+    
+    sectionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const subsection = this.nextElementSibling;
+            const arrow = this.querySelector('.section-arrow');
+            
+            if (subsection) {
+                subsection.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = subsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            }
+        });
+    });
+    
+    if (prototypesHeader) {
+        prototypesHeader.addEventListener('click', function() {
+            const prototypeSubsection = document.querySelector('.prototype-subsection');
+            const arrow = this.querySelector('.section-arrow');
+            
+            if (prototypeSubsection) {
+                prototypeSubsection.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = prototypeSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            }
+        });
+    }
+    
+    if (appsHeader) {
+        appsHeader.addEventListener('click', function() {
+            const subSubsection = document.querySelector('.sub-subsection');
+            const arrow = this.querySelector('.section-arrow');
+            
+            if (subSubsection) {
+                subSubsection.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = subSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            }
+        });
+    }
+}
+
+// Función de búsqueda
+function initializeSearch() {
+    const searchBox = $('.search-box');
+    const searchIcon = $('.search-icon');
+    const searchInput = $('.search-box input[type="text"]');
+    const cancelIcon = $('.cancel-icon');
+    
+    if (!searchBox.length || !searchInput.length) return;
+    
+    const products = getProductRoutes('../../');
+    
+    searchIcon.on('click', function() {
+        searchBox.addClass('active');
+        searchIcon.addClass('active');
+        searchInput.addClass('active');
+        cancelIcon.addClass('active');
+        searchInput.focus();
+    });
+    
+    cancelIcon.on('click', function() {
+        searchBox.removeClass('active');
+        searchIcon.removeClass('active');
+        searchInput.removeClass('active');
+        cancelIcon.removeClass('active');
+        searchInput.val('');
+        $('.search-dropdown').remove();
+    });
+    
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.search-box').length) {
+            searchBox.removeClass('active');
+            searchIcon.removeClass('active');
+            searchInput.removeClass('active');
+            cancelIcon.removeClass('active');
+            searchInput.val('');
+            $('.search-dropdown').remove();
+        }
+    });
+    
+    searchInput.on('input', function() {
+        const query = $(this).val().toLowerCase();
+        if (query.length > 0) {
+            const results = Object.keys(products).filter(product => product.includes(query));
+            showSearchResults(results, products, searchBox);
+        } else {
+            $('.search-dropdown').remove();
+        }
+    });
+}
+
+function showSearchResults(results, products, searchBox) {
+    let dropdown = $('.search-dropdown');
+    
+    if (dropdown.length === 0) {
+        dropdown = $('<div class="search-dropdown"></div>').css({
+            position: 'absolute',
+            top: '50px',
+            left: '0',
+            width: '100%',
+            background: 'white',
+            border: '1px solid #e0e0e0',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            maxHeight: '300px',
+            overflowY: 'auto',
+            zIndex: 9999,
+            padding: '8px 0'
+        });
+        searchBox.append(dropdown);
+    }
+    
+    if (results.length > 0) {
+        dropdown.empty();
+        results.forEach(result => {
+            const item = $('<div></div>').css({
+                padding: '12px 16px',
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+            }).html(`
+                <span style="color: #664AFF; font-size: 18px; line-height: 1;">★</span>
+                <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
+            `).hover(
+                function() { $(this).css('background', '#f8f9fa'); },
+                function() { $(this).css('background', 'white'); }
+            ).on('click', function() {
+                window.location.href = products[result];
+            });
+            dropdown.append(item);
+        });
+        dropdown.show();
+    } else {
+        dropdown.hide();
+    }
+}
+
 // Services Data
 const services = [
     {
@@ -50,23 +268,10 @@ const services = [
     }
 ];
 
-// Cart from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// Payment Method Logos
-const paymentMethodLogos = {
-    'Nequi': '../../Marketplace/metodos de pago/Nequi.png',
-    'Daviplata': '../../Marketplace/metodos de pago/Daviplata.png',
-    'Bancolombia': '../../Marketplace/metodos de pago/Bancolombia.png',
-    'Efecty': '../../Marketplace/metodos de pago/Efecty.png',
-    'Visa': '../../Marketplace/metodos de pago/Visa.png',
-    'Mastercard': '../../Marketplace/metodos de pago/Mastercard.png',
-    'PSE': '../../Marketplace/metodos de pago/PSE.png'
-};
-
-// Load Services
 function loadServices() {
     const grid = document.getElementById('servicesGrid');
+    if (!grid) return;
+    
     grid.innerHTML = services.map(service => `
         <div class="service-card" data-id="${service.id}">
             <div class="service-icon">
@@ -87,7 +292,6 @@ function loadServices() {
     `).join('');
 }
 
-// Cotizar Servicio directo por WhatsApp
 function cotizarServicio(serviceId) {
     const service = services.find(s => s.id === serviceId);
     if (!service) return;
@@ -96,436 +300,6 @@ function cotizarServicio(serviceId) {
     const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
-
-// Add to Cart
-function addToCart(serviceId) {
-    const service = services.find(s => s.id === serviceId);
-    if (!service) return;
-    
-    const existingItem = cart.find(item => item.name === service.name);
-    
-    if (existingItem) {
-        existingItem.quantity++;
-    } else {
-        cart.push({
-            name: service.name,
-            price: 0,
-            quantity: 1,
-            image: 'Servicios/Diseño mecanico/' + service.icon
-        });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
-    showNotification('¡Excelente!', 'Servicio agregado al carrito', 'success');
-}
-
-// Remove from Cart
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
-}
-
-// Increase Quantity
-function increaseQuantity(index) {
-    cart[index].quantity++;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
-}
-
-// Decrease Quantity
-function decreaseQuantity(index) {
-    if (cart[index].quantity > 1) {
-        cart[index].quantity--;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartUI();
-    }
-}
-
-// Update Cart UI
-function updateCartUI() {
-    const cartCount = document.getElementById('cart-count');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartPaymentMethod = document.getElementById('cartPaymentMethod');
-    
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    cartCount.textContent = totalItems;
-    
-    if (totalItems === 0) {
-        cartItems.innerHTML = '<div class="cart-empty">El carrito está vacío</div>';
-        cartTotal.textContent = '$0 COP';
-    } else {
-        cartItems.innerHTML = cart.map((item, index) => {
-            let imageSrc = item.image;
-            // Corrección de rutas de imágenes para que funcionen desde la subcarpeta
-            if (!imageSrc.startsWith('http') && !imageSrc.startsWith('file:') && !imageSrc.startsWith('data:')) {
-                imageSrc = imageSrc.replace(/^(\.\.\/|\.\/)+/, '');
-                imageSrc = '../../' + imageSrc;
-            }
-            return `
-            <div class="cart-item">
-                <img src="${imageSrc}" alt="${item.name}" class="cart-item-img">
-                <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <p class="cart-item-price">${item.price > 0 ? '$' + item.price.toLocaleString('es-CO') + ' COP' : 'Cotización'}</p>
-                </div>
-                <div class="cart-item-quantity">
-                    <button onclick="decreaseQuantity(${index})">-</button>
-                    <span>${item.quantity}</span>
-                    <button onclick="increaseQuantity(${index})">+</button>
-                </div>
-                <div class="cart-item-total">${item.price > 0 ? '$' + (item.price * item.quantity).toLocaleString('es-CO') + ' COP' : 'Cotización'}</div>
-                <button class="remove-item" onclick="removeFromCart(${index})">&times;</button>
-            </div>
-        `}).join('');
-        
-        if (totalPrice > 0) {
-            cartTotal.textContent = '$' + totalPrice.toLocaleString('es-CO') + ' COP';
-        } else {
-            cartTotal.textContent = 'Cotización';
-        }
-    }
-
-    // Actualizar visualización del método de pago
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    if (cartPaymentMethod) {
-        if(selectedPaymentMethod) {
-            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-            let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
-            if (logoSrc) {
-                paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
-            }
-            paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
-            paymentHtml += `<button class="remove-payment-btn" onclick="removePaymentMethod()" title="Quitar método de pago">&times;</button>`;
-            paymentHtml += '</div>';
-            cartPaymentMethod.innerHTML = paymentHtml;
-        } else {
-            cartPaymentMethod.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
-        }
-    }
-}
-
-// Payment Logic
-window.openPaymentModal = function() {
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    const modal = document.getElementById('paymentModal');
-    if (modal) {
-        if (window.$) $(modal).fadeIn(300); else modal.style.display = 'block';
-        
-        const options = modal.querySelectorAll('.payment-option');
-        options.forEach(opt => {
-            opt.classList.remove('selected');
-            if(opt.innerText.trim() === selectedPaymentMethod) {
-                opt.classList.add('selected');
-            }
-        });
-    }
-};
-
-window.closePaymentModal = function() {
-    const modal = document.getElementById('paymentModal');
-    if (modal) {
-        if (window.$) $(modal).fadeOut(300); else modal.style.display = 'none';
-    }
-};
-
-window.selectPayment = function(method, element) {
-    const options = document.querySelectorAll('.payment-option');
-    options.forEach(opt => opt.classList.remove('selected'));
-    if(element) element.classList.add('selected');
-    window._tempPaymentSelection = method;
-};
-
-window.confirmPaymentSelection = function() {
-    const method = window._tempPaymentSelection || localStorage.getItem('selectedPayment');
-    if(method) {
-        localStorage.setItem('selectedPayment', method);
-        closePaymentModal();
-        updateCartUI();
-        showNotification('¡Método Confirmado!', 'Pago actualizado a: ' + method, 'success');
-    } else {
-        showNotification('Atención', 'Por favor selecciona un método de pago', 'info');
-    }
-};
-
-window.removePaymentMethod = function() {
-    localStorage.removeItem('selectedPayment');
-    updateCartUI();
-    showNotification('Método Eliminado', 'Se ha quitado el método de pago.', 'error');
-};
-
-// Notification System
-window.playNotificationSound = function() {
-    try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.5);
-    } catch (e) {}
-};
-
-window.showNotification = function(title, message, type = 'success') {
-    const existingToast = document.querySelector('.toast-notification');
-    if (existingToast) existingToast.remove();
-    
-    let icon = type === 'error' ? '✕' : (type === 'info' ? 'ℹ' : '✓');
-    const html = `
-        <div class="toast-notification ${type}">
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', html);
-    const toast = document.querySelector('.toast-notification');
-    
-    if (type === 'success') playNotificationSound();
-    
-    // Force reflow
-    void toast.offsetWidth;
-    
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 400);
-    }, 3000);
-};
-
-// Search Functionality - Copied from diseño eléctrico
-const searchBox = document.querySelector('.search-box');
-const searchIcon = document.querySelector('.search-icon');
-const searchInput = document.getElementById('searchInput');
-const cancelIcon = document.querySelector('.cancel-icon');
-
-   const products = getProductRoutes('../../');
-
-if (searchBox && searchIcon && searchInput && cancelIcon) {
-    searchIcon.addEventListener('click', () => {
-        searchBox.classList.add('active');
-        searchIcon.classList.add('active');
-        searchInput.classList.add('active');
-        cancelIcon.classList.add('active');
-        searchInput.focus();
-    });
-    
-    cancelIcon.addEventListener('click', () => {
-        searchBox.classList.remove('active');
-        searchIcon.classList.remove('active');
-        searchInput.classList.remove('active');
-        cancelIcon.classList.remove('active');
-        searchInput.value = '';
-        showSearchResults([], {});
-    });
-    
-    document.addEventListener('click', (e) => {
-        if (!searchBox.contains(e.target)) {
-            searchBox.classList.remove('active');
-            searchIcon.classList.remove('active');
-            searchInput.classList.remove('active');
-            cancelIcon.classList.remove('active');
-            searchInput.value = '';
-            showSearchResults([], {});
-        }
-    });
-    
-    searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
-        if (query.length > 0) {
-            const results = Object.keys(products).filter(product => 
-                product.includes(query)
-            );
-            showSearchResults(results, products);
-        } else {
-            showSearchResults([], products);
-        }
-    });
-    
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const query = e.target.value.toLowerCase();
-            const exactMatch = Object.keys(products).find(product => 
-                product.includes(query)
-            );
-            if (exactMatch) {
-                window.location.href = products[exactMatch];
-            }
-        }
-    });
-}
-
-function showSearchResults(results, products) {
-    let dropdown = document.querySelector('.search-dropdown');
-    
-    if (!dropdown) {
-        dropdown = document.createElement('div');
-        dropdown.className = 'search-dropdown';
-        dropdown.style.position = 'absolute';
-        dropdown.style.top = '50px';
-        dropdown.style.left = '0';
-        dropdown.style.width = '100%';
-        dropdown.style.background = 'white';
-        dropdown.style.border = '1px solid #e0e0e0';
-        dropdown.style.borderRadius = '8px';
-        dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-        dropdown.style.maxHeight = '300px';
-        dropdown.style.overflowY = 'auto';
-        dropdown.style.zIndex = '9999';
-        dropdown.style.padding = '8px 0';
-        searchBox.appendChild(dropdown);
-    }
-    
-    if (results.length > 0) {
-        dropdown.innerHTML = results.map(result => `
-            <div style="padding: 12px 16px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px;" 
-                 onmouseover="this.style.background='#f8f9fa'" 
-                 onmouseout="this.style.background='white'"
-                 onclick="selectSearchResult('${result}', '${products[result]}')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#664AFF">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
-            </div>
-        `).join('');
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none';
-    }
-}
-
-function selectSearchResult(result, url) {
-    showSearchResults([], {});
-    searchBox.classList.remove('active');
-    searchIcon.classList.remove('active');
-    searchInput.classList.remove('active');
-    cancelIcon.classList.remove('active');
-    searchInput.value = '';
-    window.location.href = url;
-}
-
-// Cart Modal
-const cartIcon = document.getElementById('cartIcon');
-const cartModal = document.getElementById('cartModal');
-const closeCart = document.getElementById('closeCart');
-
-cartIcon.addEventListener('click', () => {
-    cartModal.classList.add('active');
-});
-
-closeCart.addEventListener('click', () => {
-    cartModal.classList.remove('active');
-});
-
-cartModal.addEventListener('click', (e) => {
-    if (e.target === cartModal) {
-        cartModal.classList.remove('active');
-    }
-});
-
-// Checkout Function
-window.checkout = function() {
-    if (cart.length === 0) {
-        alert('El carrito está vacío');
-        return;
-    }
-    
-    // Obtener el método de pago seleccionado
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    
-    let message = '¡Hola! Me gustaría solicitar cotización para:\n\n';
-    let total = 0;
-    
-    cart.forEach(item => {
-        const itemTotal = (item.price || 0) * item.quantity;
-        total += itemTotal;
-        message += `• ${item.name}\n  Cantidad: ${item.quantity}`;
-        if (item.price > 0) {
-            message += `\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP`;
-        }
-        message += '\n\n';
-    });
-    
-    if (total > 0) {
-        message += `Total: $${total.toLocaleString('es-CO')} COP`;
-    }
-    
-    if (selectedPaymentMethod) {
-        message += `\n\nMétodo de Pago: ${selectedPaymentMethod}`;
-    } else {
-        message += `\n\nMétodo de Pago: A convenir`;
-    }
-    
-    message += '\n\n¿Podrían proporcionarme más información?';
-    
-    const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-};
-
-// Menu Button Toggle
-const menuButton = document.querySelector('.menu-button');
-const sidebarDropdown = document.querySelector('.sidebar-dropdown');
-
-menuButton.addEventListener('click', () => {
-    sidebarDropdown.classList.toggle('active');
-});
-
-document.addEventListener('click', (e) => {
-    if (!menuButton.contains(e.target) && !sidebarDropdown.contains(e.target)) {
-        sidebarDropdown.classList.remove('active');
-    }
-});
-
-// Dropdown Sections
-document.querySelectorAll('.section-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const subsection = header.nextElementSibling;
-        subsection.classList.toggle('active');
-        const arrow = header.querySelector('.section-arrow');
-        arrow.style.transform = subsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-    });
-});
-
-// Prototypes and Apps Headers
-document.querySelectorAll('.prototypes-header, .apps-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const subsection = header.nextElementSibling;
-        subsection.classList.toggle('active');
-    });
-});
-
-// WhatsApp Floating Button
-$(document).ready(function() {
-    $('#BotonWA').floatingWhatsApp({
-        phone: '573113579437',
-        headerTitle: 'Roser Tecnologías',
-        popupMessage: '¡Hola! ¿En qué podemos ayudarte con diseño mecánico?',
-        showPopup: true,
-        position: "right",
-        size: "60px",
-        backgroundColor: '#25D366',
-        zIndex: 9999
-    });
-});
-
-// Initialize
-loadServices();
-updateCartUI();
 
 // Zoom on Scroll Animation
 const observerOptions = {
@@ -541,11 +315,9 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all zoom elements after a small delay to ensure DOM is ready
 setTimeout(() => {
     document.querySelectorAll('.zoom-on-scroll').forEach(element => {
         observer.observe(element);
-        // Add click event to restart animation
         element.addEventListener('click', () => {
             element.classList.remove('zoomed');
             setTimeout(() => {
@@ -554,7 +326,6 @@ setTimeout(() => {
         });
     });
     
-    // Add click event to hero image
     const heroImage = document.querySelector('.slide-in-right');
     if (heroImage) {
         heroImage.addEventListener('click', () => {

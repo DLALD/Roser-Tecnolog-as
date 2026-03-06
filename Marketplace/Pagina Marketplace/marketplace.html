@@ -19,7 +19,7 @@
     <div id="BotonWA"></div>
     
     <!-- Botón Flotante de Métodos de Pago -->
-    <div class="floating-payment-btn" onclick="openPaymentModal()">
+    <div class="floating-payment-btn" onclick="PaymentModal.open()">
         <span class="payment-tooltip">Métodos de Pago</span>
         <img src="../metodos de pago/M.png" alt="Métodos de Pago">
     </div>
@@ -324,77 +324,6 @@
         </div>
     </div>
 
-    <!-- Modal de Selección de Método de Pago -->
-    <div id="paymentModal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <span class="close" onclick="closePaymentModal()">&times;</span>
-            <div class="payment-header" style="padding: 20px; border-bottom: 1px solid #eee;">
-                <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
-                <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
-            </div>
-            <div class="payment-body" style="padding: 30px 20px;">
-                <div class="payment-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px;">
-                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
-                        <img src="../metodos de pago/Nequi.png" alt="Nequi">
-                        <div style="font-weight: 600;">Nequi</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
-                        <img src="../metodos de pago/Daviplata.png" alt="Daviplata">
-                        <div style="font-weight: 600;">Daviplata</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
-                        <img src="../metodos de pago/Bancolombia.png" alt="Bancolombia">
-                        <div style="font-weight: 600;">Bancolombia</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
-                        <img src="../metodos de pago/Efecty.png" alt="Efecty">
-                        <div style="font-weight: 600;">Efecty</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Visa', this)">
-                        <img src="../metodos de pago/Visa.png" alt="Visa">
-                        <div style="font-weight: 600;">Visa</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
-                        <img src="../metodos de pago/Mastercard.png" alt="Mastercard">
-                        <div style="font-weight: 600;">Mastercard</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('PSE', this)">
-                        <img src="../metodos de pago/PSE.png" alt="PSE">
-                        <div style="font-weight: 600;">PSE</div>
-                    </div>
-                </div>
-            </div>
-            <div class="payment-footer" style="padding: 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px;">
-                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
-                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal del Carrito -->
-    <div id="cartModal" class="modal">
-        <div class="modal-content cart-modal-content">
-            <span class="close" onclick="closeCartModal()">&times;</span>
-            <div class="cart-header">
-                <h2>Carrito de Compras</h2>
-            </div>
-            <div id="cartBody" class="cart-body">
-                <p class="empty-cart">Tu carrito está vacío</p>
-            </div>
-            <div class="cart-payment-info" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
-                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <span id="cart-total">$0 COP</span>
-                </div>
-                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal de Zoom de Imagen -->
     <div id="imageZoomModal" class="zoom-modal">
         <div class="zoom-modal-content">
@@ -415,6 +344,9 @@
         </div>
     </footer>
 
+    <script src="../../shared-components.js"></script>
+    <script src="../../payment-modal.js"></script>
+    <script src="../../cart-component.js"></script>
     <script src="marketplace.js"></script>
     <script src="../../script.js"></script>
 </body>

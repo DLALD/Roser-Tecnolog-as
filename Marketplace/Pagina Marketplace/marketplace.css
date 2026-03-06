@@ -275,8 +275,8 @@ body {
 
 .marketplace-layout {
     display: block;
-    max-width: 1400px;
-    margin: 100px auto 60px;
+    max-width: 100%;
+    margin: 100px 0 60px;
     padding: 0 20px;
 }
 

@@ -314,9 +314,38 @@ function initPreloader() {
 
 // Inicialización cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
+    // Limpiar navbar existente y reinicializar con rutas correctas
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+        existingNavbar.remove();
+    }
+    
+    // Inicializar componentes compartidos con rutas correctas
+    NavbarComponent.init({
+        logoPath: '../../../Imagenes/Rosero.png',
+        homeUrl: '../../../Pagina Principal/index.html',
+        marketplaceUrl: '../../../Marketplace/Pagina Marketplace/marketplace.html',
+        marketplaceIcon: '../../../Marketplace/Iconos/Marketplace.png',
+        cartIcon: '../../../Imagenes/Carrito.png',
+        sidebarBasePath: '../../../'
+    });
+    
+    PaymentModal.init({
+        basePath: '../../../Marketplace/metodos de pago/'
+    });
+    
+    CartSystem.init({
+        imageBasePath: '../../../'
+    });
+    
+    // Inicializar sidebar después de que el navbar esté listo
+    setTimeout(() => {
+        initializeSidebar();
+        initializeSearch();
+    }, 100);
+    
     // Inicializar carrusel
     initCarouselIndicators();
-    // startAutoPlay(); // Descomenta si quieres auto-play
     
     // Inicializar todas las funciones
     animateOnScroll();
@@ -328,34 +357,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollToTop();
     initLazyLoading();
     
-    // Inicializar carrito
-    updateCartUI();
-    
-    // Sincronizar método de pago al cargar
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'selectedPayment') {
-            updateCartUI();
-        }
-    });
-    
-    // Evento para abrir modal desde el carrito (delegación)
-    document.body.addEventListener('click', function(e) {
-        if (e.target.closest('.cart-payment-info')) {
-            openPaymentModal();
-        }
-    });
-    
     // Inicializar preloader solo si no es una recarga
     if (!sessionStorage.getItem('visited')) {
         initPreloader();
         sessionStorage.setItem('visited', 'true');
     }
-    
-    // Event listeners para scroll
-    window.addEventListener('scroll', () => {
-        animateOnScroll();
-        parallaxEffect();
-    });
     
     // Optimización del scroll con throttling
     let ticking = false;
@@ -379,46 +385,49 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Menú dropdown mejorado
-document.addEventListener('DOMContentLoaded', function() {
+// Función para inicializar sidebar
+function initializeSidebar() {
     const menuButton = document.querySelector('.menu-button');
+    const hamburger = document.querySelector('.hamburger');
     const dropdown = document.querySelector('.sidebar-dropdown');
     const sectionHeaders = document.querySelectorAll('.section-header');
     const appsHeader = document.querySelector('.apps-header');
     const prototypesHeader = document.querySelector('.prototypes-header');
     
-    // Toggle del menú principal
     if (menuButton && dropdown) {
         menuButton.addEventListener('click', function(e) {
             e.stopPropagation();
             dropdown.classList.toggle('active');
         });
-        
-        // Cerrar menú al hacer click fuera
-        document.addEventListener('click', function(e) {
-            if (!dropdown.contains(e.target) && !menuButton.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
+    }
+    
+    if (hamburger && dropdown) {
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
         });
     }
     
-    // Toggle de secciones
+    document.addEventListener('click', function(e) {
+        if (dropdown && !dropdown.contains(e.target) && !menuButton?.contains(e.target) && !hamburger?.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+    
     sectionHeaders.forEach(header => {
         header.addEventListener('click', function() {
             const subsection = this.nextElementSibling;
             const arrow = this.querySelector('.section-arrow');
             
-            subsection.classList.toggle('active');
-            
-            if (subsection.classList.contains('active')) {
-                arrow.style.transform = 'rotate(180deg)';
-            } else {
-                arrow.style.transform = 'rotate(0deg)';
+            if (subsection) {
+                subsection.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = subsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
             }
         });
     });
     
-    // Toggle de prototipos
     if (prototypesHeader) {
         prototypesHeader.addEventListener('click', function() {
             const prototypeSubsection = document.querySelector('.prototype-subsection');
@@ -426,17 +435,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (prototypeSubsection) {
                 prototypeSubsection.classList.toggle('active');
-                
-                if (prototypeSubsection.classList.contains('active')) {
-                    arrow.style.transform = 'rotate(180deg)';
-                } else {
-                    arrow.style.transform = 'rotate(0deg)';
+                if (arrow) {
+                    arrow.style.transform = prototypeSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
                 }
             }
         });
     }
     
-    // Toggle de apps
     if (appsHeader) {
         appsHeader.addEventListener('click', function() {
             const subSubsection = document.querySelector('.sub-subsection');
@@ -444,328 +449,110 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (subSubsection) {
                 subSubsection.classList.toggle('active');
-                
-                if (subSubsection.classList.contains('active')) {
-                    arrow.style.transform = 'rotate(180deg)';
-                } else {
-                    arrow.style.transform = 'rotate(0deg)';
+                if (arrow) {
+                    arrow.style.transform = subSubsection.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
                 }
             }
         });
     }
-});
-
-
-// Cart from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-// Payment Method Logos
-const paymentMethodLogos = {
-    'Nequi': '../../../Marketplace/metodos de pago/Nequi.png',
-    'Daviplata': '../../../Marketplace/metodos de pago/Daviplata.png',
-    'Bancolombia': '../../../Marketplace/metodos de pago/Bancolombia.png',
-    'Efecty': '../../../Marketplace/metodos de pago/Efecty.png',
-    'Visa': '../../../Marketplace/metodos de pago/Visa.png',
-    'Mastercard': '../../../Marketplace/metodos de pago/Mastercard.png',
-    'PSE': '../../../Marketplace/metodos de pago/PSE.png'
-};
-
-// Cart button click
-const cartIcon = document.querySelector('.cart-icon');
-if (cartIcon) {
-    cartIcon.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        openCartModal();
-    });
 }
 
-// Search Functionality
-const searchBox = document.querySelector('.search-box');
-const searchIcon = document.querySelector('.search-icon');
-const searchInput = document.getElementById('searchInput');
-const cancelIcon = document.querySelector('.cancel-icon');
-
-const products = getProductRoutes('../../../');
-
-if (searchBox && searchIcon && searchInput && cancelIcon) {
-    searchIcon.addEventListener('click', () => {
-        searchBox.classList.add('active');
-        searchIcon.classList.add('active');
-        searchInput.classList.add('active');
-        cancelIcon.classList.add('active');
+// Función de búsqueda
+function initializeSearch() {
+    const searchBox = $('.search-box');
+    const searchIcon = $('.search-icon');
+    const searchInput = $('.search-box input[type="text"]');
+    const cancelIcon = $('.cancel-icon');
+    
+    if (!searchBox.length || !searchInput.length) return;
+    
+    const products = getProductRoutes('../../../');
+    
+    searchIcon.on('click', function() {
+        searchBox.addClass('active');
+        searchIcon.addClass('active');
+        searchInput.addClass('active');
+        cancelIcon.addClass('active');
         searchInput.focus();
     });
     
-    cancelIcon.addEventListener('click', () => {
-        searchBox.classList.remove('active');
-        searchIcon.classList.remove('active');
-        searchInput.classList.remove('active');
-        cancelIcon.classList.remove('active');
-        searchInput.value = '';
+    cancelIcon.on('click', function() {
+        searchBox.removeClass('active');
+        searchIcon.removeClass('active');
+        searchInput.removeClass('active');
+        cancelIcon.removeClass('active');
+        searchInput.val('');
+        $('.search-dropdown').remove();
     });
     
-    document.addEventListener('click', (e) => {
-        if (!searchBox.contains(e.target)) {
-            searchBox.classList.remove('active');
-            searchIcon.classList.remove('active');
-            searchInput.classList.remove('active');
-            cancelIcon.classList.remove('active');
-            searchInput.value = '';
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.search-box').length) {
+            searchBox.removeClass('active');
+            searchIcon.removeClass('active');
+            searchInput.removeClass('active');
+            cancelIcon.removeClass('active');
+            searchInput.val('');
+            $('.search-dropdown').remove();
         }
     });
     
-    searchInput.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
+    searchInput.on('input', function() {
+        const query = $(this).val().toLowerCase();
         if (query.length > 0) {
             const results = Object.keys(products).filter(product => product.includes(query));
-            showSearchResults(results, products);
+            showSearchResults(results, products, searchBox);
         } else {
-            showSearchResults([], products);
+            $('.search-dropdown').remove();
         }
     });
 }
 
-function showSearchResults(results, products) {
-    let dropdown = document.querySelector('.search-dropdown');
+function showSearchResults(results, products, searchBox) {
+    let dropdown = $('.search-dropdown');
     
-    if (!dropdown) {
-        dropdown = document.createElement('div');
-        dropdown.className = 'search-dropdown';
-        dropdown.style.cssText = `
-            position: absolute;
-            top: 50px;
-            left: 0;
-            width: 100%;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 9999;
-            padding: 8px 0;
-        `;
-        searchBox.appendChild(dropdown);
+    if (dropdown.length === 0) {
+        dropdown = $('<div class="search-dropdown"></div>').css({
+            position: 'absolute',
+            top: '50px',
+            left: '0',
+            width: '100%',
+            background: 'white',
+            border: '1px solid #e0e0e0',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            maxHeight: '300px',
+            overflowY: 'auto',
+            zIndex: 9999,
+            padding: '8px 0'
+        });
+        searchBox.append(dropdown);
     }
     
     if (results.length > 0) {
-        dropdown.innerHTML = results.map(result => `
-            <div style="padding: 12px 16px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px;" 
-                 onmouseover="this.style.background='#f8f9fa'" 
-                 onmouseout="this.style.background='white'"
-                 onclick="window.location.href='${products[result]}'">
+        dropdown.empty();
+        results.forEach(result => {
+            const item = $('<div></div>').css({
+                padding: '12px 16px',
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+            }).html(`
                 <span style="color: #664AFF; font-size: 18px; line-height: 1;">★</span>
                 <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
-            </div>
-        `).join('');
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none';
-    }
-}
-
-// Cart Modal
-const cartModal = document.getElementById('cartModal');
-const closeCart = document.getElementById('closeCart');
-
-window.openCartModal = function() {
-    updateCartUI();
-    cartModal.style.display = 'block';
-};
-
-window.closeCartModal = function() {
-    cartModal.style.display = 'none';
-};
-
-if (closeCart) {
-    closeCart.addEventListener('click', () => {
-        closeCartModal();
-    });
-}
-
-if (cartModal) {
-    cartModal.addEventListener('click', (e) => {
-        if (e.target === cartModal) {
-            closeCartModal();
-        }
-    });
-}
-
-window.openPaymentModal = function() {
-    selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    const modal = document.getElementById('paymentModal');
-    if (modal) {
-        modal.style.display = 'block';
-        document.querySelectorAll('.payment-option').forEach(el => {
-            el.classList.remove('selected');
-            if (el.innerText.trim() === selectedPaymentMethod) el.classList.add('selected');
+            `).hover(
+                function() { $(this).css('background', '#f8f9fa'); },
+                function() { $(this).css('background', 'white'); }
+            ).on('click', function() {
+                window.location.href = products[result];
+            });
+            dropdown.append(item);
         });
-    }
-};
-
-window.closePaymentModal = function() {
-    const modal = document.getElementById('paymentModal');
-    if (modal) modal.style.display = 'none';
-};
-
-window.selectPayment = function(method, element) {
-    selectedPaymentMethod = method;
-    document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
-};
-
-window.confirmPaymentSelection = function() {
-    if (selectedPaymentMethod) {
-        localStorage.setItem('selectedPayment', selectedPaymentMethod);
-        closePaymentModal();
-        updateCartUI();
-        if(window.showToast) {
-            window.playSuccessSound();
-            window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod);
-        } else {
-            alert('Método de pago actualizado: ' + selectedPaymentMethod);
-        }
+        dropdown.show();
     } else {
-        alert('Por favor selecciona un método de pago');
+        dropdown.hide();
     }
-};
-
-window.removePaymentMethod = function() {
-    selectedPaymentMethod = '';
-    localStorage.removeItem('selectedPayment');
-    updateCartUI();
-};
-
-// Update Cart UI
-function updateCartUI() {
-    const cartCount = document.getElementById('cart-count');
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartPaymentMethod = document.getElementById('cartPaymentMethod');
-    
-    if (!cartCount || !cartItems || !cartTotal) return;
-    
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    cartCount.textContent = totalItems;
-    
-    if (totalItems > 0) {
-        cartCount.classList.add('show');
-    } else {
-        cartCount.classList.remove('show');
-    }
-    
-    if (totalItems === 0) {
-        cartItems.innerHTML = '<p class="cart-empty">El carrito está vacío</p>';
-        cartTotal.textContent = '$0 COP';
-    } else {
-        cartItems.innerHTML = '<div class="cart-items">' + cart.map((item, index) => {
-            // Ajustar ruta de imagen según la ubicación actual
-            let imagePath = item.image || '';
-            
-            // Si la ruta ya es absoluta o comienza con http, dejarla como está
-            if (imagePath.startsWith('http') || imagePath.startsWith('/')) {
-                // No hacer nada
-            } else if (imagePath.includes('Marketplace/')) {
-                // Si ya contiene Marketplace/, extraer la parte después de Marketplace/
-                const marketplaceIndex = imagePath.indexOf('Marketplace/');
-                const relativePath = imagePath.substring(marketplaceIndex + 12); // 12 = length of 'Marketplace/'
-                imagePath = '../../../Marketplace/' + relativePath;
-            } else {
-                // Si no tiene prefijo, asumir que es relativa al Marketplace
-                imagePath = '../../../Marketplace/' + imagePath;
-            }
-            
-            return `
-            <div class="cart-item">
-                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
-                <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <p class="cart-item-price">${item.price > 0 ? '$' + item.price.toLocaleString('es-CO') + ' COP' : 'Cotización'}</p>
-                </div>
-                <div class="cart-item-actions">
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
-                    <span class="quantity-display">${item.quantity}</span>
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
-                </div>
-                <div class="cart-item-total">${item.price > 0 ? '$' + (item.price * item.quantity).toLocaleString('es-CO') + ' COP' : 'Cotización'}</div>
-                <button class="remove-item-btn" onclick="removeFromCart(${index})">&times;</button>
-            </div>
-        `}).join('') + '</div>';
-        
-        if (totalPrice > 0) {
-            cartTotal.textContent = '$' + totalPrice.toLocaleString('es-CO') + ' COP';
-        } else {
-            cartTotal.textContent = 'Cotización';
-        }
-    }
-
-    // Update payment method display in cart
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    if (cartPaymentMethod) {
-        if (selectedPaymentMethod) {
-            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-            let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
-            if (logoSrc) {
-                paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
-            }
-            paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
-            paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
-            paymentHtml += '</div>';
-            cartPaymentMethod.innerHTML = paymentHtml;
-        } else {
-            cartPaymentMethod.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
-        }
-    }
-}
-
-// WhatsApp Quote
-const btnQuote = document.getElementById('btnQuote');
-if (btnQuote) {
-    btnQuote.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert('El carrito está vacío');
-            return;
-        }
-        
-        let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
-        let total = 0;
-        
-        cart.forEach(item => {
-            const itemTotal = (item.price || 0) * item.quantity;
-            total += itemTotal;
-            message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
-        });
-        
-        message += `Total: $${total.toLocaleString('es-CO')} COP`;
-        
-        const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
-        message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
-
-        const whatsappUrl = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    });
-}
-
-// Update quantity
-function updateQuantity(index, change) {
-    if (cart[index]) {
-        cart[index].quantity += change;
-        if (cart[index].quantity <= 0) {
-            cart.splice(index, 1);
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartUI();
-    }
-}
-
-// Remove from cart
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
 }
 
 // Initialize WhatsApp Widget
@@ -782,13 +569,4 @@ $(function () {
     });
 });
 
-// Debug cart images
-console.log('Cart items:', cart);
-cart.forEach((item, index) => {
-    console.log(`Item ${index}:`, {
-        name: item.name,
-        image: item.image,
-        price: item.price,
-        quantity: item.quantity
-    });
-});
+

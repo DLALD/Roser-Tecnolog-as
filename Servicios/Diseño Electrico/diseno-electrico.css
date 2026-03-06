@@ -44,6 +44,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+  z-index: 10;
 }
 
 .cta-button:hover {

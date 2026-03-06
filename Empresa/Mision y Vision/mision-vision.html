@@ -12,191 +12,13 @@
 </head>
 <body>
     <div id="BotonWA"></div>
-    
+
     <!-- Botón Flotante de Métodos de Pago -->
     <div class="floating-payment-btn" onclick="openPaymentModal()" title="Métodos de Pago">
         <img src="../../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
     </div>
 
-    <!-- Modal de Selección de Método de Pago -->
-    <div id="paymentModal" class="payment-modal">
-        <div class="payment-modal-content">
-            <div class="payment-header">
-                <span class="payment-close" onclick="closePaymentModal()">&times;</span>
-                <h2 style="margin: 0; color: #333; font-size: 1.5rem;">Selecciona tu Método de Pago</h2>
-                <p style="margin: 5px 0 0; color: #666;">Elige cómo prefieres pagar tu pedido</p>
-            </div>
-            <div class="payment-body">
-                <div class="payment-options-grid">
-                    <div class="payment-option" onclick="selectPayment('Nequi', this)">
-                        <img src="../../Marketplace/metodos de pago/Nequi.png" alt="Nequi">
-                        <div style="font-weight: 600;">Nequi</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Daviplata', this)">
-                        <img src="../../Marketplace/metodos de pago/Daviplata.png" alt="Daviplata">
-                        <div style="font-weight: 600;">Daviplata</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Bancolombia', this)">
-                        <img src="../../Marketplace/metodos de pago/Bancolombia.png" alt="Bancolombia">
-                        <div style="font-weight: 600;">Bancolombia</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Efecty', this)">
-                        <img src="../../Marketplace/metodos de pago/Efecty.png" alt="Efecty">
-                        <div style="font-weight: 600;">Efecty</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Visa', this)">
-                        <img src="../../Marketplace/metodos de pago/Visa.png" alt="Visa">
-                        <div style="font-weight: 600;">Visa</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('Mastercard', this)">
-                        <img src="../../Marketplace/metodos de pago/Mastercard.png" alt="Mastercard">
-                        <div style="font-weight: 600;">Mastercard</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('PSE', this)">
-                        <img src="../../Marketplace/metodos de pago/PSE.png" alt="PSE">
-                        <div style="font-weight: 600;">PSE</div>
-                    </div>
-                </div>
-            </div>
-            <div class="payment-footer">
-                <button onclick="closePaymentModal()" style="background: #f5f5f5; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
-                <button onclick="confirmPaymentSelection()" style="background: #2196F3; color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="menu-button">
-                <span class="menu-lines">☰</span>
-            </div>
-            <div class="nav-logo">
-                <a href="../../Pagina Principal/index.html" class="logo-link">
-                    <img src="../../Imagenes/Rosero.png" alt="Roser Tecnologías" class="logo-img">
-                    <h2>Roser Tecnologías</h2>
-                </a>
-                <a href="../../Marketplace/Pagina Marketplace/marketplace.html" class="marketplace-link" style="display: flex; align-items: center; gap: 6px; text-decoration: none; margin-left: 20px; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; transition: all 0.3s ease;">
-                    <img src="../../Marketplace/Iconos/Marketplace.png" alt="Marketplace" style="width: 20px; height: 20px;">
-                    <span style="color: #1976d2; font-weight: 500; font-size: 0.9rem;">Marketplace</span>
-                </a>
-            </div>
-            <ul class="nav-menu">
-            </ul>
-            <div class="nav-right" style="display: flex; align-items: center; gap: 16px;">
-                <div class="search-box">
-                    <input type="text" placeholder="Buscar productos..." id="shared-search-input">
-                    <div class="search-icon" id="shared-search-btn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
-                    </div>
-                    <div class="search-results" id="search-results"></div>
-                </div>
-                <div class="cart-icon" id="shared-cart-button" role="button" aria-label="Abrir carrito">
-                    <img src="../../Imagenes/Carrito.png" alt="Carrito" width="24" height="24">
-                    <span class="cart-count" id="shared-cart-count">0</span>
-                </div>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        
-        <!-- Dropdown Menu -->
-        <div class="sidebar-dropdown">
-            <div class="dropdown-section">
-                <div class="section-header">
-                    <img src="../../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
-                    <span class="section-title">Servicios</span>
-                    <span class="section-arrow">▼</span>
-                </div>
-                <div class="subsection">
-                    <a href="../../Servicios/Diseños-3D/disenos-3.html">
-                        <img src="../../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
-                        Diseños 3D
-                    </a>
-                    <a href="../../Servicios/Impresiones-3D/impresiones-3d.html">
-                        <img src="../../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
-                        Impresión 3D
-                    </a>
-                    <a href="../../Servicios/Diseño Electrico/diseno-electrico.html">
-                        <img src="../../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
-                        Diseño Eléctrico
-                    </a>
-                    <a href="../../Servicios/Diseño mecanico/diseno-mecanico.html mecanico/diseno-mecanico.html">
-                        <img src="../../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
-                        Diseño Mecánico
-                    </a>
-                    <a href="../../Servicios/Fabricacion de sistemas mecanicos/fabricacion-sistemas-mecanicos.html">
-                        <img src="../../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
-                        Fabricación de Sistemas Mecánicos
-                    </a>
-                </div>
-            </div>
-            <div class="dropdown-section">
-                <div class="section-header">
-                    <img src="../../Imagenes/PTS.png" alt="Productos" class="section-icon">
-                    <span class="section-title">Productos</span>
-                    <span class="section-arrow">▼</span>
-                </div>
-                <div class="subsection">
-                    <div class="prototypes-header">
-                        <img src="../../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
-                        Prototipos
-                        <span class="section-arrow">▼</span>
-                    </div>
-                    <div class="prototype-subsection">
-                        <a href="../../Productos-Roser/Prototipos/DePie/DePie.html">
-                            <img src="../../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
-                            DePie
-                        </a>
-                    </div>
-                    <div class="apps-header" data-toggle="apps">
-                        <img src="../../Imagenes/apps.png" alt="Apps" class="subsection-icon">
-                        Apps
-                        <span class="section-arrow">▼</span>
-                    </div>
-                    <div class="sub-subsection">
-                        <a href="../../Productos-Roser/Apps/3dcost/3dcost.html">
-                            <img src="../../Imagenes/3D.png" alt="3D" class="subsection-icon">
-                            3DCost
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="dropdown-section">
-                <div class="section-header">
-                    <img src="../../Imagenes/empresa.png" alt="Empresa" class="section-icon">
-                    <span class="section-title">Empresa</span>
-                    <span class="section-arrow">▼</span>
-                </div>
-                <div class="subsection">
-                    <a href="../Conocenos/conocenos.html">
-                        <img src="../../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
-                        Conocenos
-                    </a>
-                    <a href="mision-vision.html">
-                        <img src="../../Imagenes/vision.png" alt="Vision" class="subsection-icon">
-                        Misión y Visión
-                    </a>
-                    <a href="../Terminos y Condiciones/terminos-condiciones.html">
-                        <img src="../../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
-                        Términos y Condiciones
-                    </a>
-                    <a href="../Politicas y Privacidad/politica-privacidad.html">
-                        <img src="../../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
-                        Privacidad
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <div class="main-container">
-        <!-- Main Content -->
         <main class="content">
             <div class="hero-section">
                 <div class="hero-icon">
@@ -207,7 +29,6 @@
             </div>
 
             <div class="cards-container">
-                <!-- Misión Card -->
                 <div class="mission-card">
                     <div class="card-header">
                         <div class="card-icon mission-icon">🎯</div>
@@ -218,7 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Visión Card -->
                 <div class="vision-card">
                     <div class="card-header">
                         <div class="card-icon vision-icon">🚀</div>
@@ -230,7 +50,6 @@
                 </div>
             </div>
 
-            <!-- Values Section -->
             <div class="values-section">
                 <h3>Nuestros Valores</h3>
                 <div class="values-grid">
@@ -259,37 +78,16 @@
         </main>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>Roser Tecnologías</p>
         <p>© 2025 Todos los derechos reservados</p>
     </footer>
 
-    <!-- Cart modal -->
-    <div id="cartModal" class="modal">
-        <div class="modal-content cart-modal-content">
-            <span class="close" onclick="closeCartModal()">&times;</span>
-            <div class="cart-header">
-                <h2>Carrito de Compras</h2>
-            </div>
-            <div id="cartBody" class="cart-body">
-                <p class="empty-cart">Tu carrito está vacío</p>
-            </div>
-            <div class="cart-payment-info" onclick="openPaymentModal()" style="padding: 15px 20px; background: #e3f2fd; border-top: 1px solid #bbdefb; border-bottom: 1px solid #bbdefb; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" title="Clic para cambiar método de pago">
-                <span style="color: #1565c0; font-weight: 600;">Método de Pago:</span>
-                <div id="cartPaymentMethod" style="font-weight: bold; color: #333;">No seleccionado</div>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <span id="cart-total">$0 COP</span>
-                </div>
-                <button class="checkout-btn" onclick="checkout()">Finalizar Compra por WhatsApp</button>
-            </div>
-        </div>
-    </div>
-
+    <script src="../../navbar-component.js"></script>
+    <script src="../../payment-modal.js"></script>
+    <script src="../../cart-component.js"></script>
     <script src="../../shared-components.js"></script>
+    <script src="../../script.js"></script>
     <script src="../../product-routes.js"></script>
     <script src="mision-vision.js"></script>
 </body>

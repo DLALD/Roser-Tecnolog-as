@@ -6,7 +6,8 @@ const NavbarComponent = {
             homeUrl: 'index.html',
             marketplaceUrl: '../Marketplace/Pagina Marketplace/marketplace.html',
             marketplaceIcon: '../Marketplace/Iconos/Marketplace.png',
-            cartIcon: '../Imagenes/Carrito.png'
+            cartIcon: '../Imagenes/Carrito.png',
+            sidebarBasePath: '../'
         };
         
         const settings = { ...defaults, ...config };
@@ -18,10 +19,75 @@ const NavbarComponent = {
             } else {
                 document.body.insertAdjacentHTML('afterbegin', this.getHTML(settings));
             }
+            this.injectStyles();
             // Disparar evento cuando el navbar esté listo
             setTimeout(() => {
                 document.dispatchEvent(new Event('navbarReady'));
             }, 50);
+        }
+    },
+
+    injectStyles() {
+        if (!document.getElementById('navbar-search-styles')) {
+            const style = document.createElement('style');
+            style.id = 'navbar-search-styles';
+            style.textContent = `
+                .search-box .cancel-icon {
+                    position: absolute;
+                    right: 50px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.3s;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2;
+                }
+                
+                .search-box .cancel-icon svg {
+                    width: 20px;
+                    height: 20px;
+                    fill: #664AFF;
+                    transition: transform 0.3s;
+                }
+                
+                .search-box .cancel-icon.active {
+                    opacity: 1;
+                    visibility: visible;
+                }
+                
+                .search-box .cancel-icon.active svg {
+                    transform: rotate(360deg);
+                }
+                
+                .logo-link:hover {
+                    transform: scale(1.05);
+                }
+                
+                .nav-logo a {
+                    transition: transform 0.2s;
+                }
+                
+                .nav-logo a:hover {
+                    transform: scale(1.02);
+                }
+                
+                .marketplace-link:hover {
+                    background: #1976d2 !important;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+                }
+                
+                .marketplace-link:hover span {
+                    color: white !important;
+                }
+            `;
+            document.head.appendChild(style);
         }
     },
 
@@ -56,6 +122,8 @@ const NavbarComponent = {
                                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                                 </svg>
                             </div>
+                            <div class="search-results" id="search-results"></div>
+                            <div class="search-shortcuts" id="search-shortcuts"></div>
                         </div>
                     </div>
                     <div class="cart-icon" onclick="event.preventDefault(); event.stopPropagation(); openCartModal();" style="position: relative; cursor: pointer; display: flex; align-items: center; margin-left: 15px; min-width: 40px; min-height: 40px; justify-content: center;">
@@ -73,59 +141,59 @@ const NavbarComponent = {
                 <div class="sidebar-dropdown">
                     <div class="dropdown-section">
                         <div class="section-header">
-                            <img src="../Imagenes/Servicios.png" alt="Servicios" class="section-icon">
+                            <img src="${settings.sidebarBasePath}Imagenes/Servicios.png" alt="Servicios" class="section-icon">
                             <span class="section-title">Servicios</span>
                             <span class="section-arrow">▼</span>
                         </div>
                         <div class="subsection">
-                            <a href="../Servicios/Diseños-3D/disenos-3.html">
-                                <img src="../Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Servicios/Diseños-3D/disenos-3.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/d3d.png" alt="Diseños 3D" class="subsection-icon">
                                 Diseños 3D
                             </a>
-                            <a href="../Servicios/Impresiones-3D/impresiones-3d.html">
-                                <img src="../Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Servicios/Impresiones-3D/impresiones-3d.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/i3d.png" alt="Impresión 3D" class="subsection-icon">
                                 Impresión 3D
                             </a>
-                            <a href="../Servicios/Diseño Electrico/diseno-electrico.html">
-                                <img src="../Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Servicios/Diseño Electrico/diseno-electrico.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/D_electrico.png" alt="Diseño Eléctrico" class="subsection-icon">
                                 Diseño Eléctrico
                             </a>
-                            <a href="../Servicios/Diseño mecanico/diseno-mecanico.html">
-                                <img src="../Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Servicios/Diseño mecanico/diseno-mecanico.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/D_mecanico.png" alt="Diseño Mecánico" class="subsection-icon">
                                 Diseño Mecánico
                             </a>
-                            <a href="../Servicios/Fabricacion de sistemas mecanicos/fabricacion-sistemas-mecanicos.html">
-                                <img src="../Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Servicios/Fabricacion de sistemas mecanicos/fabricacion-sistemas-mecanicos.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/F_mecanico.png" alt="Fabricación de Sistemas Mecánicos" class="subsection-icon">
                                 Fabricación de Sistemas Mecánicos
                             </a>
                         </div>
                     </div>
                     <div class="dropdown-section">
                         <div class="section-header">
-                            <img src="../Imagenes/PTS.png" alt="Productos" class="section-icon">
+                            <img src="${settings.sidebarBasePath}Imagenes/PTS.png" alt="Productos" class="section-icon">
                             <span class="section-title">Productos</span>
                             <span class="section-arrow">▼</span>
                         </div>
                         <div class="subsection">
                             <div class="prototypes-header">
-                                <img src="../Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
+                                <img src="${settings.sidebarBasePath}Imagenes/Proto.png" alt="Prototipos" class="subsection-icon">
                                 Prototipos
                                 <span class="section-arrow">▼</span>
                             </div>
                             <div class="prototype-subsection">
-                                <a href="../Productos-Roser/Prototipos/DePie/DePie.html">
-                                    <img src="../Imagenes/ceo.png" alt="DePie" class="subsection-icon">
+                                <a href="${settings.sidebarBasePath}Productos-Roser/Prototipos/DePie/DePie.html">
+                                    <img src="${settings.sidebarBasePath}Imagenes/ceo.png" alt="DePie" class="subsection-icon">
                                     DePie
                                 </a>
                             </div>
                             <div class="apps-header" data-toggle="apps">
-                                <img src="../Imagenes/apps.png" alt="Apps" class="subsection-icon">
+                                <img src="${settings.sidebarBasePath}Imagenes/apps.png" alt="Apps" class="subsection-icon">
                                 Apps
                                 <span class="section-arrow">▼</span>
                             </div>
                             <div class="sub-subsection">
-                                <a href="../Productos-Roser/Apps/3dcost/3dcost.html">
-                                    <img src="../Imagenes/3D.png" alt="3D" class="subsection-icon">
+                                <a href="${settings.sidebarBasePath}Productos-Roser/Apps/3dcost/3dcost.html">
+                                    <img src="${settings.sidebarBasePath}Imagenes/3D.png" alt="3D" class="subsection-icon">
                                     3DCost
                                 </a>
                             </div>
@@ -133,25 +201,25 @@ const NavbarComponent = {
                     </div>
                     <div class="dropdown-section">
                         <div class="section-header">
-                            <img src="../Imagenes/empresa.png" alt="Empresa" class="section-icon">
+                            <img src="${settings.sidebarBasePath}Imagenes/empresa.png" alt="Empresa" class="section-icon">
                             <span class="section-title">Empresa</span>
                             <span class="section-arrow">▼</span>
                         </div>
                         <div class="subsection">
-                            <a href="../Empresa/Conocenos/conocenos.html">
-                                <img src="../Imagenes/ceo.png" alt="CEO" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Empresa/Conocenos/conocenos.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/ceo.png" alt="CEO" class="subsection-icon">
                                 Conocenos
                             </a>
-                            <a href="../Empresa/Mision y Vision/mision-vision.html">
-                                <img src="../Imagenes/vision.png" alt="Vision" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Empresa/Mision y Vision/mision-vision.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/vision.png" alt="Vision" class="subsection-icon">
                                 Misión y Visión
                             </a>
-                            <a href="../Empresa/Terminos y Condiciones/terminos-condiciones.html">
-                                <img src="../Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Empresa/Terminos y Condiciones/terminos-condiciones.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/terminos.png" alt="Terminos" class="subsection-icon">
                                 Términos y Condiciones
                             </a>
-                            <a href="../Empresa/Politicas y Privacidad/politica-privacidad.html">
-                                <img src="../Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
+                            <a href="${settings.sidebarBasePath}Empresa/Politicas y Privacidad/politica-privacidad.html">
+                                <img src="${settings.sidebarBasePath}Imagenes/privacidad.png" alt="Privacidad" class="subsection-icon">
                                 Privacidad
                             </a>
                         </div>

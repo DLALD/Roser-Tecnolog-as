@@ -1,247 +1,140 @@
-// DePie page scripts: sidebar menu + cart sync (copied behavior from site canonical files)
-document.addEventListener('DOMContentLoaded', function() {
-  // Sidebar/menu toggle
-  const menuButton = document.querySelector('.menu-button');
-  const sidebarDropdown = document.querySelector('.sidebar-dropdown');
-  const sectionHeaders = document.querySelectorAll('.section-header');
+// Configure navbar with correct paths
+NavbarComponent.init({
+    logoPath: '../../../Imagenes/Rosero.png',
+    homeUrl: '../../../Pagina Principal/index.html',
+    marketplaceUrl: '../../../Marketplace/Pagina Marketplace/marketplace.html',
+    marketplaceIcon: '../../../Marketplace/Iconos/Marketplace.png',
+    cartIcon: '../../../Imagenes/Carrito.png',
+    sidebarBasePath: '../../../'
+});
 
-  if (menuButton && sidebarDropdown) {
-    menuButton.addEventListener('click', function(e){
-      e.stopPropagation();
-      sidebarDropdown.classList.toggle('active');
-    });
-  }
+// Configure payment modal with correct paths
+PaymentModal.init({
+    basePath: '../../../Marketplace/metodos de pago/'
+});
 
-  sectionHeaders.forEach(sectionHeader => {
-    sectionHeader.setAttribute('tabindex', '0');
-    sectionHeader.addEventListener('click', function(e){
-      e.stopPropagation();
-      const subsection = sectionHeader.nextElementSibling;
-      const sectionArrow = sectionHeader.querySelector('.section-arrow');
-      if (subsection) subsection.classList.toggle('active');
-      if (sectionArrow) sectionArrow.style.transform = (subsection && subsection.classList.contains('active')) ? 'rotate(180deg)' : 'rotate(0deg)';
-    });
-  });
+// Configure cart system with correct paths
+CartSystem.init({
+    imageBasePath: '../../../'
+});
 
-  // Apps and prototypes headers toggles (if present)
-  document.querySelectorAll('.apps-header, .prototypes-header').forEach(h => {
-    h.setAttribute('tabindex', '0');
-    h.addEventListener('click', function(e){
-      e.preventDefault(); e.stopPropagation();
-      const next = h.nextElementSibling;
-      if (next) next.classList.toggle('active');
-      const arrow = h.querySelector('.section-arrow');
-      if (arrow) arrow.style.transform = next && next.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-    });
-  });
+// Initialize search functionality
+$(function() {
+    initializeSearch();
+});
 
-  // Close dropdown when clicking outside
-  document.addEventListener('click', function(e){
-    if (sidebarDropdown && !menuButton.contains(e.target) && !sidebarDropdown.contains(e.target)) {
-      sidebarDropdown.classList.remove('active');
-    }
-  });
-
-  // Close sidebar when clicking a link
-  document.querySelectorAll('.sidebar-dropdown a:not(.apps-header)').forEach(n => n.addEventListener('click', () => {
-    if (sidebarDropdown) sidebarDropdown.classList.remove('active');
-  }));
-
-  // --- Cart implementation (sync with marketplace via localStorage) ---
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  function updateCartCount() {
-    const count = cart.reduce((s, it) => s + it.quantity, 0);
-    const el = document.getElementById('shared-cart-count') || document.getElementById('cart-count');
-    if (el) {
-      el.textContent = count;
-      el.style.display = count > 0 ? 'flex' : 'none';
-    }
-  }
-
-  function updateCartDisplay() {
-    const cartBody = document.getElementById('cartBody');
-    if (!cartBody) return;
-    if (cart.length === 0) {
-      cartBody.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
-      const totalEl = document.getElementById('cart-total'); if (totalEl) totalEl.textContent = '$0 COP';
-      return;
-    }
-    let html = '<div class="cart-items">';
-    let total = 0;
-    cart.forEach((item, idx) => {
-      const itemTotal = (item.price || 0) * item.quantity;
-      total += itemTotal;
-      html += `
-        <div class="cart-item">
-          <img src="${item.image || ''}" alt="${item.name || ''}" class="cart-item-img">
-          <div class="cart-item-details"><h4>${item.name}</h4><p class="cart-item-price">${item.price ? '$' + item.price.toLocaleString('es-CO') + ' COP' : 'Cotización'}</p></div>
-          <div class="cart-item-quantity"><button onclick="decreaseQuantity(${idx})">-</button><span>${item.quantity}</span><button onclick="increaseQuantity(${idx})">+</button></div>
-          <div class="cart-item-total">${item.price ? '$' + itemTotal.toLocaleString('es-CO') + ' COP' : 'Cotización'}</div>
-          <button class="remove-item" onclick="removeFromCart(${idx})">&times;</button>
-        </div>`;
-    });
-    html += '</div>';
-    cartBody.innerHTML = html;
-    // Resolve image URLs and add fallbacks for images that fail to load
-    const pathParts = window.location.pathname.split('/').filter(Boolean);
-    const upPrefix = pathParts.length > 1 ? '../'.repeat(pathParts.length - 1) : '';
-
-    function resolveImageSrc(original) {
-      if (!original) return '';
-      try {
-        // If absolute URL or data URI, return as-is
-        if (/^(https?:|data:|file:)/i.test(original)) return original;
-      } catch (e) {}
-
-      // If original contains 'Marketplace/' segment, normalize to a relative path from current page
-      const idx = original.indexOf('Marketplace/');
-      if (idx !== -1) {
-        const rest = original.substring(idx + 'Marketplace/'.length);
-        return upPrefix + 'Marketplace/' + rest;
-      }
-
-      // If starts with a leading slash, treat as root-relative
-      if (original.startsWith('/')) return original;
-
-      // Default: return original (browser will try to resolve relative to this page)
-      return original;
-    }
-
-    function attachFallbacks() {
-      const imgs = cartBody.querySelectorAll('.cart-item-img');
-      imgs.forEach((imgEl, i) => {
-        const orig = imgEl.getAttribute('src') || '';
-        const resolved = resolveImageSrc(orig);
-        imgEl.src = resolved;
-
-        imgEl.onerror = function() {
-          // Try decodeURI
-          try {
-            const decoded = decodeURIComponent(orig);
-            if (decoded !== orig) { imgEl.src = resolveImageSrc(decoded); return; }
-          } catch (e) {}
-
-          // Replace spaces with %20
-          const enc = orig.replace(/ /g, '%20');
-          if (enc !== orig) { imgEl.src = resolveImageSrc(enc); return; }
-
-          // As last resort, try to find Marketplace file name and use upPrefix + path
-          const mIdx = orig.indexOf('Marketplace');
-          if (mIdx !== -1) {
-            const rest = orig.substring(mIdx + 'Marketplace'.length);
-            imgEl.src = upPrefix + 'Marketplace' + rest;
-            return;
-          }
-
-          // Hide broken image visually
-          imgEl.style.display = 'none';
-        };
-      });
-    }
-
-    attachFallbacks();
-    const totalEl = document.getElementById('cart-total'); if (totalEl) totalEl.textContent = `$${total.toLocaleString('es-CO')} COP`;
-
-    // Actualizar visualización del método de pago
-    const paymentMethodLogos = {
-        'Nequi': '../../../Marketplace/metodos de pago/Nequi.png',
-        'Daviplata': '../../../Marketplace/metodos de pago/Daviplata.png',
-        'Bancolombia': '../../../Marketplace/metodos de pago/Bancolombia.png',
-        'Efecty': '../../../Marketplace/metodos de pago/Efecty.png',
-        'Visa': '../../../Marketplace/metodos de pago/Visa.png',
-        'Mastercard': '../../../Marketplace/metodos de pago/Mastercard.png',
-        'PSE': '../../../Marketplace/metodos de pago/PSE.png'
-    };
+function initializeSearch() {
+    const searchBox = $('.search-box');
+    const searchIcon = $('.search-icon');
+    const searchInput = $('.search-box input');
+    const cancelIcon = $('.cancel-icon');
     
-    const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    const paymentContainer = document.getElementById('cartPaymentMethod');
-    if (paymentContainer) {
-        if(selectedPaymentMethod) {
-            const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-            let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
-            if (logoSrc) {
-                paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
-            }
-            paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
-            paymentHtml += `<button class="remove-payment-btn" onclick="event.stopPropagation(); removePaymentMethod()" title="Quitar método de pago" style="background: none; border: none; color: #d32f2f; cursor: pointer; font-weight: bold; font-size: 1.2rem; margin-left: 10px;">&times;</button>`;
-            paymentHtml += '</div>';
-            paymentContainer.innerHTML = paymentHtml;
+    const products = getProductRoutes('../../../');
+    
+    searchIcon.click(function() {
+        searchBox.addClass('active');
+        searchIcon.addClass('active');
+        searchInput.addClass('active');
+        cancelIcon.addClass('active');
+        searchInput.focus();
+    });
+    
+    cancelIcon.click(function() {
+        searchBox.removeClass('active');
+        searchIcon.removeClass('active');
+        searchInput.removeClass('active');
+        cancelIcon.removeClass('active');
+        searchInput.val('');
+        hideSearchResults();
+    });
+    
+    searchInput.on('input', function() {
+        const query = $(this).val().toLowerCase();
+        if (query.length > 0) {
+            const results = Object.keys(products).filter(product => 
+                product.includes(query)
+            );
+            showSearchResults(results, products);
         } else {
-            paymentContainer.innerHTML = '<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>';
+            hideSearchResults();
+        }
+    });
+    
+    function showSearchResults(results, products) {
+        let dropdown = $('.search-dropdown');
+        
+        if (dropdown.length === 0) {
+            dropdown = $('<div class="search-dropdown"></div>');
+            dropdown.css({
+                'position': 'absolute',
+                'top': '55px',
+                'left': '0',
+                'width': '100%',
+                'background': 'white',
+                'border': '1px solid #e0e0e0',
+                'border-radius': '8px',
+                'box-shadow': '0 4px 12px rgba(0,0,0,0.15)',
+                'max-height': '300px',
+                'overflow-y': 'auto',
+                'z-index': '9999',
+                'padding': '8px 0'
+            });
+            searchBox.append(dropdown);
+        }
+        
+        if (results.length > 0) {
+            let html = '';
+            results.forEach(result => {
+                html += `
+                    <div class="search-result-item" data-url="${products[result]}" style="
+                        padding: 12px 16px;
+                        cursor: pointer;
+                        transition: background 0.2s;
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        border-bottom: 1px solid #f0f0f0;
+                    ">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#664AFF">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span style="color: #333; font-size: 14px; text-transform: capitalize; flex: 1;">${result}</span>
+                    </div>
+                `;
+            });
+            dropdown.html(html).show();
+            
+            $('.search-result-item').hover(
+                function() { $(this).css('background', '#f8f9fa'); },
+                function() { $(this).css('background', 'white'); }
+            ).click(function() {
+                const url = $(this).data('url');
+                window.location.href = url;
+            });
+        } else {
+            dropdown.hide();
         }
     }
-  }
-
-  window.addToCart = function(id, name, price, image) {
-    const existing = cart.find(i => i.id === id);
-    if (existing) existing.quantity++;
-    else cart.push({ id, name, price, image, quantity: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount(); updateCartDisplay();
-  };
-
-  window.removeFromCart = function(index) { cart.splice(index,1); localStorage.setItem('cart', JSON.stringify(cart)); updateCartCount(); updateCartDisplay(); };
-  window.increaseQuantity = function(index){ cart[index].quantity++; localStorage.setItem('cart', JSON.stringify(cart)); updateCartCount(); updateCartDisplay(); };
-  window.decreaseQuantity = function(index){ if (cart[index].quantity>1){ cart[index].quantity--; localStorage.setItem('cart', JSON.stringify(cart)); updateCartCount(); updateCartDisplay(); } };
-
-  window.removePaymentMethod = function() {
-      localStorage.removeItem('selectedPayment');
-      updateCartDisplay();
-      if(window.showToast) {
-          window.showToast('Método Eliminado', 'Se ha quitado el método de pago.');
-      }
-  };
-
-  window.openCartModal = function() { updateCartDisplay(); const modal = document.getElementById('cartModal'); if (window.$ && modal) $('#cartModal').show(); else if (modal) modal.style.display='block'; };
-  window.closeCartModal = function() { const modal = document.getElementById('cartModal'); if (window.$ && modal) $('#cartModal').hide(); else if (modal) modal.style.display='none'; };
-
-  window.checkout = function(){ 
-    if (cart.length===0){ alert('Tu carrito está vacío'); return; } 
-    const phone='573113579437'; 
-    let message='¡Hola! Quiero realizar el siguiente pedido:\n\n'; 
-    let total=0; 
-    cart.forEach(item=>{ 
-      const itemTotal=(item.price||0)*item.quantity; 
-      total+=itemTotal; 
-      message+=`• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`; 
-    }); 
-    message+=`Total: $${total.toLocaleString('es-CO')} COP`; 
     
-    const currentPaymentMethod = localStorage.getItem('selectedPayment') || '';
-    message += currentPaymentMethod ? `\n\nMétodo de Pago: ${currentPaymentMethod}` : `\n\nMétodo de Pago: A convenir`;
-
-    const url=`https://wa.me/${phone}?text=${encodeURIComponent(message)}`; 
-    window.open(url,'_blank'); 
-  };
-
-  // Initialize
-  updateCartCount(); updateCartDisplay();
-
-  // React to localStorage changes from Marketplace or other pages
-  window.addEventListener('storage', function(e){ 
-      if (e.key==='cart'){ cart = JSON.parse(e.newValue) || []; updateCartCount(); updateCartDisplay(); } 
-      if (e.key==='selectedPayment'){ updateCartDisplay(); }
-  });
-
-  // Close modal when clicking outside
-  window.addEventListener('click', function(e){ const modal = document.getElementById('cartModal'); if (modal && e.target === modal) closeCartModal(); });
-
-  // --- Navigation toggle for small screens ---
-  const navToggle = document.getElementById('navToggle');
-  const navList = document.querySelector('.nav-list');
-  if (navToggle && navList) {
-    navToggle.addEventListener('click', function(e){
-      e.stopPropagation();
-      navList.classList.toggle('open');
-      navToggle.classList.toggle('open');
+    function hideSearchResults() {
+        $('.search-dropdown').hide();
+    }
+    
+    $(document).click(function(e) {
+        if (!searchBox[0].contains(e.target)) {
+            searchBox.removeClass('active');
+            searchIcon.removeClass('active');
+            searchInput.removeClass('active');
+            cancelIcon.removeClass('active');
+            searchInput.val('');
+            hideSearchResults();
+        }
     });
-    // close nav when clicking outside
-    document.addEventListener('click', function(ev){ if (!navList.contains(ev.target) && !navToggle.contains(ev.target)) navList.classList.remove('open'); });
-  }
+}
 
-  // --- Gallery lightbox ---
-  const galleryThumbs = document.querySelectorAll('.gallery-thumb');
+// DePie page scripts: unique DePie functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // --- Lightbox for carousel images ---
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxClose = document.getElementById('lightboxClose');
@@ -255,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function closeLightbox(){ if (!lightbox) return; lightbox.setAttribute('aria-hidden','true'); lightboxImg.src=''; document.body.style.overflow = ''; }
 
-  galleryThumbs.forEach(t => t.addEventListener('click', function(){ const src = t.dataset.full || t.src; openLightbox(src, t.alt); }));
   if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
   if (lightbox) lightbox.addEventListener('click', function(e){ if (e.target === lightbox) closeLightbox(); });
 
@@ -614,133 +506,14 @@ document.addEventListener('DOMContentLoaded', function() {
       videoBtn.parentNode.insertBefore(waBtn, videoBtn.nextSibling);
   }
 
-  // --- Payment Modal Logic (Moved from HTML) ---
-  window.openPaymentModal = function() {
-      const selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-      const modal = document.getElementById('paymentModal');
-      if (modal) {
-          if (window.$) $(modal).fadeIn(300); else modal.style.display = 'block';
-          
-          const options = modal.querySelectorAll('.payment-option');
-          options.forEach(opt => {
-              opt.classList.remove('selected');
-              if(opt.innerText.trim() === selectedPaymentMethod) {
-                  opt.classList.add('selected');
-              }
-          });
-      }
-  };
-
-  window.closePaymentModal = function() {
-      const modal = document.getElementById('paymentModal');
-      if (modal) {
-          if (window.$) $(modal).fadeOut(300); else modal.style.display = 'none';
-      }
-  };
-
-  window.selectPayment = function(method, element) {
-      const options = document.querySelectorAll('.payment-option');
-      options.forEach(opt => opt.classList.remove('selected'));
-      if(element) element.classList.add('selected');
-      // Store temporarily or just use the selection for confirmation
-      window._tempPaymentSelection = method;
-  };
-
-  window.confirmPaymentSelection = function() {
-      const method = window._tempPaymentSelection || localStorage.getItem('selectedPayment');
-      if(method) {
-          localStorage.setItem('selectedPayment', method);
-          closePaymentModal();
-          updateCartDisplay();
-          if(window.showToast) {
-              window.playSuccessSound();
-              window.showToast('¡Método Confirmado!', 'Pago actualizado a: ' + method);
-          } else {
-              alert('Método de pago actualizado: ' + method);
-          }
-      } else {
-          alert('Por favor selecciona un método de pago');
-      }
-  };
-
-  // --- Search Bar Functionality (Updated Links) ---
-  const searchBox = document.querySelector('.search-box');
-  const searchIcon = document.querySelector('#shared-search-btn');
-  const searchInput = document.querySelector('#shared-search-input');
-  const cancelIcon = document.querySelector('.cancel-icon');
-  const searchResults = document.getElementById('search-results');
-
-  // Product database with corrected relative paths (Up 3 levels to root)
- const products = getProductRoutes('../../../');
-
-  if (searchIcon && searchInput && searchBox) {
-      searchIcon.addEventListener('click', () => {
-          searchBox.classList.add('active');
-          searchIcon.classList.add('active');
-          searchInput.classList.add('active');
-          if(cancelIcon) cancelIcon.classList.add('active');
-          searchInput.focus();
-      });
-
-      if(cancelIcon) {
-          cancelIcon.addEventListener('click', () => {
-              searchBox.classList.remove('active');
-              searchIcon.classList.remove('active');
-              searchInput.classList.remove('active');
-              cancelIcon.classList.remove('active');
-              searchInput.value = '';
-              if(searchResults) searchResults.innerHTML = '';
-          });
-      }
-
-      searchInput.addEventListener('input', (e) => {
-          const query = e.target.value.toLowerCase();
-          if(searchResults) {
-              if (query.length > 0) {
-                  const results = Object.keys(products).filter(product => product.includes(query));
-                  if (results.length > 0) {
-                      searchResults.innerHTML = results.map(result => `
-                          <div class="search-result-item" onclick="window.location.href='${products[result]}'">
-                              <svg class="search-result-icon" viewBox="0 0 24 24" width="16" height="16" fill="#664AFF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                              <span style="text-transform: capitalize;">${result}</span>
-                          </div>
-                      `).join('');
-                      searchResults.style.display = 'block';
-                  } else {
-                      searchResults.style.display = 'none';
-                  }
-              } else {
-                  searchResults.style.display = 'none';
-              }
-          }
-      });
-
-      // Close search when clicking outside
-      document.addEventListener('click', (e) => {
-          if (!searchBox.contains(e.target)) {
-              searchBox.classList.remove('active');
-              searchIcon.classList.remove('active');
-              searchInput.classList.remove('active');
-              if(cancelIcon) cancelIcon.classList.remove('active');
-              if(searchResults) searchResults.style.display = 'none';
-          }
-      });
+  // Animaciones del Hero
+  const heroTitle = document.querySelector('.promo-hero .hero-copy h1');
+  if (heroTitle) {
+      setTimeout(() => {
+          heroTitle.classList.add('typing-complete');
+      }, 3800);
   }
 });
-
-
-// Animaciones del Hero
-document.addEventListener('DOMContentLoaded', function() {
-    const heroTitle = document.querySelector('.promo-hero .hero-copy h1');
-    
-    if (heroTitle) {
-        // Remover el borde después de completar la animación de typewriter
-        setTimeout(() => {
-            heroTitle.classList.add('typing-complete');
-        }, 3800);
-    }
-});
-
 
 // Animaciones de la sección Sobre DePie
 const observerOptions = {

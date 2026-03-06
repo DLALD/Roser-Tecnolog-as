@@ -10,6 +10,15 @@ $(function () {
         zIndex: 9999
     });
     
+    // Inicializar componentes compartidos
+    PaymentModal.init({ basePath: '../metodos de pago/' });
+    CartSystem.init({ imageBasePath: '../../' });
+    
+    // Conectar carrito del navbar
+    $('.cart-icon').on('click', function() {
+        CartSystem.open();
+    });
+    
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar');
     const contenedor = document.querySelector('.marketplace-content');
@@ -236,6 +245,36 @@ $(function () {
     });
 });
 
+// Funciones globales para compatibilidad
+window.addToCart = function(id, name, price, image) {
+    CartSystem.addItem(id, name, price, image);
+};
+
+window.checkout = function() {
+    const cart = CartSystem.getCart();
+    if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+    }
+    const phone = '573113579437';
+    let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
+    let total = 0;
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
+    });
+    message += `Total: $${total.toLocaleString('es-CO')} COP`;
+    const selectedPayment = PaymentModal.getSelectedPayment();
+    if (selectedPayment) {
+        message += `\n\nMétodo de Pago: ${selectedPayment}`;
+    } else {
+        message += `\n\nMétodo de Pago: A convenir`;
+    }
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+};
+
 // Product modal functions
 window.openProductModal = function(productId) {
     const modal = $('#productModal');
@@ -281,261 +320,6 @@ window.contactWhatsApp = function(productName) {
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 };
-
-// Payment Method Logic
-const paymentMethodLogos = {
-    'Nequi': '../metodos de pago/Nequi.png',
-    'Daviplata': '../metodos de pago/Daviplata.png',
-    'Bancolombia': '../metodos de pago/Bancolombia.png',
-    'Efecty': '../metodos de pago/Efecty.png',
-    'Visa': '../metodos de pago/Visa.png',
-    'Mastercard': '../metodos de pago/Mastercard.png',
-    'PSE': '../metodos de pago/PSE.png'
-};
-let selectedPaymentMethod = localStorage.getItem('selectedPayment') || '';
-
-if(selectedPaymentMethod) {
-    const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-    let sidebarHtml = '';
-    if (logoSrc) {
-        sidebarHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 20px; vertical-align: middle; margin-right: 5px;">`;
-    }
-    sidebarHtml += `<span style="vertical-align: middle;">${selectedPaymentMethod}</span>`;
-    $('#sidebarPaymentDisplay').html(sidebarHtml).css('color', '#4CAF50');
-}
-
-window.openPaymentModal = function() {
-    $('#paymentModal').fadeIn(300);
-    if(selectedPaymentMethod) {
-        $('.payment-option').each(function() {
-            if($(this).find('div').text() === selectedPaymentMethod) {
-                $(this).addClass('selected');
-            }
-        });
-    }
-};
-
-window.closePaymentModal = function() {
-    $('#paymentModal').fadeOut(300);
-};
-
-window.selectPayment = function(method, element) {
-    selectedPaymentMethod = method;
-    $('.payment-option').removeClass('selected');
-    $(element).addClass('selected');
-};
-
-window.playNotificationSound = function() {
-    try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.5);
-    } catch (e) {}
-};
-
-window.showNotification = function(title, message, type = 'success') {
-    $('.toast-notification').remove();
-    let icon = '✓';
-    if (type === 'error') icon = '✕';
-    if (type === 'info') icon = 'ℹ';
-    
-    const html = `
-        <div class="toast-notification ${type}">
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-        </div>
-    `;
-    $('body').append(html);
-    if (type === 'success') playNotificationSound();
-    setTimeout(() => { $('.toast-notification').addClass('show'); }, 10);
-    setTimeout(() => {
-        $('.toast-notification').removeClass('show');
-        setTimeout(() => { $('.toast-notification').remove(); }, 400);
-    }, 3000);
-};
-
-window.confirmPaymentSelection = function() {
-    if(selectedPaymentMethod) {
-        localStorage.setItem('selectedPayment', selectedPaymentMethod);
-        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-        let sidebarHtml = '';
-        if (logoSrc) {
-            sidebarHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 20px; vertical-align: middle; margin-right: 5px;">`;
-        }
-        sidebarHtml += `<span style="vertical-align: middle;">${selectedPaymentMethod}</span>`;
-        $('#sidebarPaymentDisplay').html(sidebarHtml).css('color', '#4CAF50');
-        closePaymentModal();
-        showNotification('¡Método Confirmado!', 'Pago actualizado a: ' + selectedPaymentMethod, 'success');
-    } else {
-        showNotification('Atención', 'Por favor selecciona un método de pago', 'info');
-    }
-};
-
-window.removePaymentMethod = function() {
-    selectedPaymentMethod = '';
-    localStorage.removeItem('selectedPayment');
-    $('#sidebarPaymentDisplay').text('Seleccionar Método').css('color', '#1976d2');
-    updateCartDisplay();
-    showNotification('Método Eliminado', 'Se ha quitado el método de pago.', 'error');
-};
-
-// Cart system
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-function updateCartCount() {
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    $('#cart-count').text(count);
-    if (count > 0) {
-        $('#cart-count').show();
-    } else {
-        $('#cart-count').hide();
-    }
-}
-
-function updateCartDisplay() {
-    const cartBody = $('#cartBody');
-    if (cart.length === 0) {
-        cartBody.html('<p class="empty-cart">Tu carrito está vacío</p>');
-        $('#cart-total').text('$0 COP');
-        return;
-    }
-    let html = '<div class="cart-items">';
-    let total = 0;
-    cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        let imagePath = item.image || '';
-        if (imagePath && !imagePath.startsWith('http') && !imagePath.startsWith('data:')) {
-            if (imagePath.includes('Marketplace/')) {
-                const parts = imagePath.split('Marketplace/');
-                imagePath = '../../Marketplace/' + parts[1];
-            }
-        }
-        html += `
-            <div class="cart-item">
-                <img src="${imagePath}" alt="${item.name}" class="cart-item-img">
-                <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <p class="cart-item-price">$${item.price.toLocaleString('es-CO')} COP</p>
-                </div>
-                <div class="cart-item-quantity">
-                    <button onclick="decreaseQuantity(${index})">-</button>
-                    <span>${item.quantity}</span>
-                    <button onclick="increaseQuantity(${index})">+</button>
-                </div>
-                <div class="cart-item-total">$${itemTotal.toLocaleString('es-CO')} COP</div>
-                <button class="remove-item" onclick="removeFromCart(${index})">&times;</button>
-            </div>
-        `;
-    });
-    html += '</div>';
-    cartBody.html(html);
-    $('#cart-total').text(`$${total.toLocaleString('es-CO')} COP`);
-    
-    if(selectedPaymentMethod) {
-        const logoSrc = paymentMethodLogos[selectedPaymentMethod];
-        let paymentHtml = '<div style="display: flex; align-items: center; gap: 8px;">';
-        if (logoSrc) {
-            paymentHtml += `<img src="${logoSrc}" alt="${selectedPaymentMethod}" style="height: 24px; object-fit: contain;">`;
-        }
-        paymentHtml += `<span style="font-weight: bold; color: #333;">${selectedPaymentMethod}</span>`;
-        paymentHtml += `<button class="remove-payment-btn" onclick="removePaymentMethod()" title="Quitar método de pago">&times;</button>`;
-        paymentHtml += '</div>';
-        $('#cartPaymentMethod').html(paymentHtml);
-    } else {
-        $('#cartPaymentMethod').html('<span style="color: #f57c00; cursor: pointer;" onclick="closeCartModal(); openPaymentModal();">No seleccionado (Clic para elegir)</span>');
-    }
-}
-
-window.addToCart = function(id, name, price, image) {
-    const existingItem = cart.find(item => item.id === id);
-    if (existingItem) {
-        existingItem.quantity++;
-        existingItem.image = image; // Actualizar imagen por si cambió la ruta
-    } else {
-        cart.push({ id, name, price, image, quantity: 1 });
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-    showNotification('¡Excelente!', 'Producto agregado al carrito', 'success');
-};
-
-window.removeFromCart = function(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-};
-
-window.increaseQuantity = function(index) {
-    cart[index].quantity++;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateCartDisplay();
-};
-
-window.decreaseQuantity = function(index) {
-    if (cart[index].quantity > 1) {
-        cart[index].quantity--;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        updateCartDisplay();
-    }
-};
-
-window.openCartModal = function() {
-    updateCartDisplay();
-    $('#cartModal').show();
-};
-
-window.closeCartModal = function() {
-    $('#cartModal').hide();
-};
-
-window.checkout = function() {
-    if (cart.length === 0) {
-        alert('Tu carrito está vacío');
-        return;
-    }
-    const phone = '573113579437';
-    let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
-    let total = 0;
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
-    });
-    message += `Total: $${total.toLocaleString('es-CO')} COP`;
-    if (selectedPaymentMethod) {
-        message += `\n\nMétodo de Pago: ${selectedPaymentMethod}`;
-    } else {
-        message += `\n\nMétodo de Pago: A convenir`;
-    }
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-};
-
-$('.cart-icon').click(function() {
-    openCartModal();
-});
-
-updateCartCount();
-updateCartDisplay();
 
 window.openImageZoom = function(imageSrc, altText) {
     const modal = $('#imageZoomModal');
