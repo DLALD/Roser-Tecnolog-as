@@ -205,6 +205,16 @@ const CartSystem = {
             this.cart = JSON.parse(localStorage.getItem('cart')) || [];
             this.updateCount();
         }, 1000);
+    },
+
+    addItem(id, name, price, image) {
+        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existing = this.cart.find(i => i.id === id);
+        if (existing) existing.quantity++;
+        else this.cart.push({ id, name, price, image, quantity: 1 });
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        this.updateCount();
+        window.notifyAddToCart?.();
     }
 };
 

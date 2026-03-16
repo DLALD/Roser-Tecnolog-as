@@ -33,9 +33,10 @@ function initializeApp() {
     const searchInput = $('.search-box input');
     const cancelIcon = $('.cancel-icon');
     
-    // Product database
-const products = getProductRoutes('../');
-    
+    // Product database — cargado dinámicamente desde Supabase
+    let products = {};
+    loadProductRoutes('../').then(routes => { products = routes; });
+
     searchIcon.click(function() {
         searchBox.addClass('active');
         searchIcon.addClass('active');

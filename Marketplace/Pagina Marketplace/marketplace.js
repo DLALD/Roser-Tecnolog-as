@@ -1,4 +1,61 @@
+function renderProducts(products) {
+    const grid = $('.products-grid');
+    grid.empty();
+    products.forEach((p, index) => {
+        const categoriesStr = p.categories.join(' ');
+        const imageCart = p.image.startsWith('../') ? '../../Marketplace/produtos/' + p.image.slice(3) : p.image;
+        grid.append(`
+            <div class="product-item" data-category="${categoriesStr}" style="animation-delay: ${index * 0.1}s">
+                <div class="product-image" onclick="window.location.href='${p.detail_url}'">
+                    <img src="${p.image}" alt="${p.name}" class="main-product-img">
+                </div>
+                <div class="product-info">
+                    <h3 onclick="window.location.href='${p.detail_url}'" style="cursor: pointer;">${p.name}</h3>
+                    <p class="product-description">${p.description}</p>
+                    <div class="product-price">$${p.price.toLocaleString('es-CO')} COP</div>
+                    <div class="product-delivery">
+                        <span class="delivery-time">📦 Preparación: ${p.preparation_days} días</span>
+                    </div>
+                    <button class="add-to-cart-btn-grid" onclick="event.stopPropagation(); addToCart('${p.id}', '${p.name.replace(/'/g, "\\'")}'  , ${p.price}, '${p.image}')">Agregar al Carrito</button>
+                </div>
+            </div>
+        `);
+    });
+}
+
 $(function () {
+    // Cargar productos y categorias desde Supabase
+    ProductsDB.getProducts().then(products => {
+        renderProducts(products);
+
+        // Extraer categorias unicas
+        const cats = new Set();
+        products.forEach(p => (p.categories || []).forEach(c => cats.add(c)));
+        const list = document.getElementById('categoriesList');
+        cats.forEach(cat => {
+            const label = cat.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            list.insertAdjacentHTML('beforeend', `
+                <li>
+                    <a href="#" class="sidebar-link category-link" data-category="${cat}">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:8px"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                        <span>${label}</span>
+                    </a>
+                </li>
+            `);
+        });
+
+        // Re-bind clicks en categorias (incluye las nuevas)
+        $(document).on('click', '.category-link', function(e) {
+            e.preventDefault();
+            const category = $(this).data('category');
+            $('.category-link').removeClass('active');
+            $(this).addClass('active');
+            $('.marketplace-content h2').text(category === 'all' ? 'Productos Disponibles' : $(this).find('span').text());
+            filterProducts();
+        });
+
+        filterProducts();
+    });
     $('#BotonWA').floatingWhatsApp({
         phone: '573113579437',
         headerTitle: 'Roser Tecnologías',
@@ -63,21 +120,7 @@ $(function () {
         });
     }
     
-    // Categories filter functionality
-    $('.category-link').click(function(e) {
-        e.preventDefault();
-        const category = $(this).data('category');
-        const categoryName = $(this).find('span').text();
-        
-        // Update active button
-        $('.category-link').removeClass('active');
-        $(this).addClass('active');
-        
-        // Update title
-        $('.marketplace-content h2').text(category === 'all' ? 'Productos Disponibles' : categoryName);
-        
-        filterProducts();
-    });
+    // Categories filter -- manejado dinamicamente en el bloque de carga de productos
     
     // Funcionalidad de búsqueda animada
     const searchBox = document.querySelector(".search-box");
@@ -251,28 +294,7 @@ window.addToCart = function(id, name, price, image) {
 };
 
 window.checkout = function() {
-    const cart = CartSystem.getCart();
-    if (cart.length === 0) {
-        alert('Tu carrito está vacío');
-        return;
-    }
-    const phone = '573113579437';
-    let message = '¡Hola! Quiero realizar el siguiente pedido:\n\n';
-    let total = 0;
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-        message += `• ${item.name}\n  Cantidad: ${item.quantity}\n  Precio: $${itemTotal.toLocaleString('es-CO')} COP\n\n`;
-    });
-    message += `Total: $${total.toLocaleString('es-CO')} COP`;
-    const selectedPayment = PaymentModal.getSelectedPayment();
-    if (selectedPayment) {
-        message += `\n\nMétodo de Pago: ${selectedPayment}`;
-    } else {
-        message += `\n\nMétodo de Pago: A convenir`;
-    }
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    CartSystem.checkout();
 };
 
 // Product modal functions

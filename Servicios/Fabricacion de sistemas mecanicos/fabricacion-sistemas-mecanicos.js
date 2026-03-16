@@ -119,7 +119,8 @@ function initializeSearch() {
     
     if (!searchBox.length || !searchInput.length) return;
     
-    const products = getProductRoutes('../../');
+    let products = {};
+    loadProductRoutes('../../').then(routes => { products = routes; });
     
     searchIcon.on('click', function() {
         searchBox.addClass('active');

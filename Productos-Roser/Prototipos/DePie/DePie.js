@@ -29,7 +29,8 @@ function initializeSearch() {
     const searchInput = $('.search-box input');
     const cancelIcon = $('.cancel-icon');
     
-    const products = getProductRoutes('../../../');
+    let products = {};
+    loadProductRoutes('../../../').then(routes => { products = routes; });
     
     searchIcon.click(function() {
         searchBox.addClass('active');
