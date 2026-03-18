@@ -18,7 +18,10 @@ async function loadProduct() {
 
         currentProduct = product;
         renderProduct(product);
+        const fbtIds = product.frequently_bought_ids || [];
+        if (fbtIds.length) loadFrequentlyBought(product, fbtIds);
         loadRelated(product);
+        loadReviews(product.id);
     } catch {
         showError();
     }
@@ -29,7 +32,8 @@ function renderProduct(p) {
 
     // Textos
     document.getElementById('productName').textContent = p.name;
-    document.getElementById('productPrice').textContent = `$${Number(p.price).toLocaleString('es-CO')} COP`;
+    const priceFormatted = `$${Number(p.price).toLocaleString('es-CO')} COP`;
+    document.getElementById('buyBoxPrice').textContent = priceFormatted;
     document.getElementById('productDescription').textContent = p.description || '';
     document.getElementById('productPrep').textContent = `${p.preparation_days} días hábiles`;
     document.getElementById('productRating').textContent = `(${p.rating_count || 0} valoraciones)`;
@@ -100,7 +104,6 @@ async function loadRelated(p) {
     const grid = document.getElementById('relatedGrid');
     if (!all.length) { grid.closest('.related-products').style.display = 'none'; return; }
 
-    // Ordenar por cantidad de categorías en común (más relevante primero)
     const scored = all.map(r => ({
         ...r,
         score: (r.categories || []).filter(c => cats.includes(c)).length
@@ -113,6 +116,91 @@ async function loadRelated(p) {
             <p class="price">$${Number(r.price).toLocaleString('es-CO')} COP</p>
         </div>
     `).join('');
+
+}
+
+async function loadFrequentlyBought(main, ids) {
+    const idsParam = ids.map(id => `"${id}"`).join(',');
+    const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/products?id=in.(${ids.join(',')})&select=id,name,price,image`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const companions = await res.json();
+    if (Array.isArray(companions) && companions.length) renderFrequentlyBought(main, companions);
+}
+
+function renderFrequentlyBought(main, companions) {
+    if (!companions.length) return;
+    const section = document.getElementById('frequentlyBought');
+    const itemsEl = document.getElementById('fbtItems');
+    const summaryEl = document.getElementById('fbtSummary');
+
+    // Estado de checks
+    const checked = [true, ...companions.map(() => true)];
+    const allProducts = [main, ...companions];
+
+    function calcTotal() {
+        return allProducts.reduce((sum, p, i) => checked[i] ? sum + Number(p.price) : sum, 0);
+    }
+
+    function renderItems() {
+        itemsEl.innerHTML = allProducts.map((p, i) => `
+            <div class="fbt-item">
+                <input type="checkbox" class="fbt-item-check" ${checked[i] ? 'checked' : ''}
+                    onchange="fbtToggle(${i})" ${i === 0 ? 'disabled' : ''}>
+                <img src="${p.image}" alt="${p.name}" onerror="this.style.opacity='0'">
+                <p>${i === 0 ? '<strong>Este producto:</strong> ' : ''}${p.name}</p>
+                <span class="fbt-price">$${Number(p.price).toLocaleString('es-CO')} COP</span>
+            </div>
+            ${i < allProducts.length - 1 ? '<span class="fbt-plus">+</span>' : ''}
+        `).join('');
+    }
+
+    function renderSummary() {
+        const total = calcTotal();
+        const count = checked.filter(Boolean).length;
+        summaryEl.innerHTML = `
+            <div class="fbt-total-label">Precio total: <span class="fbt-total-price">$${total.toLocaleString('es-CO')} COP</span></div>
+            <button class="fbt-add-btn" onclick="fbtAddAll()">Agregar ${count > 1 ? 'ambos' : 'al'} al carrito</button>
+            <div class="fbt-info">
+                <span>ℹ️</span>
+                <span>Vendidos por Roser Tecnologías</span>
+            </div>
+        `;
+    }
+
+    window.fbtToggle = function(idx) {
+        if (idx === 0) return;
+        checked[idx] = !checked[idx];
+        renderSummary();
+    };
+
+    window.fbtAddAll = function() {
+        allProducts.forEach((p, i) => {
+            if (!checked[i]) return;
+            const existing = cart.find(c => c.id === p.id);
+            if (existing) existing.quantity += 1;
+            else cart.push({ id: p.id, name: p.name, price: p.price, image: p.image, quantity: 1 });
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        updateCartDisplay();
+        let toast = document.getElementById('cartToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'cartToast';
+            toast.className = 'cart-toast';
+            toast.innerHTML = '<span>✅</span><span>Productos agregados al carrito</span>';
+            document.body.appendChild(toast);
+        }
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+    };
+
+    renderItems();
+    renderSummary();
+    section.style.display = '';
 }
 
 function renderGallery(images) {
@@ -333,4 +421,420 @@ window.contactWhatsApp = function() {
     window.open(`https://wa.me/573113579437?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
-$(document).ready(loadProduct);
+// ── Auth ──
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+
+async function initAuth() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    currentUser = session?.user || null;
+    updateAuthBtn();
+    updateReviewForm();
+}
+
+function updateAuthBtn() {
+    const btn = document.getElementById('authNavBtn');
+    if (!btn) return;
+    if (currentUser) {
+        const name = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+        btn.textContent = `👤 ${name}`;
+        btn.classList.add('logged');
+        btn.onclick = authLogout;
+    } else {
+        btn.textContent = 'Iniciar sesión';
+        btn.classList.remove('logged');
+        btn.onclick = openAuthModal;
+    }
+}
+
+function updateReviewForm() {
+    const form = document.querySelector('.review-form-box');
+    const loginPrompt = document.getElementById('reviewLoginPrompt');
+    if (!form) return;
+    if (currentUser) {
+        const name = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+        form.style.display = '';
+        if (loginPrompt) loginPrompt.style.display = 'none';
+        document.getElementById('reviewAuthor').value = name;
+        document.getElementById('reviewAuthor').readOnly = true;
+        form.querySelector('.review-form-sub').textContent = `Publicando como ${name}`;
+    } else {
+        form.style.display = 'none';
+        if (loginPrompt) loginPrompt.style.display = '';
+    }
+}
+
+window.openAuthModal = function() {
+    document.getElementById('authModal').style.display = 'flex';
+    showLogin();
+};
+window.closeAuthModal = function() {
+    document.getElementById('authModal').style.display = 'none';
+};
+window.showLogin = function() {
+    document.getElementById('authLogin').style.display = '';
+    document.getElementById('authRegister').style.display = 'none';
+    document.getElementById('authMsg').textContent = '';
+};
+window.showRegister = function() {
+    document.getElementById('authLogin').style.display = 'none';
+    document.getElementById('authRegister').style.display = '';
+    document.getElementById('regMsg').textContent = '';
+};
+
+window.authLogin = async function() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const msg = document.getElementById('authMsg');
+    if (!email || !password) { msg.textContent = 'Completa todos los campos.'; msg.className = 'auth-msg error'; return; }
+    msg.textContent = 'Entrando...';
+    msg.className = 'auth-msg';
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) { msg.textContent = error.message; msg.className = 'auth-msg error'; return; }
+    currentUser = data.user;
+    updateAuthBtn();
+    updateReviewForm();
+    closeAuthModal();
+};
+
+window.generateUsername = function() {
+    const email = document.getElementById('regEmail').value.trim();
+    const base = email ? email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '') : 'usuario';
+    document.getElementById('regUsername').value = base + Math.floor(Math.random() * 100);
+};
+
+window.generatePassword = function() {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#!';
+    const pwd = Array.from({length: 10}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    const input = document.getElementById('regPassword');
+    input.value = pwd;
+    input.type = 'text';
+    setTimeout(() => input.type = 'password', 2000);
+};
+
+window.clearRegUsername = function() {};
+
+window.togglePass = function(id, btn) {
+    const input = document.getElementById(id);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁️';
+};
+
+
+window.authRegister = async function() {
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const msg = document.getElementById('regMsg');
+    if (!username || !email || !password) { msg.textContent = 'Completa todos los campos.'; msg.className = 'auth-msg error'; return; }
+    if (password.length < 6) { msg.textContent = 'La contraseña debe tener mínimo 6 caracteres.'; msg.className = 'auth-msg error'; return; }
+    msg.textContent = 'Creando cuenta...';
+    msg.className = 'auth-msg';
+    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { username } } });
+    if (error) { msg.textContent = error.message; msg.className = 'auth-msg error'; return; }
+    if (data.user && !data.session) {
+        msg.textContent = '✅ Revisa tu correo para confirmar la cuenta.';
+        msg.className = 'auth-msg success';
+    } else {
+        currentUser = data.user;
+        updateAuthBtn();
+        updateReviewForm();
+        closeAuthModal();
+    }
+};
+
+window.authLogout = async function() {
+    await supabaseClient.auth.signOut();
+    currentUser = null;
+    updateAuthBtn();
+    updateReviewForm();
+};
+
+$(document).ready(() => { loadProduct(); initAuth(); });
+
+// ── Reseñas ──
+let selectedRating = 0;
+
+document.getElementById('starPicker').addEventListener('click', e => {
+    const v = parseInt(e.target.dataset.v);
+    if (!v) return;
+    selectedRating = v;
+    document.querySelectorAll('#starPicker span').forEach((s, i) => {
+        s.classList.toggle('active', i < v);
+    });
+});
+
+document.getElementById('starPicker').addEventListener('mouseover', e => {
+    const v = parseInt(e.target.dataset.v);
+    if (!v) return;
+    document.querySelectorAll('#starPicker span').forEach((s, i) => {
+        s.classList.toggle('hover', i < v);
+    });
+});
+
+document.getElementById('starPicker').addEventListener('mouseleave', () => {
+    document.querySelectorAll('#starPicker span').forEach(s => s.classList.remove('hover'));
+});
+
+async function loadReviews(productId) {
+    const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/reviews?product_id=eq.${productId}&order=created_at.desc&select=*`,
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    const reviews = await res.json();
+    renderReviews(reviews);
+    updateProductRatingDisplay(reviews);
+}
+
+function renderReviews(reviews) {
+    const list = document.getElementById('reviewsList');
+    const summary = document.getElementById('reviewsSummary');
+
+    if (!reviews.length) {
+        list.innerHTML = '<p class="no-reviews">Aún no hay opiniones. ¡Sé el primero!</p>';
+        summary.innerHTML = '';
+        return;
+    }
+
+    const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+    const total = reviews.length;
+    const counts = [5,4,3,2,1].map(n => ({ n, c: reviews.filter(r => r.rating === n).length }));
+
+    summary.innerHTML = `
+        <div class="reviews-avg-row">
+            <span class="avg-number">${avg.toFixed(1)}</span>
+            <span class="avg-stars">${starsHTML(avg)}</span>
+        </div>
+        <p class="avg-label">${total} calificación${total !== 1 ? 'es' : ''} globales</p>
+        <div class="reviews-bars">
+            ${counts.map(({n, c}) => {
+                const pct = total ? Math.round(c / total * 100) : 0;
+                return `<div class="bar-row">
+                    <a href="#">${n} estrella${n !== 1 ? 's' : ''}</a>
+                    <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+                    <span class="bar-pct">${pct}%</span>
+                </div>`;
+            }).join('')}
+        </div>
+    `;
+
+    list.innerHTML = reviews.map(r => {
+        const initial = r.author.trim()[0].toUpperCase();
+        const date = new Date(r.created_at).toLocaleDateString('es-CO', {year:'numeric', month:'long', day:'numeric'});
+        return `
+        <div class="review-card" data-id="${r.id}">
+            <div class="review-card-top">
+                <div class="review-avatar">${initial}</div>
+                <span class="review-author">${escapeHtml(r.author)}</span>
+            </div>
+            <div class="review-rating-row">
+                <span class="review-stars">${starsHTML(r.rating)}</span>
+            </div>
+            <p class="review-date">Publicado el ${date} · <span class="review-time-ago">${timeAgo(r.created_at)}</span></p>
+            <p class="review-comment review-comment-text">${escapeHtml(r.comment)}</p>
+            ${currentUser && (currentUser.user_metadata?.username || currentUser.email.split('@')[0]) === r.author ? `
+            <div class="review-actions">
+                <button class="review-edit-btn" onclick="editReview('${r.id}', '${escapeHtml(r.author)}', ${r.rating}, '${escapeHtml(r.comment).replace(/'/g, "&#39;")}')">✏️ Editar</button>
+                <button class="review-delete-btn" onclick="deleteReview('${r.id}')">🗑️ Borrar</button>
+            </div>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function updateProductRatingDisplay(reviews) {
+    if (!reviews.length) return;
+    const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+    document.getElementById('productStars').textContent = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+    document.getElementById('productRating').textContent = `(${reviews.length} reseña${reviews.length !== 1 ? 's' : ''})`;
+}
+
+window.submitReview = async function() {
+    if (!currentUser) { openAuthModal(); return; }
+    const author = currentUser.user_metadata?.username || currentUser.email.split('@')[0];
+    const comment = document.getElementById('reviewComment').value.trim();
+    const msg = document.getElementById('reviewMsg');
+
+    if (!selectedRating) { msg.textContent = 'Selecciona una puntuación.'; msg.className = 'review-msg error'; return; }
+    if (!comment) { msg.textContent = 'Escribe un comentario.'; msg.className = 'review-msg error'; return; }
+
+    const btn = document.querySelector('.review-submit-btn');
+    btn.disabled = true;
+    btn.textContent = editingReviewId ? 'Guardando...' : 'Publicando...';
+
+    let res;
+    if (editingReviewId) {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${editingReviewId}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ author, rating: selectedRating, comment })
+        });
+    } else {
+        res = await fetch(`${SUPABASE_URL}/rest/v1/reviews`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ product_id: currentProduct.id, author, rating: selectedRating, comment })
+        });
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Publicar reseña';
+
+    if (res.ok) {
+        msg.textContent = editingReviewId ? '✅ ¡Reseña actualizada!' : '✅ ¡Reseña publicada!';
+        msg.className = 'review-msg success';
+        document.getElementById('reviewAuthor').value = '';
+        document.getElementById('reviewComment').value = '';
+        selectedRating = 0;
+        editingReviewId = null;
+        document.querySelectorAll('#starPicker span').forEach(s => s.classList.remove('active'));
+        btn.textContent = 'Publicar opinión';
+        loadReviews(currentProduct.id);
+    } else {
+        msg.textContent = 'Error al publicar. Intenta de nuevo.';
+        msg.className = 'review-msg error';
+    }
+};
+
+function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `hace ${mins || 1} minuto${mins !== 1 ? 's' : ''}`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `hace ${hrs} hora${hrs !== 1 ? 's' : ''}`;
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return `hace ${days} día${days !== 1 ? 's' : ''}`;
+    const months = Math.floor(days / 30);
+    if (months < 12) return `hace ${months} mes${months !== 1 ? 'es' : ''}`;
+    return `hace ${Math.floor(months / 12)} año${Math.floor(months / 12) !== 1 ? 's' : ''}`;
+}
+
+function starsHTML(rating) {
+    const full = Math.round(rating);
+    return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let editingReviewId = null;
+
+window.editReview = function(id, author, rating, comment) {
+    // Cerrar cualquier edición inline previa
+    document.querySelectorAll('.review-inline-edit').forEach(el => el.remove());
+    document.querySelectorAll('.review-comment-text').forEach(el => el.style.display = '');
+    document.querySelectorAll('.review-actions').forEach(el => el.style.display = '');
+
+    const card = document.querySelector(`.review-card[data-id="${id}"]`);
+    if (!card) return;
+
+    const commentEl = card.querySelector('.review-comment');
+    const actionsEl = card.querySelector('.review-actions');
+    commentEl.style.display = 'none';
+    actionsEl.style.display = 'none';
+
+    let inlineRating = rating;
+    const starsHtml = [1,2,3,4,5].map(v =>
+        `<span class="inline-star ${v <= rating ? 'active' : ''}" data-v="${v}">★</span>`
+    ).join('');
+
+    const form = document.createElement('div');
+    form.className = 'review-inline-edit';
+    form.innerHTML = `
+        <div class="inline-star-picker">${starsHtml}</div>
+        <textarea class="inline-textarea" rows="3" maxlength="500">${comment}</textarea>
+        <div class="inline-actions">
+            <button class="inline-save-btn">Guardar</button>
+            <button class="inline-cancel-btn">Cancelar</button>
+        </div>
+        <p class="inline-msg"></p>
+    `;
+    actionsEl.insertAdjacentElement('beforebegin', form);
+
+    // Estrellas inline
+    form.querySelectorAll('.inline-star').forEach(s => {
+        s.addEventListener('click', () => {
+            inlineRating = parseInt(s.dataset.v);
+            form.querySelectorAll('.inline-star').forEach((st, i) => st.classList.toggle('active', i < inlineRating));
+        });
+        s.addEventListener('mouseover', () => {
+            const v = parseInt(s.dataset.v);
+            form.querySelectorAll('.inline-star').forEach((st, i) => st.classList.toggle('hover', i < v));
+        });
+    });
+    form.querySelector('.inline-star-picker').addEventListener('mouseleave', () => {
+        form.querySelectorAll('.inline-star').forEach(st => st.classList.remove('hover'));
+    });
+
+    // Cancelar
+    form.querySelector('.inline-cancel-btn').addEventListener('click', () => {
+        form.remove();
+        commentEl.style.display = '';
+        actionsEl.style.display = '';
+    });
+
+    // Guardar
+    form.querySelector('.inline-save-btn').addEventListener('click', async () => {
+        const newComment = form.querySelector('.inline-textarea').value.trim();
+        const msgEl = form.querySelector('.inline-msg');
+        if (!inlineRating) { msgEl.textContent = 'Selecciona una puntuación.'; msgEl.className = 'inline-msg error'; return; }
+        if (!newComment) { msgEl.textContent = 'Escribe un comentario.'; msgEl.className = 'inline-msg error'; return; }
+
+        const saveBtn = form.querySelector('.inline-save-btn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
+
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ author, rating: inlineRating, comment: newComment })
+        });
+
+        if (res.ok) {
+            loadReviews(currentProduct.id);
+        } else {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar';
+            msgEl.textContent = 'Error al guardar.';
+            msgEl.className = 'inline-msg error';
+        }
+    });
+
+    form.querySelector('.inline-textarea').focus();
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+window.deleteReview = async function(id) {
+    if (!confirm('¿Borrar esta reseña?')) return;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'return=minimal'
+        }
+    });
+    if (res.ok) {
+        loadReviews(currentProduct.id);
+    } else {
+        const err = await res.text();
+        console.error('DELETE error', res.status, err);
+        alert('No se pudo borrar. Revisa la consola (F12).');
+    }
+};

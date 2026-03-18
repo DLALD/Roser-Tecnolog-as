@@ -32,9 +32,10 @@
 
 .product-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 420px 1fr 280px;
+    gap: 24px;
     margin-bottom: 40px;
+    align-items: start;
 }
 
 /* Product Gallery */
@@ -150,116 +151,86 @@
 
 /* Product Details */
 .product-details h1 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 500;
-}
-
-.product-price {
-    font-size: 1.8rem;
-    color: #B12704;
+    font-size: 1.5rem;
+    color: #0F1111;
+    margin-bottom: 6px;
     font-weight: 400;
-    margin-bottom: 15px;
-}
-
-.product-delivery {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.product-delivery span {
-    color: #666;
-    font-size: 14px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
 }
 
 .product-rating {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .stars {
-    color: #FFA41C;
-    font-size: 18px;
+    color: #1976d2;
+    font-size: 1rem;
+    letter-spacing: 1px;
 }
 
 .rating-count {
-    color: #007185;
-    font-size: 14px;
+    color: #1976d2;
+    font-size: 0.85rem;
     cursor: pointer;
+    font-weight: 500;
 }
 
 .rating-count:hover {
     text-decoration: underline;
 }
 
-.product-price-section {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.price {
-    font-size: 2rem;
-    color: #B12704;
-    font-weight: 400;
-}
-
-.product-delivery-info {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.product-delivery-info p {
-    margin: 8px 0;
-    color: #333;
-    font-size: 14px;
-}
-
 .product-description {
-    margin-bottom: 30px;
+    margin-bottom: 0;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e7e7e7;
 }
 
 .product-description h3 {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 600;
+    font-size: 0.82rem;
+    color: #0F1111;
+    margin-bottom: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .product-description ul {
     list-style: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .product-description ul li {
-    padding: 8px 0;
-    padding-left: 25px;
+    padding: 9px 0 9px 28px;
     position: relative;
-    color: #333;
-    font-size: 14px;
+    color: #0F1111;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    border-bottom: 1px solid #f0f0f0;
 }
+.product-description ul li:last-child { border-bottom: none; }
 
 .product-description ul li:before {
     content: "✓";
     position: absolute;
-    left: 0;
-    color: #4CAF50;
-    font-weight: bold;
+    left: 4px;
+    color: #1976d2;
+    font-weight: 700;
+    font-size: 0.9rem;
 }
 
 /* Product Actions */
 .product-actions {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .color-selector {
@@ -369,48 +340,12 @@
     width: 100%;
 }
 
-/* Product Specifications */
-.product-specs {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    margin-top: 30px;
-    max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.product-specs h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-.product-specs table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.product-specs table tr {
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.product-specs table tr:last-child {
-    border-bottom: none;
-}
-
-.product-specs table td {
-    padding: 15px 10px;
-    color: #333;
-    font-size: 14px;
-}
-
-.product-specs table td:first-child {
-    width: 30%;
-    color: #666;
-}
+/* Product Specifications — estilos en producto-dinamico.css */
+.product-specs {}
+.product-specs h3 {}
+.product-specs table {}
+.product-specs table tr {}
+.product-specs table td {}
 
 /* Cart Modal Styles */
 .modal {

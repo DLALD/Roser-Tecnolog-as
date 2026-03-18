@@ -335,6 +335,7 @@ document.getElementById('productForm').addEventListener('submit', async e => {
             features: getFeatures(),
             whatsapp_message: document.getElementById('whatsapp_message').value.trim(),
             stock: document.getElementById('stock').checked,
+            frequently_bought_ids: fbtSelected.map(p => p.id),
             detail_url: `../productos/producto-dinamico.html?id=${id}`
         };
 
@@ -390,6 +391,15 @@ async function editProduct(id) {
     document.getElementById('whatsapp_message').value = p.whatsapp_message || '';
     document.getElementById('image_url').value = p.image || '';
     document.getElementById('stock').checked = p.stock;
+
+    // Comprados juntos
+    fbtSelected = [];
+    const fbtIds = p.frequently_bought_ids || [];
+    fbtIds.forEach(id => {
+        const found = allProductsCache.find(x => x.id === id);
+        if (found) fbtSelected.push(found);
+    });
+    renderFbtSelected();
 
     if (p.image) {
         document.getElementById('imagePreviewMain').src = p.image;
@@ -452,6 +462,8 @@ function resetForm() {
     selectedCategories = [];
     renderCategoryTags();
     document.getElementById('categories').value = '';
+    fbtSelected = [];
+    renderFbtSelected();
     galleryFiles = [];
     galleryUrls = [];
     colorData = [];
@@ -480,6 +492,70 @@ priceInput.addEventListener('input', function() {
     const num = parseInt(raw);
     this.value = num.toLocaleString('es-CO');
     document.getElementById('priceDisplay').innerHTML = `<span>$${num.toLocaleString('es-CO')} COP</span>`;
+});
+
+// ── Comprados juntos ──
+let fbtSelected = []; // [{id, name, image}]
+let allProductsCache = [];
+
+async function loadAllProductsCache() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id,name,image&order=name.asc`, { headers });
+    allProductsCache = await res.json();
+}
+
+function renderFbtDropdown(filter) {
+    const dropdown = document.getElementById('fbtDropdown');
+    const currentId = document.getElementById('productId2').value.trim();
+    const filtered = allProductsCache.filter(p =>
+        p.name.toLowerCase().includes(filter.toLowerCase()) &&
+        !fbtSelected.find(s => s.id === p.id) &&
+        p.id !== currentId
+    ).slice(0, 8);
+    if (!filtered.length) { dropdown.classList.remove('open'); return; }
+    dropdown.innerHTML = filtered.map(p => `
+        <div class="category-option fbt-option" onclick="addFbtProduct('${p.id}')">
+            <img src="${p.image || ''}" onerror="this.style.display='none'" style="width:32px;height:32px;object-fit:contain;border-radius:3px;margin-right:8px;vertical-align:middle;border:1px solid #eee">
+            ${p.name}
+        </div>
+    `).join('');
+    dropdown.classList.add('open');
+}
+
+window.addFbtProduct = function(id) {
+    if (fbtSelected.length >= 3) return;
+    const p = allProductsCache.find(x => x.id === id);
+    if (!p || fbtSelected.find(s => s.id === id)) return;
+    fbtSelected.push(p);
+    document.getElementById('fbtSearch').value = '';
+    document.getElementById('fbtDropdown').classList.remove('open');
+    renderFbtSelected();
+};
+
+window.removeFbtProduct = function(id) {
+    fbtSelected = fbtSelected.filter(p => p.id !== id);
+    renderFbtSelected();
+};
+
+function renderFbtSelected() {
+    document.getElementById('frequently_bought_ids').value = fbtSelected.map(p => p.id).join(',');
+    document.getElementById('fbtSelectedList').innerHTML = fbtSelected.map(p => `
+        <div class="fbt-tag">
+            <img src="${p.image || ''}" onerror="this.style.display='none'" style="width:28px;height:28px;object-fit:contain;border-radius:3px;border:1px solid #eee">
+            <span>${p.name}</span>
+            <button type="button" onclick="removeFbtProduct('${p.id}')">x</button>
+        </div>
+    `).join('');
+}
+
+document.getElementById('fbtSearch').addEventListener('input', function() {
+    renderFbtDropdown(this.value);
+});
+document.getElementById('fbtSearch').addEventListener('focus', function() {
+    renderFbtDropdown(this.value || '');
+});
+document.addEventListener('click', e => {
+    if (!e.target.closest('#fbtSelectorWrapper'))
+        document.getElementById('fbtDropdown').classList.remove('open');
 });
 
 // ── Selector de categorías ─────────────────────────────────
@@ -545,3 +621,4 @@ document.addEventListener('click', e => {
 
 loadProducts();
 loadAllCategories();
+loadAllProductsCache();
