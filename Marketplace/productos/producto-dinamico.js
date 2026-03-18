@@ -36,11 +36,16 @@ function renderProduct(p) {
     document.getElementById('buyBoxPrice').textContent = priceFormatted;
     document.getElementById('productDescription').textContent = p.description || '';
     document.getElementById('productPrep').textContent = `${p.preparation_days} días hábiles`;
-    document.getElementById('productRating').textContent = `(${p.rating_count || 0} valoraciones)`;
 
-    // Estrellas
-    const stars = Math.round(p.rating || 5);
-    document.getElementById('productStars').textContent = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+    // Configuración de Rating estilo: 4.6 de ★★★★★ (9,734)
+    const rating = p.rating || 5;
+    const count = p.rating_count || 0;
+    const starsStr = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    
+    const starsEl = document.getElementById('productStars');
+    if (starsEl && starsEl.parentElement) {
+        starsEl.parentElement.innerHTML = `<span class="rating-score">${Number(rating).toFixed(1)} de</span><span id="productStars" class="stars">${starsStr}</span><span id="productRating" class="rating-count">(${count.toLocaleString('es-CO')})</span>`;
+    }
 
     // Galería o colores
     const colors = p.colors || [];
@@ -645,8 +650,12 @@ function renderReviews(reviews) {
 function updateProductRatingDisplay(reviews) {
     if (!reviews.length) return;
     const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+    
+    const scoreEl = document.querySelector('.rating-score');
+    if (scoreEl) scoreEl.textContent = `${avg.toFixed(1)} de`;
+    
     document.getElementById('productStars').textContent = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
-    document.getElementById('productRating').textContent = `(${reviews.length} reseña${reviews.length !== 1 ? 's' : ''})`;
+    document.getElementById('productRating').textContent = `(${reviews.length.toLocaleString('es-CO')})`;
 }
 
 window.submitReview = async function() {
