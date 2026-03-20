@@ -1,18 +1,36 @@
 // Inicialización cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
+    // Limpiar navbar existente y reinicializar con rutas correctas
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+        existingNavbar.remove();
+    }
+    
+    // Inicializar componentes compartidos con rutas correctas
+    NavbarComponent.init({
+        logoPath: '../../Imagenes/Rosero.png',
+        homeUrl: '../../Pagina Principal/index.html',
+        marketplaceUrl: '../../Marketplace/Pagina Marketplace/marketplace.html',
+        marketplaceIcon: '../../Marketplace/Iconos/Marketplace.png',
+        cartIcon: '../../Imagenes/Carrito.png',
+        sidebarBasePath: '../../'
+    });
+    
     PaymentModal.init({
-        basePath: '/Marketplace/metodos de pago/'
+        basePath: '../../Marketplace/metodos de pago/'
     });
     
     CartSystem.init({
-        imageBasePath: '/'
+        imageBasePath: '../../'
     });
     
+    // Inicializar sidebar y búsqueda después de que el navbar esté listo
     setTimeout(() => {
         initializeSidebar();
         initializeSearch();
     }, 100);
     
+    // Inicializar WhatsApp Widget
     $('#BotonWA').floatingWhatsApp({
         phone: '573113579437',
         headerTitle: 'Roser Tecnologías',

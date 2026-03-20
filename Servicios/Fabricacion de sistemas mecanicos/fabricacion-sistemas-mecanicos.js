@@ -1,6 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
-    PaymentModal.init({ basePath: '/Marketplace/metodos de pago/' });
-    CartSystem.init({ imageBasePath: '/' });
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+        existingNavbar.remove();
+    }
+    
+    NavbarComponent.init({
+        logoPath: '../../Imagenes/Rosero.png',
+        homeUrl: '../../Pagina Principal/index.html',
+        marketplaceUrl: '../../Marketplace/Pagina Marketplace/marketplace.html',
+        marketplaceIcon: '../../Marketplace/Iconos/Marketplace.png',
+        cartIcon: '../../Imagenes/Carrito.png',
+        sidebarBasePath: '../../'
+    });
+    
+    PaymentModal.init({
+        basePath: '../../Marketplace/metodos de pago/'
+    });
+    
+    CartSystem.init({
+        imageBasePath: '../../'
+    });
     
     setTimeout(() => {
         initializeSidebar();

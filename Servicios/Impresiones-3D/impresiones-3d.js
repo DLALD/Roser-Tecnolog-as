@@ -1,13 +1,36 @@
 // Inicialización cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    PaymentModal.init({ basePath: '/Marketplace/metodos de pago/' });
-    CartSystem.init({ imageBasePath: '/' });
+    // Limpiar navbar existente y reinicializar con rutas correctas
+    const existingNavbar = document.querySelector('.navbar');
+    if (existingNavbar) {
+        existingNavbar.remove();
+    }
 
+    // Inicializar componentes compartidos con rutas correctas
+    NavbarComponent.init({
+        logoPath: '../../Imagenes/Rosero.png',
+        homeUrl: '../../Pagina Principal/index.html',
+        marketplaceUrl: '../../Marketplace/Pagina Marketplace/marketplace.html',
+        marketplaceIcon: '../../Marketplace/Iconos/Marketplace.png',
+        cartIcon: '../../Imagenes/Carrito.png',
+        sidebarBasePath: '../../'
+    });
+
+    PaymentModal.init({
+        basePath: '../../Marketplace/metodos de pago/'
+    });
+
+    CartSystem.init({
+        imageBasePath: '../../'
+    });
+
+    // Inicializar sidebar y búsqueda después de que el navbar esté listo
     setTimeout(() => {
         initializeSidebar();
         initializeSearch();
     }, 100);
 
+    // Inicializar WhatsApp Widget
     $('#BotonWA').floatingWhatsApp({
         phone: '573113579437',
         headerTitle: 'Roser Tecnologías',
@@ -19,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zIndex: 9999
     });
 
+    // Manejador del formulario de cotización
     const quoteForm = document.getElementById('quoteForm');
     if (quoteForm) {
         quoteForm.addEventListener('submit', function(e) {
@@ -34,8 +58,11 @@ document.addEventListener('DOMContentLoaded', function() {
             message += `*Teléfono:* ${phone}\n`;
             message += `*Descripción:* ${description}\n`;
 
-            const url = `https://wa.me/573113579437?text=${encodeURIComponent(message)}`;
+            const whatsappPhone = '573113579437';
+            const url = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(message)}`;
+            
             window.open(url, '_blank');
+            alert('Serás redirigido a WhatsApp para enviar tu solicitud.');
             this.reset();
         });
     }
