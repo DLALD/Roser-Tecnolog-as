@@ -230,8 +230,7 @@ const NavbarComponent = {
     }
 };
 
-// Auto-inicializar cuando el DOM esté listo
-if (document.readyState === 'loading') {
+    if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => NavbarComponent.init());
 } else {
     NavbarComponent.init();
