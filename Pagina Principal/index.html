@@ -11,6 +11,28 @@
     <!--Floating WhatsApp css-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.css">
     <link rel="stylesheet" href="index.css">
+    <style>
+        .floating-payment-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .floating-payment-btn img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+        }
+    </style>
     <!--Floating WhatsApp javascript-->
     <script src="https://cdn.jsdelivr.net/gh/rafaelbotazini/floating-whatsapp@latest/floating-wpp.min.js"></script>
 </head>
@@ -18,11 +40,6 @@
     <!--Div donde estará el botón de WhatsApp-->
     <div id="BotonWA"></div>
     
-    <!-- Botón Flotante de Métodos de Pago -->
-    <div class="floating-payment-btn" onclick="openPaymentModal()" title="Métodos de Pago">
-        <img src="../Marketplace/metodos de pago/M.png" alt="Métodos de Pago">
-    </div>
-
     <!-- Navbar y modales se generan automáticamente -->
 
     <!-- Hero Section -->
